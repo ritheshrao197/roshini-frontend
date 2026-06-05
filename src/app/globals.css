@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+
+/* ── Design Tokens ────────────────────────────────────────────── */
+:root {
+  /* Primary Brand */
+  --brand-brown:      #6B3E26;
+  --brand-brown-dark: #4e2c18;
+  --brand-brown-light:#8a5438;
+  --brand-green:      #4CAF50;
+  --brand-green-dark: #388E3C;
+  --brand-cream:      #F5E9DA;
+  --brand-cream-dark: #ede0cc;
+
+  /* Secondary Palette */
+  --gold:             #E6A817;
+  --gold-dark:        #c48e10;
+  --spice-red:        #B23A2A;
+  --premium-gold:     #C9A34E;
+
+  /* Neutrals */
+  --bg:               #FFFDF9;
+  --surface:          #FDF6EC;
+  --surface-2:        #F5E9DA;
+  --border:           #E8D5BC;
+  --border-dark:      #d4b896;
+  --text:             #2C1A0E;
+  --text-muted:       #7A5C45;
+  --text-light:       #B0886A;
+
+  /* Legacy aliases (keep for existing components that use these) */
+  --background:       var(--bg);
+  --foreground:       var(--text);
+  --accent-green:     var(--brand-brown);
+  --accent-sage:      var(--text-muted);
+  --accent-cream-dark:var(--brand-cream);
+}
+
+/* ── Tailwind Theme Registration ──────────────────────────────── */
+@theme inline {
+  --color-background:       var(--bg);
+  --color-foreground:       var(--text);
+  --color-accent-green:     var(--brand-brown);
+  --color-accent-sage:      var(--text-muted);
+  --color-accent-cream-dark:var(--brand-cream);
+
+  /* New tokens available as Tailwind classes */
+  --color-brand-brown:      var(--brand-brown);
+  --color-brand-brown-dark: var(--brand-brown-dark);
+  --color-brand-green:      var(--brand-green);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-cream:      var(--brand-cream);
+  --color-brand-cream-dark: var(--brand-cream-dark);
+  --color-gold:             var(--gold);
+  --color-spice-red:        var(--spice-red);
+  --color-premium-gold:     var(--premium-gold);
+  --color-surface:          var(--surface);
+  --color-surface-2:        var(--surface-2);
+  --color-border:           var(--border);
+  --color-text-muted:       var(--text-muted);
+  --color-text-light:       var(--text-light);
+
+  /* Font families */
+  --font-sans:   'Poppins', system-ui, sans-serif;
+  --font-serif:  'Merriweather', Georgia, serif;
+}
+
+/* ── Base Styles ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Merriweather', Georgia, serif;
+  line-height: 1.25;
+  color: var(--brand-brown);
+}
+
+/* ── Utility Classes ──────────────────────────────────────────── */
+.btn-primary {
+  background: var(--brand-brown);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(107, 62, 38, 0.18);
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover {
+  background: var(--brand-brown-dark);
+  box-shadow: 0 4px 16px rgba(107, 62, 38, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--brand-brown);
+  padding: 0.7rem 2rem;
+  border-radius: 9999px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid var(--brand-brown);
+  transition: all 0.2s;
+  display: inline-block;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background: var(--brand-cream);
+}
+
+.btn-gold {
+  background: var(--gold);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  box-shadow: 0 2px 12px rgba(230, 168, 23, 0.3);
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+}
+.btn-gold:hover {
+  background: var(--gold-dark);
+  transform: translateY(-1px);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.section-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+/* ── Animations ───────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--brand-cream) 25%, var(--brand-cream-dark) 50%, var(--brand-cream) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-brown-light); }
+
+/* ── Focus Rings ──────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--brand-brown);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Selection ────────────────────────────────────────────────── */
+::selection {
+  background: var(--brand-cream);
+  color: var(--brand-brown);
+}
+
+/* ── Form Inputs ──────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.75rem;
+  background: #fff;
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--brand-brown);
+  box-shadow: 0 0 0 3px rgba(107, 62, 38, 0.1);
+}
+.input::placeholder {
+  color: var(--text-light);
+}
