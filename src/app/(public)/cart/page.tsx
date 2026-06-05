@@ -243,7 +243,7 @@ export default function CartPage() {
               <div className="space-y-4">
                 {cartItems.map((item) => {
                   const imageSrc = item.pImage 
-                    ? `${BACKEND_URL}/uploads/products/${item.pImage}` 
+                    ? `${BACKEND_URL}/uploads/products/${encodeURIComponent(item.pImage)}` 
                     : "/images/product-placeholder.jpg";
                   return (
                     <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>

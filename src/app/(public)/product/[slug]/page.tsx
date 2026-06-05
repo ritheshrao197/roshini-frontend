@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     product.pImages && product.pImages.length > 0
       ? product.pImages[0].startsWith("http")
         ? product.pImages[0]
-        : `${BACKEND_URL}/uploads/products/${product.pImages[0]}`
+        : `${BACKEND_URL}/uploads/products/${encodeURIComponent(product.pImages[0])}`
       : "/images/product-placeholder.jpg";
 
   const isOutOfStock = product.pQuantity === 0;

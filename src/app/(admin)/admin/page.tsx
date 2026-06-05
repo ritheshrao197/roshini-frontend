@@ -706,7 +706,7 @@ export default function AdminDashboardPage() {
                         {selectedOrder.allProduct?.map((item, idx) => {
                           if (!item.id) return null;
                           const img = item.id.pImages?.length > 0
-                            ? `${BACKEND_URL}/uploads/products/${item.id.pImages[0]}`
+                            ? `${BACKEND_URL}/uploads/products/${encodeURIComponent(item.id.pImages[0])}`
                             : "/images/product-placeholder.jpg";
                           return (
                             <div key={idx} className="flex items-center gap-3 bg-white border p-3 rounded-xl" style={{ borderColor: "#E8D5BC" }}>
