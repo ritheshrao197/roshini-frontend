@@ -87,12 +87,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
               className="relative overflow-hidden rounded-3xl shadow-md"
               style={{ aspectRatio: "1 / 1", background: "#F5E9DA" }}
             >
-              <Image
+              <img
                 src={imageUrl}
                 alt={product.pName}
-                fill
-                className="object-cover"
-                priority
+                className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
