@@ -39,9 +39,23 @@ export interface Category {
   cStatus: string;
 }
 
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function getAllProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${API_URL}/product/all-product`, {
+    const res = await fetchWithTimeout(`${API_URL}/product/all-product`, {
       next: { revalidate: 60 }, // Cache on server for 60 seconds
     });
     if (!res.ok) throw new Error("Failed to fetch products");
@@ -55,7 +69,7 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_URL}/category/all-category`, {
+    const res = await fetchWithTimeout(`${API_URL}/category/all-category`, {
       next: { revalidate: 300 }, // Cache on server for 5 minutes
     });
     if (!res.ok) throw new Error("Failed to fetch categories");
