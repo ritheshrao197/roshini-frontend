@@ -8,6 +8,7 @@ import ProductIngredients from "./ProductIngredients";
 import ProductBenefits from "./ProductBenefits";
 import ProductSEO from "./ProductSEO";
 import ProductShipping from "./ProductShipping";
+import { API_URL } from "@/lib/api";
 
 interface SimpleCategory {
   _id: string;
@@ -272,7 +273,7 @@ export default function ProductForm({
     if (!confirm("Are you sure you want to soft delete this product?")) return;
     setIsSaving(true);
     try {
-      const res = await fetch("http://localhost:8000/api/product/delete-product", {
+      const res = await fetch(`${API_URL}/product/delete-product`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pId: initialProduct._id }),
@@ -296,7 +297,7 @@ export default function ProductForm({
     if (!initialProduct?._id) return;
     setIsSaving(true);
     try {
-      const res = await fetch("http://localhost:8000/api/product/restore-product", {
+      const res = await fetch(`${API_URL}/product/restore-product`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pId: initialProduct._id }),
@@ -382,8 +383,8 @@ export default function ProductForm({
       if (pImage2) formData.append("pImage2", pImage2);
 
       const endpoint = isEditMode
-        ? "http://localhost:8000/api/product/edit-product"
-        : "http://localhost:8000/api/product/add-product";
+        ? `${API_URL}/product/edit-product`
+        : `${API_URL}/product/add-product`;
 
       const res = await fetch(endpoint, {
         method: "POST",

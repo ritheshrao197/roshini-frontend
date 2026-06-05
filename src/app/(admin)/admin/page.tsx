@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductForm from "@/components/admin/product/ProductForm";
+import { API_URL, BACKEND_URL } from "@/lib/api";
 
 interface Product {
   _id: string;
@@ -99,7 +100,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function fetchAnalytics() {
       try {
-        const res = await fetch("http://localhost:8000/api/admin/analytics", { credentials: "include" });
+        const res = await fetch(`${API_URL}/admin/analytics`, { credentials: "include" });
         const json = await res.json();
         if (json.error) {
           setAnalyticsError(json.error);
@@ -118,7 +119,7 @@ export default function AdminDashboardPage() {
   // 2. Fetch Dynamic Catalog Lists
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/product/all-product");
+      const res = await fetch(`${API_URL}/product/all-product`);
       const json = await res.json();
       setProducts(json.Products || []);
     } catch (e) {
@@ -128,7 +129,7 @@ export default function AdminDashboardPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/category/all-category");
+      const res = await fetch(`${API_URL}/category/all-category`);
       const json = await res.json();
       setCategories(json.Categories || []);
     } catch (e) {
@@ -138,7 +139,7 @@ export default function AdminDashboardPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/order/get-all-orders");
+      const res = await fetch(`${API_URL}/order/get-all-orders`);
       const json = await res.json();
       setOrders(json.Orders || []);
     } catch (e) {
@@ -148,7 +149,7 @@ export default function AdminDashboardPage() {
 
   const fetchPaymentSettings = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/customize/payment-settings");
+      const res = await fetch(`${API_URL}/customize/payment-settings`);
       const json = await res.json();
       setPhonePeEnabled(json.phonePeEnabled !== false);
       setPayUEnabled(json.payUEnabled !== false);
@@ -162,7 +163,7 @@ export default function AdminDashboardPage() {
     setFormSuccess("");
     setFormError("");
     try {
-      const res = await fetch("http://localhost:8000/api/customize/update-payment-settings", {
+      const res = await fetch(`${API_URL}/customize/update-payment-settings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phonePeEnabled, payUEnabled }),
@@ -210,7 +211,7 @@ export default function AdminDashboardPage() {
       formData.append("cStatus", "Active");
       formData.append("cImage", cImage);
 
-      const res = await fetch("http://localhost:8000/api/category/add-category", {
+      const res = await fetch(`${API_URL}/category/add-category`, {
         method: "POST",
         headers: { 
           "token": localStorage.getItem("token") || ""
@@ -244,7 +245,7 @@ export default function AdminDashboardPage() {
     setDrawerSaving(true);
     setDrawerMsg("");
     try {
-      const res = await fetch("http://localhost:8000/api/order/admin-update-order", {
+      const res = await fetch(`${API_URL}/order/admin-update-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ oId: selectedOrder._id, ...fields }),
@@ -278,7 +279,7 @@ export default function AdminDashboardPage() {
   // Old simple update kept for backward compat
   const handleUpdateOrderStatus = async (oId: string, status: string) => {
     try {
-      await fetch("http://localhost:8000/api/order/update-order", {
+      await fetch(`${API_URL}/order/update-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ oId, status }),
@@ -440,7 +441,7 @@ export default function AdminDashboardPage() {
                       <h3 className="font-serif font-bold text-[#6B3E26]">Financial Exports</h3>
                       <p className="text-xs text-[#7A5C45]">Download sales database entries as CSV sheets.</p>
                     </div>
-                    <a href="http://localhost:8000/api/admin/orders/export" className="px-6 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-semibold rounded-full hover:bg-[#4e2c18] transition-all">
+                    <a href={`${API_URL}/admin/orders/export`} className="px-6 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-semibold rounded-full hover:bg-[#4e2c18] transition-all">
                       Export CSV
                     </a>
                   </div>
@@ -705,7 +706,7 @@ export default function AdminDashboardPage() {
                         {selectedOrder.allProduct?.map((item, idx) => {
                           if (!item.id) return null;
                           const img = item.id.pImages?.length > 0
-                            ? `http://localhost:8000/uploads/products/${item.id.pImages[0]}`
+                            ? `${BACKEND_URL}/uploads/products/${item.id.pImages[0]}`
                             : "/images/product-placeholder.jpg";
                           return (
                             <div key={idx} className="flex items-center gap-3 bg-white border p-3 rounded-xl" style={{ borderColor: "#E8D5BC" }}>

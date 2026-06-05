@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 type VerifyState = "loading" | "success" | "failed" | "pending" | "error";
 
@@ -28,7 +29,7 @@ function PaymentStatusContent() {
     async function verifyPayment() {
       try {
         const res  = await fetch(
-          `http://localhost:8000/api/payment/phonepe-status?txnId=${txnId}`
+          `${API_URL}/payment/phonepe-status?txnId=${txnId}`
         );
         const data = await res.json();
 

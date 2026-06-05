@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getCart, updateQuantity, removeFromCart, clearCart, getCartTotal } from "@/lib/cart";
+import { API_URL, BACKEND_URL } from "@/lib/api";
 
 interface CartItem {
   id: string;
@@ -49,7 +50,7 @@ export default function CartPage() {
     }
 
     // 3. Load payment gateway settings
-    fetch("http://localhost:8000/api/customize/payment-settings")
+    fetch(`${API_URL}/customize/payment-settings`)
       .then(r => r.json())
       .then(json => {
         const pe = json.phonePeEnabled !== false;
@@ -99,7 +100,7 @@ export default function CartPage() {
     try {
       /* ── PhonePe Flow ─────────────────────────────────────────── */
       if (selectedPayment === "phonepe") {
-        const res = await fetch("http://localhost:8000/api/payment/phonepe", {
+        const res = await fetch(`${API_URL}/payment/phonepe`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -131,7 +132,7 @@ export default function CartPage() {
 
       /* ── PayU Flow ────────────────────────────────────────────── */
       if (selectedPayment === "payu") {
-        const res = await fetch("http://localhost:8000/api/payment/payu", {
+        const res = await fetch(`${API_URL}/payment/payu`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -242,7 +243,7 @@ export default function CartPage() {
               <div className="space-y-4">
                 {cartItems.map((item) => {
                   const imageSrc = item.pImage 
-                    ? `http://localhost:8000/uploads/products/${item.pImage}` 
+                    ? `${BACKEND_URL}/uploads/products/${item.pImage}` 
                     : "/images/product-placeholder.jpg";
                   return (
                     <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>

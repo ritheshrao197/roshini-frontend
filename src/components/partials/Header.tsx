@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getCartCount } from "@/lib/cart";
+import { API_URL } from "@/lib/api";
 
 export default function Header() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function Header() {
 
   const handleSignout = async () => {
     try {
-      await fetch("http://localhost:8000/api/signout", { method: "POST", credentials: "include" });
+      await fetch(`${API_URL}/signout`, { method: "POST", credentials: "include" });
     } catch {}
     localStorage.removeItem("user");
     localStorage.removeItem("token");

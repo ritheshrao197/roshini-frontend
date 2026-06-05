@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/lib/cart";
+import { API_URL, BACKEND_URL } from "@/lib/api";
 
 interface OrderItem {
   id: {
@@ -98,7 +99,7 @@ export default function DashboardPage() {
 
     async function fetchUserOrders() {
       try {
-        const res = await fetch("http://localhost:8000/api/order/order-by-user", {
+        const res = await fetch(`${API_URL}/order/order-by-user`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -139,7 +140,7 @@ export default function DashboardPage() {
   const handleDownloadInvoice = async (orderId: string) => {
     setDownloadingInvoice(orderId);
     try {
-      const res = await fetch(`http://localhost:8000/api/order/invoice/${orderId}`);
+      const res = await fetch(`${API_URL}/order/invoice/${orderId}`);
       const json = await res.json();
       if (json.invoice) {
         const inv = json.invoice;
@@ -369,7 +370,7 @@ ${inv.trackingId ? `<div class="row"><span>Tracking ID</span><strong>${inv.track
                           {order.allProduct.map((item, idx) => {
                             if (!item.id) return null;
                             const imageSrc = item.id.pImages && item.id.pImages.length > 0
-                              ? `http://localhost:8000/uploads/products/${item.id.pImages[0]}`
+                              ? `${BACKEND_URL}/uploads/products/${item.id.pImages[0]}`
                               : "/images/product-placeholder.jpg";
                             return (
                               <div key={idx} className="flex items-center justify-between gap-4 bg-white border p-3 rounded-xl" style={{ borderColor: "#E8D5BC" }}>

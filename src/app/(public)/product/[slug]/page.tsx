@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getProductBySlug, getRelatedProducts } from "@/lib/api";
+import { getProductBySlug, getRelatedProducts, BACKEND_URL } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import Header from "@/components/partials/Header";
@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     product.pImages && product.pImages.length > 0
       ? product.pImages[0].startsWith("http")
         ? product.pImages[0]
-        : `http://localhost:8000/uploads/products/${product.pImages[0]}`
+        : `${BACKEND_URL}/uploads/products/${product.pImages[0]}`
       : "/images/product-placeholder.jpg";
 
   const isOutOfStock = product.pQuantity === 0;

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Product } from "@/lib/api";
+import { Product, BACKEND_URL } from "@/lib/api";
 
 interface ProductCardProps {
   product: Product;
@@ -12,7 +12,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     product.pImages && product.pImages.length > 0
       ? product.pImages[0].startsWith("http")
         ? product.pImages[0]
-        : `http://localhost:8000/uploads/products/${product.pImages[0]}`
+        : `${BACKEND_URL}/uploads/products/${product.pImages[0]}`
       : "/images/product-placeholder.jpg";
 
   const productSlug =
