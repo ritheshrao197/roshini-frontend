@@ -77,7 +77,7 @@ export default function AdminDashboardPage() {
 
 function AdminDashboardInner() {
   const router = useRouter();
-  const { isLoggedIn, isAdmin, hasRole, login } = useAuth();
+  const { isLoggedIn, isAdmin, hasRole, login, logout } = useAuth();
 
   // Auth guard — redirect to login if not an admin
   useEffect(() => {
@@ -89,11 +89,7 @@ function AdminDashboardInner() {
     }
   }, []); // eslint-disable-line
 
-  useEffect(() => {
-    if (!loadingAnalytics && !isAdmin) {
-       router.push("/");
-    }
-  }, [isAdmin, loadingAnalytics, router]);
+
 
   const handleApiError = (status: number) => {
     if (status === 401 || status === 403) {
@@ -147,6 +143,12 @@ function AdminDashboardInner() {
   const [formSuccess, setFormSuccess] = useState("");
   const [formError, setFormError] = useState("");
 
+  useEffect(() => {
+    if (!loadingAnalytics && !isAdmin) {
+       router.push("/");
+    }
+  }, [isAdmin, loadingAnalytics, router]);
+
   // 1. Fetch Analytics Overview
   useEffect(() => {
     async function fetchAnalytics() {
@@ -155,6 +157,7 @@ function AdminDashboardInner() {
           headers: { 'token': localStorage.getItem('token') || "" },
           credentials: "include" 
         });
+        handleApiError(res.status);
         const json = await res.json();
         if (json.error) {
           setAnalyticsError(json.error);
