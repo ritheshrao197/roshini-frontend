@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import ProductForm from "@/components/admin/product/ProductForm";
 import VlogForm from "@/components/admin/vlogs/VlogForm";
 import AchievementManager from "@/components/admin/achievements/AchievementManager";
 import SliderManager from "@/components/admin/slider/SliderManager";
+import UserManagementPanel from "@/components/admin/users/UserManagementPanel";
+import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import { API_URL, BACKEND_URL } from "@/lib/api";
 
 interface Product {
@@ -62,7 +65,24 @@ interface AnalyticsData {
 }
 
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders">("overview");
+  return (
+    <AuthProvider>
+      <AdminDashboardInner />
+    </AuthProvider>
+  );
+}
+
+function AdminDashboardInner() {
+  const router = useRouter();
+  const { isLoggedIn, isAdmin, hasRole, login } = useAuth();
+
+  // Auth guard — redirect to login if not an admin
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) login(token); // hydrate from storage
+  }, []); // eslint-disable-line
+
+  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users">("overview");
   
   // Vlog states
   const [vlogs, setVlogs] = useState<any[]>([]);
@@ -468,6 +488,19 @@ export default function AdminDashboardPage() {
               >
                 🖼️ Homepage Slider
               </button>
+              {/* ── RBAC: User Management (super_admin + order_manager) ── */}
+              {(hasRole(["super_admin", "order_manager"])) && (
+                <button 
+                  onClick={() => setActiveTab("users")} 
+                  className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                    activeTab === "users" 
+                      ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                      : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                  }`}
+                >
+                  👥 User Management
+                </button>
+              )}
             </div>
           </div>
         </aside>
@@ -490,6 +523,10 @@ export default function AdminDashboardPage() {
             <SliderManager />
           )}
 
+          {/* USER MANAGEMENT PANEL */}
+          {activeTab === "users" && (
+            <UserManagementPanel />
+          )}
           {/* ACHIEVEMENTS PANEL */}
           {activeTab === "achievements" && (
             <AchievementManager />

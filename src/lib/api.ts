@@ -247,3 +247,149 @@ export async function trackSliderAnalytics(sliderId: string, type: 'impression' 
     console.error("trackSliderAnalytics Error:", err);
   }
 }
+
+// ── Admin User Management API ─────────────────────────────────────────────
+
+function getAuthHeaders(): Record<string, string> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
+  return { "Content-Type": "application/json", token };
+}
+
+export interface AdminUser {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber?: number;
+  role: string;
+  status: string;
+  userRole: number;
+  lastLogin?: string;
+  createdAt: string;
+}
+
+export interface UsersListResponse {
+  success: boolean;
+  users: AdminUser[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
+export interface UserDetailResponse {
+  success: boolean;
+  user: AdminUser;
+  orderStats: {
+    totalOrders: number;
+    totalSpent: number;
+    latestOrder: { amount: number; status: string; paymentStatus: string; createdAt: string } | null;
+  };
+}
+
+export interface AuditLog {
+  _id: string;
+  adminId: { _id: string; name: string; email: string } | string;
+  action: string;
+  entityType: string;
+  entityId: string | null;
+  oldValue: unknown;
+  newValue: unknown;
+  timestamp: string;
+}
+
+export async function adminListUsers(params: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: string;
+  status?: string;
+  sort?: string;
+} = {}): Promise<UsersListResponse> {
+  const qs = new URLSearchParams(params as Record<string, string>).toString();
+  const res = await fetch(`${API_URL}/admin/users?${qs}`, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  return res.json();
+}
+
+export async function adminCreateUser(data: {
+  name: string;
+  email: string;
+  phoneNumber?: string;
+  role: string;
+  tempPassword: string;
+}): Promise<{ success?: boolean; error?: string; user?: AdminUser }> {
+  const res = await fetch(`${API_URL}/admin/users`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+export async function adminGetUser(id: string): Promise<UserDetailResponse> {
+  const res = await fetch(`${API_URL}/admin/users/${id}`, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  return res.json();
+}
+
+export async function adminUpdateUser(
+  id: string,
+  data: { role?: string; status?: string; phoneNumber?: string }
+): Promise<{ success?: boolean; error?: string; user?: AdminUser }> {
+  const res = await fetch(`${API_URL}/admin/users/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+export async function adminBulkAction(
+  ids: string[],
+  action: "activate" | "deactivate" | "block"
+): Promise<{ success?: boolean; error?: string; affected?: number }> {
+  const res = await fetch(`${API_URL}/admin/users/bulk`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    credentials: "include",
+    body: JSON.stringify({ ids, action }),
+  });
+  return res.json();
+}
+
+export function adminExportUsersUrl(params: { role?: string; status?: string } = {}): string {
+  const qs = new URLSearchParams(params as Record<string, string>).toString();
+  return `${API_URL}/admin/users/export?${qs}`;
+}
+
+export async function adminListCustomers(params: {
+  filter?: "recent" | "top" | "inactive";
+  page?: number;
+  limit?: number;
+} = {}): Promise<{ success: boolean; customers: AdminUser[]; total: number; totalPages: number }> {
+  const qs = new URLSearchParams(params as Record<string, string>).toString();
+  const res = await fetch(`${API_URL}/admin/customers?${qs}`, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  return res.json();
+}
+
+export async function adminGetAuditLogs(params: {
+  page?: number;
+  limit?: number;
+  action?: string;
+  entityType?: string;
+} = {}): Promise<{ success: boolean; logs: AuditLog[]; total: number; totalPages: number }> {
+  const qs = new URLSearchParams(params as Record<string, string>).toString();
+  const res = await fetch(`${API_URL}/admin/audit-logs?${qs}`, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  return res.json();
+}
