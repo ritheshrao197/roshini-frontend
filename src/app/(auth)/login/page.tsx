@@ -33,7 +33,7 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
-        router.push("/account/dashboard"); // Redirect to new dashboard
+        router.push("/"); // Redirect to home page
       }
     } catch (err) {
       setError("Failed to connect to backend server.");

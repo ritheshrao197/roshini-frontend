@@ -151,7 +151,10 @@ function AdminDashboardInner() {
   useEffect(() => {
     async function fetchAnalytics() {
       try {
-        const res = await fetch(`${API_URL}/admin/analytics`, { credentials: "include" });
+        const res = await fetch(`${API_URL}/admin/analytics`, { 
+          headers: { 'token': localStorage.getItem('token') || "" },
+          credentials: "include" 
+        });
         const json = await res.json();
         if (json.error) {
           setAnalyticsError(json.error);
@@ -193,7 +196,9 @@ function AdminDashboardInner() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_URL}/order/get-all-orders`);
+      const res = await fetch(`${API_URL}/order/get-all-orders`, {
+        headers: { 'token': localStorage.getItem('token') || "" }
+      });
       const json = await res.json();
       setOrders(json.Orders || []);
     } catch (e) {
@@ -238,7 +243,10 @@ function AdminDashboardInner() {
     try {
       const res = await fetch(`${API_URL}/customize/update-payment-settings`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "token": localStorage.getItem('token') || ""
+        },
         body: JSON.stringify({ phonePeEnabled, payUEnabled }),
       });
       const data = await res.json();
@@ -361,7 +369,10 @@ function AdminDashboardInner() {
     try {
       const res = await fetch(`${API_URL}/order/admin-update-order`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "token": localStorage.getItem("token") || ""
+        },
         body: JSON.stringify({ oId: selectedOrder._id, ...fields }),
       });
       const data = await res.json();
@@ -395,7 +406,10 @@ function AdminDashboardInner() {
     try {
       await fetch(`${API_URL}/order/update-order`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "token": localStorage.getItem("token") || ""
+        },
         body: JSON.stringify({ oId, status }),
       });
       fetchOrders();
