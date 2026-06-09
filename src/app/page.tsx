@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import { getFeaturedProducts, getCategories } from "@/lib/api";
+import { getFeaturedProducts, getCategories, getAchievements, getHeroSliders } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
+import HeroSlider from "@/components/home/HeroSlider";
 import Header from "@/components/partials/Header";
 import NewsletterForm from "@/components/home/NewsletterForm";
 
@@ -91,96 +92,23 @@ function getCatEmoji(name: string) {
 }
 
 export default async function HomePage() {
-  const [products, categories] = await Promise.all([
+  const [products, categories, achievements, heroSliders] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
+    getAchievements(),
+    getHeroSliders(),
   ]);
+
+  // Separate achievements by type
+  const awards = achievements.filter(a => a.type === "Award" || a.type === "Certification" || a.type === "Media");
+  const stats = achievements.filter(a => a.type === "Statistic");
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'Poppins', sans-serif" }}>
       <Header />
 
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section style={{ background: "linear-gradient(135deg, #F5E9DA 0%, #FFFDF9 60%, #F5E9DA 100%)" }} className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6">
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, #E6A817 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
-        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #6B3E26 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
-          {/* Text */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest" style={{ background: "#6B3E26", color: "#F5E9DA" }}>
-              🌿 Karnataka Heritage · Homemade Nutrition
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
-              Traditional Nutrition<br />
-              <span style={{ color: "#E6A817" }}>for Modern</span><br />
-              Families
-            </h1>
-
-            <p className="text-base md:text-lg leading-relaxed max-w-lg" style={{ color: "#7A5C45" }}>
-              Health Mixes, Seed Mixes, Herbal Teas, Spice Powders and Homemade Nutrition Products — crafted with love, rooted in tradition.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link href="/shop" className="btn-primary">
-                Shop Now
-              </Link>
-              <Link href="/#featured" className="btn-secondary">
-                Explore Collections
-              </Link>
-            </div>
-
-            {/* Trust micro-stats */}
-            <div className="flex gap-6 pt-2">
-              {[
-                { value: "500+", label: "Happy Families" },
-                { value: "100%", label: "Natural" },
-                { value: "0g", label: "Added Sugar" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <div className="text-xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>{s.value}</div>
-                  <div className="text-xs font-medium" style={{ color: "#7A5C45" }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Hero Visual */}
-          <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(135deg, #6B3E26 0%, #8a5438 100%)", minHeight: 400 }}>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-5">
-                <div className="text-8xl">🌾</div>
-                <h2 className="text-2xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#F5E9DA" }}>
-                  Handcrafted with Love
-                </h2>
-                <p className="text-sm leading-relaxed" style={{ color: "#ede0cc" }}>
-                  Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches for maximum nutrition.
-                </p>
-                {/* Badges */}
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {["No Sugar", "Preservative Free", "Homemade"].map((b) => (
-                    <span key={b} className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: "rgba(245,233,218,0.15)", color: "#F5E9DA", border: "1px solid rgba(245,233,218,0.3)" }}>
-                      {b}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Floating cards */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-2xl px-4 py-3 shadow-lg border border-[#E8D5BC]">
-              <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#7A5C45" }}>Today's Pickup</div>
-              <div className="text-sm font-bold" style={{ color: "#6B3E26" }}>Ragi Health Mix 🌾</div>
-            </div>
-            <div className="absolute -bottom-4 -left-4 bg-[#4CAF50] rounded-2xl px-4 py-3 shadow-lg text-white">
-              <div className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Rating</div>
-              <div className="text-sm font-bold">⭐ 4.9 / 5.0</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── HERO SLIDER ─────────────────────────────────────────────── */}
+      <HeroSlider sliders={heroSliders} />
 
       {/* ── TRUST BADGES ─────────────────────────────────────── */}
       <section style={{ background: "#6B3E26" }} className="py-8 px-4 sm:px-6">
@@ -327,6 +255,92 @@ export default async function HomePage() {
                 <div className="font-bold text-sm" style={{ color: "#F5E9DA" }}>{v.title}</div>
                 <div className="text-xs mt-0.5" style={{ color: "#ede0cc", opacity: 0.8 }}>{v.sub}</div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ACHIEVEMENTS & RECOGNITION ───────────────────────── */}
+      <section className="py-16 md:py-20 px-4 sm:px-6" style={{ background: "#FFFDF9" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="section-label text-[#E6A817] font-bold tracking-widest uppercase text-[10px]">National Acclaim</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2 leading-tight" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+              🏆 Award-Winning Nutrition<br />Trusted by Families Across India
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-sm md:text-base leading-relaxed" style={{ color: "#7A5C45" }}>
+              Roshini's NutriMix combines traditional wisdom with modern nutrition, earning national recognition and the trust of health-conscious families across India.
+            </p>
+          </div>
+
+          {/* Awards Grid */}
+          {awards.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+              {awards.map((award) => (
+                <div 
+                  key={award._id} 
+                  className="p-6 rounded-2xl flex flex-col items-center text-center transition-all hover:-translate-y-1 shadow-sm hover:shadow-md"
+                  style={{ background: "#FDF6EC", border: "1.5px solid #E8D5BC" }}
+                >
+                  <div className="text-4xl mb-4">{award.icon}</div>
+                  <h3 className="font-bold text-lg mb-1 leading-tight" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+                    {award.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-[#B23A2A]">{award.subtitle}</p>
+                  {award.description && (
+                    <p className="text-xs mt-3 opacity-80" style={{ color: "#7A5C45" }}>{award.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Impact Counters */}
+          {stats.length > 0 && (
+            <div className="py-10 rounded-3xl mb-16" style={{ background: "linear-gradient(135deg, #6B3E26 0%, #8a5438 100%)", boxShadow: "0 10px 30px -10px rgba(107, 62, 38, 0.5)" }}>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-[#F5E9DA]/20">
+                {stats.map((stat) => (
+                  <div key={stat._id} className="text-center px-4 flex flex-col items-center">
+                    <span className="text-3xl mb-2">{stat.icon}</span>
+                    <div className="text-3xl md:text-4xl font-bold mb-1" style={{ fontFamily: "'Merriweather', serif", color: "#F5E9DA" }}>
+                      {stat.value || stat.title}
+                    </div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-[#ede0cc]">
+                      {stat.value ? stat.title : stat.subtitle}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recognition Statement */}
+          <div className="max-w-3xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-3xl" style={{ background: "rgba(245,233,218,0.3)", border: "1px dashed #E8D5BC" }}>
+            <h3 className="text-2xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+              Recognized for Innovation. Trusted for Results.
+            </h3>
+            <p className="text-sm md:text-base leading-relaxed" style={{ color: "#7A5C45" }}>
+              Roshini's NutriMix was recognized as an <strong className="text-[#6B3E26]">Innovative Product at National Saras Mela 2024</strong> and later honored as <strong className="text-[#6B3E26]">Best Product at National Saras Mela 2024-25</strong> for its quality, nutritional value, and consumer acceptance.
+            </p>
+            <p className="text-sm md:text-base leading-relaxed" style={{ color: "#7A5C45" }}>
+              Representing Karnataka at prestigious national exhibitions, Roshini's NutriMix showcases the potential of women-led entrepreneurship, traditional nutrition, and millet-based wellness solutions. Today, the product continues to earn the trust of families seeking natural, wholesome, and preservative-free nutrition.
+            </p>
+          </div>
+
+          {/* Quick Highlights Bar */}
+          <div className="mt-16 flex flex-wrap justify-center gap-3">
+            {[
+              "🏆 Best Product – National Saras Mela 2024-25",
+              "🌟 Innovative Product – National Saras Mela 2024",
+              "🇮🇳 Represented Karnataka Nationally",
+              "⭐ 4.84/5 Customer Rating",
+              "🌿 30+ Natural Ingredients",
+              "🚫 No Added Sugar",
+              "💚 Preservative Free"
+            ].map((highlight, idx) => (
+              <span key={idx} className="text-xs font-bold px-4 py-2 rounded-full shadow-sm" style={{ background: "#FFF", border: "1px solid #E8D5BC", color: "#6B3E26" }}>
+                {highlight}
+              </span>
             ))}
           </div>
         </div>

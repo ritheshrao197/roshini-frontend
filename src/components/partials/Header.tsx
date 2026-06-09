@@ -79,7 +79,7 @@ export default function Header() {
               {[
                 { href: "/shop", label: "Shop All" },
                 { href: "/shop?category=health-mixes", label: "Health Mixes" },
-                { href: "/shop?category=herbal-tea", label: "Herbal Teas" },
+                { href: "/blogs", label: "Blogs" },
                 { href: "/#values", label: "Our Story" },
               ].map((item) => (
                 <Link
@@ -169,7 +169,7 @@ export default function Header() {
             {[
               { href: "/shop", label: "🛍️  Shop All" },
               { href: "/shop?category=health-mixes", label: "💚  Health Mixes" },
-              { href: "/shop?category=herbal-tea", label: "🍃  Herbal Teas" },
+              { href: "/blogs", label: "📝  Blogs" },
               { href: "/#values", label: "🏡  Our Story" },
               { href: "/cart", label: `🛒  Cart (${cartCount})` },
             ].map((item) => (

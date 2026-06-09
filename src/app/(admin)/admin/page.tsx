@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProductForm from "@/components/admin/product/ProductForm";
+import VlogForm from "@/components/admin/vlogs/VlogForm";
+import AchievementManager from "@/components/admin/achievements/AchievementManager";
+import SliderManager from "@/components/admin/slider/SliderManager";
 import { API_URL, BACKEND_URL } from "@/lib/api";
 
 interface Product {
@@ -59,7 +62,15 @@ interface AnalyticsData {
 }
 
 export default function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders">("overview");
+  
+  // Vlog states
+  const [vlogs, setVlogs] = useState<any[]>([]);
+  const [vlogCategories, setVlogCategories] = useState<any[]>([]);
+  const [editingVlog, setEditingVlog] = useState<any | null>(null);
+  const [showVlogForm, setShowVlogForm] = useState(false);
+  const [vCatName, setVCatName] = useState("");
+  const [vCatDesc, setVCatDesc] = useState("");
   
   // Analytics
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
@@ -147,6 +158,22 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const fetchVlogs = async () => {
+    try {
+      const res = await fetch(`${API_URL}/admin/vlogs`, { headers: { 'token': localStorage.getItem('token') || "" }, credentials: "include" });
+      const json = await res.json();
+      setVlogs(json.vlogs || []);
+    } catch (e) { console.error(e); }
+  };
+
+  const fetchVlogCategories = async () => {
+    try {
+      const res = await fetch(`${API_URL}/vlog-categories`);
+      const json = await res.json();
+      setVlogCategories(json.Categories || []);
+    } catch (e) { console.error(e); }
+  };
+
   const fetchPaymentSettings = async () => {
     try {
       const res = await fetch(`${API_URL}/customize/payment-settings`);
@@ -189,6 +216,11 @@ export default function AdminDashboardPage() {
     if (activeTab === "categories") fetchCategories();
     if (activeTab === "orders") fetchOrders();
     if (activeTab === "settings") fetchPaymentSettings();
+    if (activeTab === "vlogs") {
+      fetchVlogs();
+      fetchVlogCategories();
+    }
+    if (activeTab === "vlogCategories") fetchVlogCategories();
   }, [activeTab]);
 
   // 3. CRUD: Modular Product Form Handling (Coordinated inside ProductForm component)
@@ -232,6 +264,42 @@ export default function AdminDashboardPage() {
     } catch (err) {
       setFormError("Failed to add category.");
     }
+  };
+
+  // Vlog Category Add
+  const handleAddVlogCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSuccess("");
+    setFormError("");
+    try {
+      const res = await fetch(`${API_URL}/admin/vlog-categories`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "token": localStorage.getItem('token') || "" },
+        credentials: "include",
+        body: JSON.stringify({ cName: vCatName, cDescription: vCatDesc, cStatus: "Active" }),
+      });
+      const data = await res.json();
+      if (data.error) setFormError(data.error);
+      else {
+        setFormSuccess("Vlog Category created successfully!");
+        fetchVlogCategories();
+        setVCatName("");
+        setVCatDesc("");
+      }
+    } catch (err) { setFormError("Failed to add vlog category."); }
+  };
+
+  const handleVlogPublishToggle = async (id: string, currentStatus: boolean) => {
+    try {
+      const action = currentStatus ? "unpublish" : "publish";
+      const res = await fetch(`${API_URL}/admin/vlogs/${id}/publish`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'token': localStorage.getItem('token') || "" },
+        credentials: "include",
+        body: JSON.stringify({ action })
+      });
+      if (res.ok) fetchVlogs();
+    } catch (err) { console.error(err); }
   };
 
   // 5. Admin: comprehensive order update (status + payment status + tracking + refund)
@@ -360,6 +428,46 @@ export default function AdminDashboardPage() {
               >
                 ⚙️ Payment Settings
               </button>
+              <button 
+                onClick={() => setActiveTab("vlogs")} 
+                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                  activeTab === "vlogs" 
+                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                }`}
+              >
+                📝 Blogs Manager
+              </button>
+              <button 
+                onClick={() => setActiveTab("vlogCategories")} 
+                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                  activeTab === "vlogCategories" 
+                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                }`}
+              >
+                🏷️ Blog Categories
+              </button>
+              <button 
+                onClick={() => setActiveTab("achievements")} 
+                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                  activeTab === "achievements" 
+                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                }`}
+              >
+                🏆 Achievements
+              </button>
+              <button 
+                onClick={() => setActiveTab("sliders")} 
+                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                  activeTab === "sliders" 
+                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                }`}
+              >
+                🖼️ Homepage Slider
+              </button>
             </div>
           </div>
         </aside>
@@ -375,6 +483,16 @@ export default function AdminDashboardPage() {
             <div className="bg-red-50 text-red-600 text-sm p-4 rounded-xl border border-red-100">
               {formError}
             </div>
+          )}
+
+          {/* SLIDERS PANEL */}
+          {activeTab === "sliders" && (
+            <SliderManager />
+          )}
+
+          {/* ACHIEVEMENTS PANEL */}
+          {activeTab === "achievements" && (
+            <AchievementManager />
           )}
 
           {/* 1. OVERVIEW PANEL */}
@@ -659,8 +777,7 @@ export default function AdminDashboardPage() {
                   </tbody>
                 </table>
               </div>
-
-              {/* Order Detail Drawer (right-side panel) */}
+{/* Order Detail Drawer (right-side panel) */}
               {selectedOrder && (
                 <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setSelectedOrder(null)}>
                   {/* Backdrop */}
@@ -821,6 +938,122 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
+          {/* VLOGS PANEL */}
+          {activeTab === "vlogs" && (
+            <div className="space-y-6">
+              {showVlogForm ? (
+                <VlogForm
+                  initialVlog={editingVlog}
+                  categoriesList={vlogCategories}
+                  onSuccess={() => {
+                    setShowVlogForm(false);
+                    setEditingVlog(null);
+                    fetchVlogs();
+                  }}
+                  onCancel={() => {
+                    setShowVlogForm(false);
+                    setEditingVlog(null);
+                  }}
+                />
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold font-serif text-[#6B3E26]">Blogs Manager</h2>
+                    <button
+                      onClick={() => {
+                        setEditingVlog(null);
+                        setShowVlogForm(true);
+                      }}
+                      className="px-5 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-semibold rounded-full hover:bg-[#4e2c18] transition-all cursor-pointer"
+                    >
+                      + Add Blog
+                    </button>
+                  </div>
+
+                  <div className="bg-[#FDF6EC] border rounded-3xl overflow-hidden" style={{ borderColor: "#E8D5BC" }}>
+                    <table className="w-full text-left text-sm border-collapse">
+                      <thead>
+                        <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
+                          <th className="px-6 py-3">Title</th>
+                          <th className="px-6 py-3">Category</th>
+                          <th className="px-6 py-3 text-center">Status</th>
+                          <th className="px-6 py-3 text-right">Views</th>
+                          <th className="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {vlogs.length === 0 ? (
+                          <tr><td colSpan={5} className="px-6 py-10 text-center text-sm text-[#7A5C45]">No vlogs found.</td></tr>
+                        ) : vlogs.map(v => (
+                          <tr key={v._id} className="border-b hover:bg-[#F5E9DA]/40 transition-colors" style={{ borderColor: "#E8D5BC" }}>
+                            <td className="px-6 py-4 font-semibold text-[#6B3E26]">{v.title}</td>
+                            <td className="px-6 py-4 text-[#7A5C45]">{v.vCategory?.cName || "Uncategorized"}</td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${v.isPublished ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-600 border border-gray-200"}`}>
+                                {v.isPublished ? "Published" : "Draft"}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right text-[#7A5C45]">{v.viewCount}</td>
+                            <td className="px-6 py-4 text-right space-x-3">
+                              <button onClick={() => handleVlogPublishToggle(v._id, v.isPublished)} className="text-[#B23A2A] hover:underline text-xs font-bold">
+                                {v.isPublished ? "Unpublish" : "Publish"}
+                              </button>
+                              <button onClick={() => { setEditingVlog(v); setShowVlogForm(true); }} className="text-[#6B3E26] hover:underline text-xs font-bold">
+                                Edit
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* VLOG CATEGORIES PANEL */}
+          {activeTab === "vlogCategories" && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold font-serif text-[#6B3E26]">Blog Categories Manager</h2>
+              
+              <form onSubmit={handleAddVlogCategory} className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-4" style={{ borderColor: "#E8D5BC" }}>
+                <h3 className="font-serif font-bold text-[#6B3E26] text-lg">Add Blog Category</h3>
+                <div className="flex flex-col gap-4">
+                  <input 
+                    type="text" placeholder="Category Name" value={vCatName} onChange={e => setVCatName(e.target.value)} required 
+                    className="px-4 py-3 rounded-xl border bg-white text-sm focus:outline-none focus:border-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}
+                  />
+                  <textarea 
+                    placeholder="Description" value={vCatDesc} onChange={e => setVCatDesc(e.target.value)} required 
+                    className="px-4 py-3 rounded-xl border bg-white text-sm focus:outline-none focus:border-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}
+                  />
+                </div>
+                <button type="submit" className="px-6 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full hover:bg-[#4e2c18] cursor-pointer transition-all">
+                  Create Category
+                </button>
+              </form>
+
+              <div className="bg-[#FDF6EC] border rounded-3xl overflow-hidden" style={{ borderColor: "#E8D5BC" }}>
+                <table className="w-full text-left text-sm border-collapse">
+                  <thead>
+                    <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
+                      <th className="px-6 py-3">Category Name</th>
+                      <th className="px-6 py-3">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vlogCategories.map(c => (
+                      <tr key={c._id} className="border-b hover:bg-[#F5E9DA]/20" style={{ borderColor: "#E8D5BC" }}>
+                        <td className="px-6 py-4 font-semibold text-[#6B3E26]">{c.cName}</td>
+                        <td className="px-6 py-4 text-[#2C1A0E]/80">{c.cDescription}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
           {/* 5. SETTINGS PANEL */}
           {activeTab === "settings" && (
             <div className="space-y-6">
