@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProductForm from "@/components/admin/product/ProductForm";
@@ -425,162 +426,45 @@ function AdminDashboardInner() {
     <div className="min-h-screen bg-[#FFFDF9] text-[#2C1A0E] flex flex-col font-sans">
       {/* Header */}
       <header className="border-b sticky top-0 bg-[#FFFDF9]/80 backdrop-blur-md z-50" style={{ borderColor: "#E8D5BC" }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold tracking-tight text-[#6B3E26] font-serif">
-            Roshini's <span className="font-sans text-lg font-light" style={{ color: "#7A5C45" }}>Admin</span>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg md:text-2xl font-bold tracking-tight text-[#6B3E26] font-serif">
+            Roshini's <span className="font-sans text-sm md:text-lg font-light" style={{ color: "#7A5C45" }}>Admin</span>
           </Link>
           <Link href="/" className="text-xs uppercase font-bold tracking-widest text-[#6B3E26] hover:underline flex items-center gap-1">
-            <span>👁️</span> View Storefront
+            <span>👁️</span> <span className="hidden sm:inline">View Storefront</span>
           </Link>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto w-full px-6 py-12 flex-1 flex flex-col lg:flex-row gap-8">
-        {/* Navigation Sidebar */}
-        <aside className="w-full lg:w-64 space-y-4">
-          <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-3" style={{ borderColor: "#E8D5BC" }}>
-            <h3 className="font-serif font-bold text-[#6B3E26] text-lg">Admin Control</h3>
-            <div className="flex flex-col gap-1.5 pt-2">
-              <button 
-                onClick={() => setActiveTab("overview")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "overview" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                📊 Dashboard Overview
-              </button>
-              <button 
-                onClick={() => setActiveTab("products")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "products" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                📦 Products Manager
-              </button>
-              <button 
-                onClick={() => setActiveTab("categories")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "categories" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🍃 Categories Manager
-              </button>
-              <button 
-                onClick={() => setActiveTab("orders")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "orders" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🛒 Orders Manager
-              </button>
-              <button 
-                onClick={() => setActiveTab("settings")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "settings" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                ⚙️ Payment Settings
-              </button>
-              <button 
-                onClick={() => setActiveTab("vlogs")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "vlogs" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                📝 Blogs Manager
-              </button>
-              <button 
-                onClick={() => setActiveTab("vlogCategories")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "vlogCategories" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🏷️ Blog Categories
-              </button>
-              <button 
-                onClick={() => setActiveTab("achievements")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "achievements" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🏆 Achievements
-              </button>
-              <button 
-                onClick={() => setActiveTab("sliders")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "sliders" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🖼️ Homepage Slider
-              </button>
-              {/* ── RBAC: User Management (super_admin + order_manager) ── */}
-              {(hasRole(["super_admin", "order_manager"])) && (
-                <button 
-                  onClick={() => setActiveTab("users")} 
-                  className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                    activeTab === "users" 
-                      ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                      : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                  }`}
-                >
-                  👥 User Management
-                </button>
-              )}
+      {/* ── Layout ── */}
+      <div className="max-w-7xl mx-auto w-full px-3 md:px-6 py-4 md:py-8 lg:py-12 flex-1 flex flex-row gap-4 lg:gap-8">
 
-              <button
-                onClick={() => setActiveTab("media")}
-                className={`block w-full text-left px-5 py-3 rounded-2xl text-xs font-bold transition-all ${
-                  activeTab === "media"
-                    ? "bg-[#6B3E26] text-[#F5E9DA] shadow-lg shadow-[#6B3E26]/20"
-                    : "text-[#6B3E26] hover:bg-[#F5E9DA]"
-                }`}
-              >
-                🖼️ Media
-              </button>
-              <button
-                onClick={() => setActiveTab("emailLogs")}
-                className={`block w-full text-left px-5 py-3 rounded-2xl text-xs font-bold transition-all ${
-                  activeTab === "emailLogs"
-                    ? "bg-[#6B3E26] text-[#F5E9DA] shadow-lg shadow-[#6B3E26]/20"
-                    : "text-[#6B3E26] hover:bg-[#F5E9DA]"
-                }`}
-              >
-                ✉️ Email Logs
-              </button>
-              <button 
-                onClick={() => setActiveTab("builder")} 
-                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
-                  activeTab === "builder" 
-                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
-                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
-                }`}
-              >
-                🏗️ Website Builder
-              </button>
+        {/* LEFT SIDEBAR — desktop only */}
+        <aside className="hidden lg:block w-64 flex-shrink-0">
+          <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-3 sticky top-24" style={{ borderColor: "#E8D5BC" }}>
+            <h3 className="font-serif font-bold text-[#6B3E26] text-lg mb-3">Admin Control</h3>
+            <div className="flex flex-col gap-1.5">
+              <button onClick={() => setActiveTab("overview")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "overview" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📊 Dashboard Overview</button>
+              <button onClick={() => setActiveTab("products")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "products" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📦 Products Manager</button>
+              <button onClick={() => setActiveTab("categories")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "categories" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🍃 Categories Manager</button>
+              <button onClick={() => setActiveTab("orders")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "orders" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🛒 Orders Manager</button>
+              <button onClick={() => setActiveTab("settings")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "settings" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>⚙️ Payment Settings</button>
+              <button onClick={() => setActiveTab("vlogs")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "vlogs" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📝 Blogs Manager</button>
+              <button onClick={() => setActiveTab("vlogCategories")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "vlogCategories" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏷️ Blog Categories</button>
+              <button onClick={() => setActiveTab("achievements")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "achievements" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏆 Achievements</button>
+              <button onClick={() => setActiveTab("sliders")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "sliders" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🖼️ Homepage Slider</button>
+              {hasRole(["super_admin", "order_manager"]) && (
+                <button onClick={() => setActiveTab("users")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "users" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>👥 User Management</button>
+              )}
+              <button onClick={() => setActiveTab("media")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "media" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🖼️ Media</button>
+              <button onClick={() => setActiveTab("emailLogs")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "emailLogs" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>✉️ Email Logs</button>
+              <button onClick={() => setActiveTab("builder")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "builder" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏗️ Website Builder</button>
             </div>
           </div>
         </aside>
 
         {/* Dynamic Panels */}
-        <main className="flex-1 space-y-6">
+        <main className="flex-1 space-y-6 pb-24 lg:pb-0">
           {formSuccess && (
             <div className="bg-green-50 text-green-600 text-sm p-4 rounded-xl border border-green-100">
               {formSuccess}
@@ -655,7 +539,7 @@ function AdminDashboardInner() {
                         </h3>
                         <p className="text-xs text-[#7A5C45]">The following products have fewer than 10 units in stock and need replenishment.</p>
                       </div>
-                      <div className="overflow-hidden rounded-2xl border bg-[#FFFDF9]" style={{ borderColor: "#E8D5BC" }}>
+                      <div className="overflow-x-auto rounded-2xl border bg-[#FFFDF9]" style={{ borderColor: "#E8D5BC" }}>
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
                             <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
@@ -728,7 +612,7 @@ function AdminDashboardInner() {
                   </div>
 
                   {/* Products Table */}
-                  <div className="bg-[#FDF6EC] border rounded-3xl overflow-hidden" style={{ borderColor: "#E8D5BC" }}>
+                  <div className="bg-[#FDF6EC] border rounded-3xl overflow-x-auto" style={{ borderColor: "#E8D5BC" }}>
                     <table className="w-full text-left text-sm border-collapse">
                       <thead>
                         <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
@@ -812,7 +696,7 @@ function AdminDashboardInner() {
               </form>
 
               {/* Categories Table */}
-              <div className="bg-[#FDF6EC] border rounded-3xl overflow-hidden" style={{ borderColor: "#E8D5BC" }}>
+              <div className="bg-[#FDF6EC] border rounded-3xl overflow-x-auto" style={{ borderColor: "#E8D5BC" }}>
                 <table className="w-full text-left text-sm border-collapse">
                   <thead>
                     <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
@@ -842,7 +726,7 @@ function AdminDashboardInner() {
               </div>
 
               {/* Orders Summary Table */}
-              <div className="bg-[#FDF6EC] border rounded-3xl overflow-hidden" style={{ borderColor: "#E8D5BC" }}>
+              <div className="bg-[#FDF6EC] border rounded-3xl overflow-x-auto" style={{ borderColor: "#E8D5BC" }}>
                 <table className="w-full text-left text-sm border-collapse">
                   <thead>
                     <tr className="border-b text-[10px] uppercase font-bold text-[#7A5C45] bg-[#FDF6EC]" style={{ borderColor: "#E8D5BC" }}>
@@ -1268,6 +1152,69 @@ function AdminDashboardInner() {
           )}
         </main>
       </div>
+
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} hasRole={hasRole} />
     </div>
+  );
+}
+
+// ── Portal Bottom Nav ── renders directly into document.body so fixed positioning is always relative to viewport
+type TabId = "overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder";
+
+function BottomNav({ activeTab, setActiveTab, hasRole }: {
+  activeTab: TabId;
+  setActiveTab: (tab: TabId) => void;
+  hasRole: (roles: string[]) => boolean;
+}) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+
+  const btn = (tab: TabId, emoji: string, label: string) => (
+    <button
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      style={{
+        display: "flex", flexDirection: "column", alignItems: "center",
+        gap: 2, padding: "6px 12px", borderRadius: 12,
+        fontSize: 10, fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+        background: activeTab === tab ? "#6B3E26" : "transparent",
+        color: activeTab === tab ? "#F5E9DA" : "#7A5C45",
+        border: "none", cursor: "pointer", transition: "all 0.15s",
+      }}
+    >
+      <span style={{ fontSize: 18 }}>{emoji}</span>{label}
+    </button>
+  );
+
+  return createPortal(
+    <nav style={{
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 9999,
+      background: "rgba(255,253,249,0.97)",
+      borderTop: "1px solid #E8D5BC",
+      display: "flex",
+      overflow: "hidden",
+    }} className="lg:hidden">
+      <div style={{ display: "flex", overflowX: "auto", gap: 4, padding: "6px 8px", scrollbarWidth: "none", width: "100%" }}>
+        {btn("overview", "📊", "Overview")}
+        {btn("products", "📦", "Products")}
+        {btn("categories", "🍃", "Categories")}
+        {btn("orders", "🛒", "Orders")}
+        {btn("settings", "⚙️", "Settings")}
+        {btn("vlogs", "📝", "Blogs")}
+        {btn("vlogCategories", "🏷️", "Blog Cats")}
+        {btn("achievements", "🏆", "Awards")}
+        {btn("sliders", "🖼️", "Sliders")}
+        {hasRole(["super_admin", "order_manager"]) && btn("users", "👥", "Users")}
+        {btn("media", "🖼️", "Media")}
+        {btn("emailLogs", "✉️", "Emails")}
+        {btn("builder", "🏗️", "Builder")}
+      </div>
+    </nav>,
+    document.body
   );
 }
