@@ -286,6 +286,50 @@ function UserDetailDrawer({ userId, onClose }: { userId: string; onClose: () => 
                 </div>
               ))}
             </div>
+
+            {/* Saved Addresses (Read-only) */}
+            {data.user.addresses && data.user.addresses.length > 0 && (
+              <div className="bg-[#FDF6EC] border rounded-2xl p-5 space-y-3" style={{ borderColor: "#E8D5BC" }}>
+                <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#7A5C45]">Saved Addresses ({data.user.addresses.length})</h4>
+                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                  {data.user.addresses.map((addr: any, idx: number) => (
+                    <div key={idx} className="bg-white border p-3 rounded-xl text-xs space-y-1" style={{ borderColor: "#E8D5BC" }}>
+                      <div className="flex justify-between items-start">
+                        <strong className="text-[#6B3E26]">{addr.type} {addr.isDefault && <span className="text-[9px] bg-[#6B3E26] text-white px-1.5 py-0.5 rounded-full ml-1">Default</span>}</strong>
+                        <span className="text-gray-500">{addr.mobileNumber}</span>
+                      </div>
+                      <p className="text-gray-600">{addr.addressLine1}, {addr.city}, {addr.state} {addr.pincode}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Preferences & Settings */}
+            <div className="bg-[#FDF6EC] border rounded-2xl p-5 space-y-4" style={{ borderColor: "#E8D5BC" }}>
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#7A5C45]">Account Preferences</h4>
+              
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-[#7A5C45] text-xs font-medium">Dietary Prefs</span>
+                <span className="font-semibold text-[#2C1A0E] text-xs">
+                  {data.user.preferences?.dietaryPreferences?.length > 0 ? data.user.preferences.dietaryPreferences.join(", ") : "None"}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-[#7A5C45] text-xs font-medium">Language</span>
+                <span className="font-semibold text-[#2C1A0E] text-xs">{data.user.preferences?.preferredLanguage || "English"}</span>
+              </div>
+              
+              <div className="pt-2 border-t" style={{ borderColor: "#E8D5BC" }}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A5C45] block mb-2">Communication Settings</span>
+                <div className="flex flex-wrap gap-2 text-[10px]">
+                  <Badge text={`Email: ${data.user.notifications?.email?.promotions ? "ON" : "OFF"}`} colorClass={data.user.notifications?.email?.promotions ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"} />
+                  <Badge text={`SMS: ${data.user.notifications?.sms?.orders ? "ON" : "OFF"}`} colorClass={data.user.notifications?.sms?.orders ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"} />
+                  <Badge text={`WhatsApp: ${data.user.notifications?.whatsapp?.orders ? "ON" : "OFF"}`} colorClass={data.user.notifications?.whatsapp?.orders ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"} />
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex-1 flex items-center justify-center text-sm text-red-500">User not found.</div>

@@ -140,6 +140,11 @@ export default function SliderManager() {
                   <td className="px-6 py-4">
                     <p className="font-bold text-[#6B3E26] text-base">{item.title || "No Title (Media Only)"}</p>
                     {item.subtitle && <p className="text-xs text-gray-500">{item.subtitle}</p>}
+                    {item.experimentId && (
+                      <div className="mt-2 text-[10px] bg-[#FFF5E5] border border-[#F2D6B3] text-[#A66E2B] px-2 py-1 rounded inline-block">
+                        🧪 A/B Test: <b>{item.experimentId}</b> (Variant: <b>{item.variant || '-'}</b>)
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="bg-gray-100 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">{item.type}</span>

@@ -7,7 +7,10 @@ import ProductForm from "@/components/admin/product/ProductForm";
 import VlogForm from "@/components/admin/vlogs/VlogForm";
 import AchievementManager from "@/components/admin/achievements/AchievementManager";
 import SliderManager from "@/components/admin/slider/SliderManager";
+import SectionManager from "@/components/admin/builder/SectionManager";
 import UserManagementPanel from "@/components/admin/users/UserManagementPanel";
+import MediaManagementPanel from "@/components/admin/MediaManagementPanel";
+import EmailLogsPanel from "@/components/admin/EmailLogsPanel";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import { API_URL, BACKEND_URL } from "@/lib/api";
 
@@ -79,10 +82,27 @@ function AdminDashboardInner() {
   // Auth guard — redirect to login if not an admin
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) login(token); // hydrate from storage
+    if (token) {
+      login(token); // hydrate from storage
+    } else {
+      router.push("/login");
+    }
   }, []); // eslint-disable-line
 
-  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users">("overview");
+  useEffect(() => {
+    if (!loadingAnalytics && !isAdmin) {
+       router.push("/");
+    }
+  }, [isAdmin, loadingAnalytics, router]);
+
+  const handleApiError = (status: number) => {
+    if (status === 401 || status === 403) {
+      logout();
+      router.push("/login");
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder">("overview");
   
   // Vlog states
   const [vlogs, setVlogs] = useState<any[]>([]);
@@ -150,9 +170,12 @@ function AdminDashboardInner() {
   // 2. Fetch Dynamic Catalog Lists
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_URL}/product/all-product`);
-      const json = await res.json();
-      setProducts(json.Products || []);
+      const res = await fetch(`${API_URL}/product/all-product`, { headers: { 'token': localStorage.getItem('token') || "" } });
+      handleApiError(res.status);
+      if (res.ok) {
+        const json = await res.json();
+        setProducts(json.Products || []);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -181,8 +204,11 @@ function AdminDashboardInner() {
   const fetchVlogs = async () => {
     try {
       const res = await fetch(`${API_URL}/admin/vlogs`, { headers: { 'token': localStorage.getItem('token') || "" }, credentials: "include" });
-      const json = await res.json();
-      setVlogs(json.vlogs || []);
+      handleApiError(res.status);
+      if (res.ok) {
+        const json = await res.json();
+        setVlogs(json.vlogs || []);
+      }
     } catch (e) { console.error(e); }
   };
 
@@ -501,6 +527,37 @@ function AdminDashboardInner() {
                   👥 User Management
                 </button>
               )}
+
+              <button
+                onClick={() => setActiveTab("media")}
+                className={`block w-full text-left px-5 py-3 rounded-2xl text-xs font-bold transition-all ${
+                  activeTab === "media"
+                    ? "bg-[#6B3E26] text-[#F5E9DA] shadow-lg shadow-[#6B3E26]/20"
+                    : "text-[#6B3E26] hover:bg-[#F5E9DA]"
+                }`}
+              >
+                🖼️ Media
+              </button>
+              <button
+                onClick={() => setActiveTab("emailLogs")}
+                className={`block w-full text-left px-5 py-3 rounded-2xl text-xs font-bold transition-all ${
+                  activeTab === "emailLogs"
+                    ? "bg-[#6B3E26] text-[#F5E9DA] shadow-lg shadow-[#6B3E26]/20"
+                    : "text-[#6B3E26] hover:bg-[#F5E9DA]"
+                }`}
+              >
+                ✉️ Email Logs
+              </button>
+              <button 
+                onClick={() => setActiveTab("builder")} 
+                className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${
+                  activeTab === "builder" 
+                    ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" 
+                    : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]"
+                }`}
+              >
+                🏗️ Website Builder
+              </button>
             </div>
           </div>
         </aside>
@@ -523,6 +580,11 @@ function AdminDashboardInner() {
             <SliderManager />
           )}
 
+          {/* WEBSITE BUILDER PANEL */}
+          {activeTab === "builder" && (
+            <SectionManager />
+          )}
+
           {/* USER MANAGEMENT PANEL */}
           {activeTab === "users" && (
             <UserManagementPanel />
@@ -530,6 +592,16 @@ function AdminDashboardInner() {
           {/* ACHIEVEMENTS PANEL */}
           {activeTab === "achievements" && (
             <AchievementManager />
+          )}
+
+          {/* MEDIA MANAGEMENT PANEL */}
+          {activeTab === "media" && (
+            <MediaManagementPanel />
+          )}
+
+          {/* EMAIL LOGS PANEL */}
+          {activeTab === "emailLogs" && (
+            <EmailLogsPanel />
           )}
 
           {/* 1. OVERVIEW PANEL */}

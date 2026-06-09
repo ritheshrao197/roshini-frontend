@@ -12,10 +12,15 @@ import { BACKEND_URL, trackSliderAnalytics } from "@/lib/api";
 
 export default function HeroSlider({ sliders }: { sliders: any[] }) {
   const [mounted, setMounted] = useState(false);
+  const [variant, setVariant] = useState<"A" | "B">("A");
   const trackedImpressions = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     setMounted(true);
+    // Read A/B testing variant from cookies
+    const match = document.cookie.match(new RegExp('(^| )ab_variant=([^;]+)'));
+    if (match) setVariant(match[2] as "A" | "B");
+
     // Track first slide on mount if exists
     if (sliders && sliders.length > 0) {
       trackImpression(sliders[0]._id);
@@ -215,7 +220,11 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
                       <Link 
                         href={primaryBtnLink} 
                         onClick={() => trackClick(slide._id)}
-                        className="px-8 py-3.5 bg-[#E6A817] text-[#6B3E26] font-bold rounded-full hover:bg-[#F5E9DA] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wide"
+                        className={`px-8 py-3.5 font-bold rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wide ${
+                          variant === "B"
+                            ? "bg-[#4CAF50] text-white hover:bg-[#388E3C]" // Variant B: Green CTA
+                            : "bg-[#E6A817] text-[#6B3E26] hover:bg-[#F5E9DA]" // Variant A: Gold CTA
+                        }`}
                       >
                         {primaryBtnText}
                       </Link>

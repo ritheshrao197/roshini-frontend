@@ -37,6 +37,7 @@ export default function Header() {
     } catch {}
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setUser(null);
     setMenuOpen(false);
     router.push("/login");
@@ -122,7 +123,7 @@ export default function Header() {
               {user ? (
                 <div className="hidden md:flex items-center gap-2">
                   <Link
-                    href="/dashboard"
+                    href="/account/dashboard"
                     className="text-xs font-semibold text-[#6B3E26] bg-[#F5E9DA] hover:bg-[#ede0cc] px-3 py-2 rounded-full transition-all"
                   >
                     Hi, {user.name?.split(" ")[0] || "User"} 👋
@@ -184,7 +185,7 @@ export default function Header() {
             ))}
             {user ? (
               <>
-                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-xl">
+                <Link href="/account/dashboard" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-xl">
                   My Orders
                 </Link>
                 {user.role === 1 && (

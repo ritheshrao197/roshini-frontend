@@ -22,6 +22,8 @@ export interface Slider {
   status: string;
   startDate?: string;
   endDate?: string;
+  experimentId?: string;
+  variant?: string;
   displayOrder: number;
 }
 
@@ -51,6 +53,8 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
     animationType: "fade",
     textAlignment: "left",
     status: "published",
+    experimentId: "",
+    variant: "",
     displayOrder: 0,
   });
 
@@ -78,6 +82,8 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
         textAlignment: initialData.textAlignment || "left",
         status: initialData.status || "published",
         displayOrder: initialData.displayOrder || 0,
+        experimentId: initialData.experimentId || "",
+        variant: initialData.variant || "",
         startDate: initialData.startDate ? new Date(initialData.startDate).toISOString().split('T')[0] : "",
         endDate: initialData.endDate ? new Date(initialData.endDate).toISOString().split('T')[0] : "",
       });
@@ -224,16 +230,16 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="block text-xs font-bold text-gray-700 uppercase">Title</label>
-              <input type="text" name="title" value={formData.title} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Award Winning Nutrition" />
+              <input type="text" name="title" value={formData.title || ""} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Award Winning Nutrition" />
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-gray-700 uppercase">Subtitle</label>
-              <input type="text" name="subtitle" value={formData.subtitle} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Best Product 2024" />
+              <input type="text" name="subtitle" value={formData.subtitle || ""} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Best Product 2024" />
             </div>
           </div>
           <div className="space-y-2">
             <label className="block text-xs font-bold text-gray-700 uppercase">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} className="w-full border rounded-xl p-3 h-20" />
+            <textarea name="description" value={formData.description || ""} onChange={handleChange} className="w-full border rounded-xl p-3 h-20" />
           </div>
         </div>
 
@@ -264,15 +270,15 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-gray-700 uppercase">Primary Link</label>
-              <input type="text" name="primaryButtonLink" value={formData.primaryButtonLink} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. /products/nutrimix" />
+              <input type="text" name="primaryButtonLink" value={formData.primaryButtonLink || ""} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. /products/nutrimix" />
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-gray-700 uppercase">Secondary Button Text</label>
-              <input type="text" name="secondaryButtonText" value={formData.secondaryButtonText} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Learn More" />
+              <input type="text" name="secondaryButtonText" value={formData.secondaryButtonText || ""} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. Learn More" />
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-gray-700 uppercase">Secondary Link</label>
-              <input type="text" name="secondaryButtonLink" value={formData.secondaryButtonLink} onChange={handleChange} className="w-full border rounded-xl p-3" />
+              <input type="text" name="secondaryButtonLink" value={formData.secondaryButtonLink || ""} onChange={handleChange} className="w-full border rounded-xl p-3" />
             </div>
           </div>
         </div>
@@ -296,6 +302,18 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
                 <option value="center">Center</option>
                 <option value="right">Right</option>
               </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 p-4 rounded-xl border" style={{ background: "linear-gradient(to right, #FDF6EC, #fcfcfc)", borderColor: "#E8D5BC" }}>
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-[#E6A817] uppercase tracking-wider">A/B Test Experiment ID</label>
+              <input type="text" name="experimentId" value={formData.experimentId} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. diwali-promo" />
+              <p className="text-[10px] text-gray-500">To A/B test, give multiple slides the exact same Experiment ID.</p>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-[#E6A817] uppercase tracking-wider">Variant Name</label>
+              <input type="text" name="variant" value={formData.variant} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. A" />
+              <p className="text-[10px] text-gray-500">Name this variant (e.g. 'A', 'B', 'C') for analytics tracking.</p>
             </div>
           </div>
           <div className="flex items-center gap-2 mt-4">

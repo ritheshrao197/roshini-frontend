@@ -29,10 +29,11 @@ export default function LoginPage() {
       if (data.error) {
         setError(data.error);
       } else {
-        // Success: Store token and user locally and redirect
+        // Success: Store token locally and in cookie for Next.js Middleware
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        router.push("/");
+        document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
+        router.push("/account/dashboard"); // Redirect to new dashboard
       }
     } catch (err) {
       setError("Failed to connect to backend server.");

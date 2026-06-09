@@ -248,6 +248,20 @@ export async function trackSliderAnalytics(sliderId: string, type: 'impression' 
   }
 }
 
+export async function getWebsiteSections(): Promise<any[]> {
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/sections`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Failed to fetch website sections");
+    const data = await res.json();
+    return data.sections || [];
+  } catch (err) {
+    console.error("getWebsiteSections Error:", err);
+    return [];
+  }
+}
+
 // ── Admin User Management API ─────────────────────────────────────────────
 
 function getAuthHeaders(): Record<string, string> {
@@ -265,6 +279,9 @@ export interface AdminUser {
   userRole: number;
   lastLogin?: string;
   createdAt: string;
+  addresses?: any[];
+  preferences?: any;
+  notifications?: any;
 }
 
 export interface UsersListResponse {

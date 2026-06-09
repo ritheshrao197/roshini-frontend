@@ -7,14 +7,33 @@ export default function NewsletterForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    // Simulate submission (wire to your email API later)
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitted(true);
-    setLoading(false);
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:8000/api/subscribers/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "Homepage" }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError(data.error || "Failed to subscribe. Please try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -34,10 +53,12 @@ export default function NewsletterForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-    >
+    <div className="max-w-md mx-auto">
+      {error && <p className="text-red-500 text-sm mb-2 text-center">{error}</p>}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row gap-3"
+      >
       <input
         type="email"
         value={email}
@@ -55,6 +76,7 @@ export default function NewsletterForm() {
       >
         {loading ? "Subscribing..." : "Subscribe Free"}
       </button>
-    </form>
+      </form>
+    </div>
   );
 }
