@@ -48,29 +48,6 @@ export const AuthContext = createContext<AuthContextValue>({
   hasRole: () => false,
 });
 
-// ── JWT decode (client-side, no verification — server always re-validates) ──
-
-function decodeJwt(token: string): AuthUser | null {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    const parsed = JSON.parse(json);
-    // Ensure token is not expired client-side
-    if (parsed.exp && parsed.exp * 1000 < Date.now()) {
-      return null;
-    }
-    return parsed as AuthUser;
-  } catch {
-    return null;
-  }
-}
-
 // ── Provider ───────────────────────────────────────────────────────────────
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -79,29 +56,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Hydrate from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem("token");
-    if (stored) {
-      const decoded = decodeJwt(stored);
-      if (decoded) {
-        setToken(stored);
-        setUser(decoded);
-      } else {
-        // Expired or invalid — clean up
-        localStorage.removeItem("token");
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
+      } catch {
+        localStorage.removeItem("user");
       }
     }
   }, []);
 
-  const login = useCallback((newToken: string) => {
-    const decoded = decodeJwt(newToken);
-    if (decoded) {
-      localStorage.setItem("token", newToken);
-      setToken(newToken);
-      setUser(decoded);
-    }
+  const login = useCallback((userData: any) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
   }, []);
 
   const logout = useCallback(() => {
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setToken(null);

@@ -42,11 +42,45 @@ export interface Category {
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 8000): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  
+  const fetchOptions: RequestInit = {
+    ...options,
+    signal: controller.signal,
+    credentials: options.credentials || "include", // Ensure cookies are always transferred
+  };
+
   try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
+    let response = await fetch(url, fetchOptions);
+    
+    if (response.status === 401) {
+      try {
+        const clone = response.clone();
+        const data = await clone.json();
+        if (data.code === "TOKEN_EXPIRED") {
+          // Call the refresh endpoint to rotate cookies
+          const refreshRes = await fetch(`${API_URL}/refresh-token`, {
+            method: "POST",
+            credentials: "include",
+          });
+          
+          if (refreshRes.ok) {
+            // Retrying original request with updated cookies
+            response = await fetch(url, fetchOptions);
+          } else {
+            // Refresh token expired/revoked, force signout and login redirect
+            if (typeof window !== "undefined") {
+              localStorage.removeItem("user");
+              localStorage.removeItem("token");
+              document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+              window.location.href = "/login";
+            }
+          }
+        }
+      } catch (err) {
+        console.error("[API Client] Error during silent token refresh:", err);
+      }
+    }
+    
     return response;
   } finally {
     clearTimeout(timeoutId);

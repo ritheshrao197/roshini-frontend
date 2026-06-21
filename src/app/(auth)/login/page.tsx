@@ -29,10 +29,8 @@ export default function LoginPage() {
       if (data.error) {
         setError(data.error);
       } else {
-        // Success: Store token locally and in cookie for Next.js Middleware
-        localStorage.setItem("token", data.token);
+        // Success: Store only user in localStorage. Cookies are set automatically by the backend.
         localStorage.setItem("user", JSON.stringify(data.user));
-        document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
         router.push("/"); // Redirect to home page
       }
     } catch (err) {

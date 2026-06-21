@@ -82,12 +82,17 @@ function AdminDashboardInner() {
 
   // Auth guard — redirect to login if not an admin
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      login(token); // hydrate from storage
-    } else {
-      router.push("/login");
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        const isAdminUser = parsed.role === 1 || parsed.userRole === 1 || (parsed.rbacRole && parsed.rbacRole !== "customer");
+        if (isAdminUser) {
+          return; // Authorized
+        }
+      } catch (e) {}
     }
+    router.push("/login");
   }, []); // eslint-disable-line
 
 
@@ -1164,7 +1169,7 @@ type TabId = "overview" | "products" | "categories" | "orders" | "settings" | "v
 function BottomNav({ activeTab, setActiveTab, hasRole }: {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
-  hasRole: (roles: string[]) => boolean;
+  hasRole: (roles: any[]) => boolean;
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
