@@ -309,7 +309,9 @@ ${inv.trackingId ? `<div class="row"><span>Tracking ID</span><strong>${inv.track
                       {order.allProduct.map((item, idx) => {
                         if (!item.id) return null;
                         const imageSrc = item.id.pImages && item.id.pImages.length > 0
-                          ? `${BACKEND_URL}/uploads/products/${encodeURIComponent(item.id.pImages[0])}`
+                          ? item.id.pImages[0].startsWith("http")
+                            ? item.id.pImages[0]
+                            : `${BACKEND_URL}/uploads/products/${encodeURIComponent(item.id.pImages[0])}`
                           : "/images/product-placeholder.jpg";
                         return (
                           <div key={idx} className="flex items-center justify-between gap-4 bg-white border p-3 rounded-xl" style={{ borderColor: "#E8D5BC" }}>

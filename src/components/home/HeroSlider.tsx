@@ -159,7 +159,9 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
             primaryBtnText = primaryBtnText || "Shop Now";
             primaryBtnLink = primaryBtnLink || `/products/${slide.productData.slug || slide.productData._id}`;
             if (!slide.desktopImage && slide.productData.pImages?.[0]) {
-              bgImage = `${BACKEND_URL}/uploads/products/${slide.productData.pImages[0]}`;
+              bgImage = slide.productData.pImages[0].startsWith("http")
+                ? slide.productData.pImages[0]
+                : `${BACKEND_URL}/uploads/products/${slide.productData.pImages[0]}`;
             }
           } else if (slide.type === "achievement" && slide.achievementData) {
             title = slide.title || slide.achievementData.title;

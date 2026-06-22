@@ -100,7 +100,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutM
 export async function getAllProducts(): Promise<Product[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/product/all-product`, {
-      next: { revalidate: 60 }, // Cache on server for 60 seconds
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch products");
     const data = await res.json();
@@ -114,7 +114,7 @@ export async function getAllProducts(): Promise<Product[]> {
 export async function getCategories(): Promise<Category[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/category/all-category`, {
-      next: { revalidate: 300 }, // Cache on server for 5 minutes
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch categories");
     const data = await res.json();
@@ -188,7 +188,7 @@ export interface Vlog {
 export async function getVlogs(page = 1, limit = 10): Promise<{ vlogs: Vlog[], totalPages: number }> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/vlogs?page=${page}&limit=${limit}`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch vlogs");
     const data = await res.json();
@@ -202,7 +202,7 @@ export async function getVlogs(page = 1, limit = 10): Promise<{ vlogs: Vlog[], t
 export async function getFeaturedVlogs(): Promise<Vlog[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/vlogs/featured`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch featured vlogs");
     const data = await res.json();
@@ -216,7 +216,7 @@ export async function getFeaturedVlogs(): Promise<Vlog[]> {
 export async function getVlogBySlug(slug: string): Promise<Vlog | null> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/vlogs/${slug}`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch vlog");
     const data = await res.json();
@@ -230,7 +230,7 @@ export async function getVlogBySlug(slug: string): Promise<Vlog | null> {
 export async function getVlogCategories(): Promise<VlogCategory[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/vlog-categories`, {
-      next: { revalidate: 300 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch vlog categories");
     const data = await res.json();
@@ -256,7 +256,7 @@ export interface Achievement {
 export async function getAchievements(): Promise<Achievement[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/achievements`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch achievements");
     const data = await res.json();
@@ -270,7 +270,7 @@ export async function getAchievements(): Promise<Achievement[]> {
 export async function getHeroSliders(): Promise<any[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/sliders/active`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch sliders");
     const data = await res.json();
@@ -296,7 +296,7 @@ export async function trackSliderAnalytics(sliderId: string, type: 'impression' 
 export async function getWebsiteSections(): Promise<any[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/sections`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch website sections");
     const data = await res.json();
