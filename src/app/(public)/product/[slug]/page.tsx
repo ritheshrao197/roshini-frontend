@@ -22,7 +22,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     openGraph: {
       title: product.pName,
       description: product.pDescription,
-      images: product.pImages?.length ? [{ url: product.pImages[0] }] : [],
+      images: product.image?.secureUrl 
+        ? [{ url: product.image.secureUrl }]
+        : product.images?.[0]?.secureUrl
+        ? [{ url: product.images[0].secureUrl }]
+        : product.pImages?.length 
+        ? [{ url: product.pImages[0] }] 
+        : [],
     },
   };
 }
@@ -35,11 +41,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const relatedProducts = await getRelatedProducts(product);
 
   const imageUrl =
-    product.pImages && product.pImages.length > 0
+    product.image?.secureUrl ||
+    product.images?.[0]?.secureUrl ||
+    (product.pImages && product.pImages.length > 0
       ? product.pImages[0].startsWith("http")
         ? product.pImages[0]
         : `${BACKEND_URL}/uploads/products/${encodeURIComponent(product.pImages[0])}`
-      : "/images/product-placeholder.jpg";
+      : "/images/product-placeholder.jpg");
 
   const isOutOfStock = product.pQuantity === 0;
   const categoryName = typeof product.pCategory === "object" ? product.pCategory.cName : "Homemade";
@@ -197,7 +205,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 productId={product._id}
                 price={product.pPrice}
                 pName={product.pName}
-                pImage={product.pImages?.[0]}
+                pImage={product.image?.secureUrl || product.images?.[0]?.secureUrl || product.pImages?.[0]}
                 disabled={isOutOfStock}
               />
               <Link

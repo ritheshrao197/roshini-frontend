@@ -114,8 +114,8 @@ export default async function HomePage() {
               <h4 className="font-bold text-sm uppercase tracking-wider mb-4 text-[#F5E9DA]">Contact</h4>
               <ul className="space-y-2 text-xs" style={{ color: "#ede0cc" }}>
                 <li>📍 Karnataka, India</li>
-                <li>📞 +91 99999 99999</li>
-                <li>✉️ hello@roshinishomeproducts.com</li>
+                <li>📞 +91 95918 96917</li>
+                <li>✉️roshinishomeproducts@gmail.com</li>
                 <li>🕐 Mon–Sat: 9am – 7pm IST</li>
               </ul>
             </div>

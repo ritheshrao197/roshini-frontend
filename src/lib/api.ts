@@ -4,6 +4,13 @@ export const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const API_URL = `${BACKEND_URL}/api`;
 
+export interface CloudinaryImage {
+  publicId: string;
+  secureUrl: string;
+  alt?: string;
+  isPrimary?: boolean;
+}
+
 export interface Product {
   _id: string;
   pName: string;
@@ -16,6 +23,8 @@ export interface Product {
     cName: string;
   } | string;
   pImages: string[];
+  image?: CloudinaryImage;
+  images?: CloudinaryImage[];
   pOffer: string | null;
   pRatingsReviews: any[];
   pStatus: string;
@@ -36,6 +45,7 @@ export interface Category {
   cName: string;
   cDescription: string;
   cImage: string;
+  image?: CloudinaryImage;
   cStatus: string;
 }
 
@@ -162,6 +172,7 @@ export interface Vlog {
   content: string;
   excerpt: string;
   thumbnail?: string;
+  image?: CloudinaryImage;
   vCategory: VlogCategory;
   vTags?: VlogTag[];
   isPublished: boolean;

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import ProductBasicInfo from "./ProductBasicInfo";
 import ProductPricing from "./ProductPricing";
-import ProductImages from "./ProductImages";
+import ProductImages, { GalleryImage } from "./ProductImages";
 import ProductIngredients from "./ProductIngredients";
 import ProductBenefits from "./ProductBenefits";
 import ProductSEO from "./ProductSEO";
@@ -57,8 +57,7 @@ export default function ProductForm({
   const [lowStockThreshold, setLowStockThreshold] = useState("10");
   const [productWeight, setProductWeight] = useState("");
 
-  const [pImage1, setPImage1] = useState<File | null>(null);
-  const [pImage2, setPImage2] = useState<File | null>(null);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
 
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [nutritionalInfo, setNutritionalInfo] = useState<{ [key: string]: string }>({});
@@ -161,7 +160,36 @@ export default function ProductForm({
       }
 
       setRelatedProducts(initialProduct.relatedProducts || []);
+
+      if (initialProduct.images && initialProduct.images.length > 0) {
+        setGalleryImages(
+          initialProduct.images.map((img: any) => ({
+            id: img.publicId || Math.random().toString(36).substring(7),
+            publicId: img.publicId,
+            secureUrl: img.secureUrl,
+            previewUrl: img.secureUrl,
+            alt: img.alt || "",
+            isPrimary: !!img.isPrimary,
+          }))
+        );
+      } else if (initialProduct.image && initialProduct.image.secureUrl) {
+        setGalleryImages([
+          {
+            id: initialProduct.image.publicId || "main",
+            publicId: initialProduct.image.publicId,
+            secureUrl: initialProduct.image.secureUrl,
+            previewUrl: initialProduct.image.secureUrl,
+            alt: initialProduct.image.alt || "",
+            isPrimary: true,
+          },
+        ]);
+      } else {
+        setGalleryImages([]);
+      }
+
       setHasChanges(false);
+    } else {
+      setGalleryImages([]);
     }
   }, [initialProduct]);
 
@@ -199,8 +227,7 @@ export default function ProductForm({
     pQuantity,
     lowStockThreshold,
     productWeight,
-    pImage1,
-    pImage2,
+    galleryImages,
     ingredients,
     nutritionalInfo,
     usageInstructions,
@@ -327,6 +354,11 @@ export default function ProductForm({
       return;
     }
 
+    if (galleryImages.length === 0) {
+      setFormError("Must provide at least 1 product image");
+      return;
+    }
+
     setIsSaving(true);
 
     try {
@@ -379,8 +411,31 @@ export default function ProductForm({
       formData.append("offerExpiryDate", offerExpiryDate);
       formData.append("relatedProducts", JSON.stringify(relatedProducts));
 
-      if (pImage1) formData.append("pImage1", pImage1);
-      if (pImage2) formData.append("pImage2", pImage2);
+      const filesToUpload: File[] = [];
+      const imagesMetadata: any[] = [];
+
+      galleryImages.forEach((img) => {
+        if (img.file) {
+          filesToUpload.push(img.file);
+          imagesMetadata.push({
+            fileIndex: filesToUpload.length - 1,
+            alt: img.alt,
+            isPrimary: img.isPrimary,
+          });
+        } else if (img.publicId && img.secureUrl) {
+          imagesMetadata.push({
+            publicId: img.publicId,
+            secureUrl: img.secureUrl,
+            alt: img.alt,
+            isPrimary: img.isPrimary,
+          });
+        }
+      });
+
+      filesToUpload.forEach((file) => {
+        formData.append("images", file);
+      });
+      formData.append("imagesMetadata", JSON.stringify(imagesMetadata));
 
       const endpoint = isEditMode
         ? `${API_URL}/product/edit-product`
@@ -559,10 +614,8 @@ export default function ProductForm({
 
         {activeTab === "media" && (
           <ProductImages
-            pImage1={pImage1}
-            setPImage1={setPImage1}
-            pImage2={pImage2}
-            setPImage2={setPImage2}
+            galleryImages={galleryImages}
+            setGalleryImages={setGalleryImages}
           />
         )}
 

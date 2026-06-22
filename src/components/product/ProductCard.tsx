@@ -9,11 +9,13 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const imageUrl =
-    product.pImages && product.pImages.length > 0
+    product.image?.secureUrl ||
+    product.images?.[0]?.secureUrl ||
+    (product.pImages && product.pImages.length > 0
       ? product.pImages[0].startsWith("http")
         ? product.pImages[0]
         : `${BACKEND_URL}/uploads/products/${encodeURIComponent(product.pImages[0])}`
-      : "/images/product-placeholder.jpg";
+      : "/images/product-placeholder.jpg");
 
   const productSlug =
     product.slug ||
