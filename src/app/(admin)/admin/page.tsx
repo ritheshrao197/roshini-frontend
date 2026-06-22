@@ -444,32 +444,8 @@ function AdminDashboardInner() {
       {/* ── Layout ── */}
       <div className="max-w-7xl mx-auto w-full px-3 md:px-6 py-4 md:py-8 lg:py-12 flex-1 flex flex-row gap-4 lg:gap-8">
 
-        {/* LEFT SIDEBAR — desktop only */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-3 sticky top-24" style={{ borderColor: "#E8D5BC" }}>
-            <h3 className="font-serif font-bold text-[#6B3E26] text-lg mb-3">Admin Control</h3>
-            <div className="flex flex-col gap-1.5">
-              <button onClick={() => setActiveTab("overview")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "overview" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📊 Dashboard Overview</button>
-              <button onClick={() => setActiveTab("products")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "products" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📦 Products Manager</button>
-              <button onClick={() => setActiveTab("categories")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "categories" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🍃 Categories Manager</button>
-              <button onClick={() => setActiveTab("orders")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "orders" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🛒 Orders Manager</button>
-              <button onClick={() => setActiveTab("settings")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "settings" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>⚙️ Payment Settings</button>
-              <button onClick={() => setActiveTab("vlogs")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "vlogs" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>📝 Blogs Manager</button>
-              <button onClick={() => setActiveTab("vlogCategories")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "vlogCategories" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏷️ Blog Categories</button>
-              <button onClick={() => setActiveTab("achievements")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "achievements" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏆 Achievements</button>
-              <button onClick={() => setActiveTab("sliders")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "sliders" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🖼️ Homepage Slider</button>
-              {hasRole(["super_admin", "order_manager"]) && (
-                <button onClick={() => setActiveTab("users")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "users" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>👥 User Management</button>
-              )}
-              <button onClick={() => setActiveTab("media")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "media" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🖼️ Media</button>
-              <button onClick={() => setActiveTab("emailLogs")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "emailLogs" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>✉️ Email Logs</button>
-              <button onClick={() => setActiveTab("builder")} className={`text-left text-sm py-2.5 px-4 rounded-xl transition-all cursor-pointer ${ activeTab === "builder" ? "bg-[#6B3E26] text-[#F5E9DA] font-semibold shadow-sm" : "text-[#7A5C45] hover:bg-[#F5E9DA] hover:text-[#6B3E26]" }`}>🏗️ Website Builder</button>
-            </div>
-          </div>
-        </aside>
-
         {/* Dynamic Panels */}
-        <main className="flex-1 space-y-6 pb-24 lg:pb-0">
+        <main className="flex-1 space-y-6 pb-24">
           {formSuccess && (
             <div className="bg-green-50 text-green-600 text-sm p-4 rounded-xl border border-green-100">
               {formSuccess}
@@ -1205,8 +1181,8 @@ function BottomNav({ activeTab, setActiveTab, hasRole }: {
       borderTop: "1px solid #E8D5BC",
       display: "flex",
       overflow: "hidden",
-    }} className="lg:hidden">
-      <div style={{ display: "flex", overflowX: "auto", gap: 4, padding: "6px 8px", scrollbarWidth: "none", width: "100%" }}>
+    }}>
+      <div style={{ display: "flex", overflowX: "auto", gap: 4, padding: "6px 8px", scrollbarWidth: "none", width: "100%" }} className="justify-start lg:justify-center">
         {btn("overview", "📊", "Overview")}
         {btn("products", "📦", "Products")}
         {btn("categories", "🍃", "Categories")}

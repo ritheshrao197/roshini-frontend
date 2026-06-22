@@ -248,13 +248,13 @@ export default function CartPage() {
                       : `${BACKEND_URL}/uploads/products/${encodeURIComponent(item.pImage)}`
                     : "/images/product-placeholder.jpg";
                   return (
-                    <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>
+                    <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>
                       {/* Product details preview */}
                       <div className="flex items-center gap-4">
                         <img 
                           src={imageSrc} 
                           alt={item.pName || "Product"} 
-                          className="h-16 w-16 object-cover rounded-xl border bg-white"
+                          className="h-16 w-16 object-cover rounded-xl border bg-white flex-shrink-0"
                           style={{ borderColor: "#E8D5BC" }}
                         />
                         <div>
@@ -264,7 +264,7 @@ export default function CartPage() {
                       </div>
 
                       {/* Quantity adjustments */}
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0" style={{ borderTopColor: "#E8D5BC" }}>
                         <div className="flex items-center gap-2 bg-white border rounded-xl px-2 py-1" style={{ borderColor: "#E8D5BC" }}>
                           <button 
                             type="button" 
