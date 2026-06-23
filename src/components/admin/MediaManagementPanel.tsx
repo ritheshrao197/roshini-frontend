@@ -29,6 +29,7 @@ export default function MediaManagementPanel() {
       const token = localStorage.getItem("token") || "";
       const res = await fetch(`${API_URL}/admin/media`, {
         headers: { token },
+        credentials: "include",
       });
       const json = await res.json();
       if (json.success) {
@@ -58,6 +59,7 @@ export default function MediaManagementPanel() {
           "Content-Type": "application/json",
           token,
         },
+        credentials: "include",
         body: JSON.stringify({ public_id }),
       });
       const json = await res.json();

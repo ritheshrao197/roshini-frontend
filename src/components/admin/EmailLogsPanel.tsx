@@ -23,6 +23,7 @@ export default function EmailLogsPanel() {
       const token = localStorage.getItem("token") || "";
       const res = await fetch(`${API_URL}/admin/email-logs`, {
         headers: { token },
+        credentials: "include",
       });
       const json = await res.json();
       if (json.success) {
