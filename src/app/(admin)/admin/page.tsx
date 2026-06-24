@@ -12,6 +12,7 @@ import SectionManager from "@/components/admin/builder/SectionManager";
 import UserManagementPanel from "@/components/admin/users/UserManagementPanel";
 import MediaManagementPanel from "@/components/admin/MediaManagementPanel";
 import EmailLogsPanel from "@/components/admin/EmailLogsPanel";
+import CouponManagementPanel from "@/components/admin/coupons/CouponManagementPanel";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import { API_URL, BACKEND_URL } from "@/lib/api";
 
@@ -107,7 +108,7 @@ function AdminDashboardInner() {
     }
   };
 
-  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder" | "coupons">("overview");
   
   // Vlog states
   const [vlogs, setVlogs] = useState<any[]>([]);
@@ -484,6 +485,11 @@ function AdminDashboardInner() {
           {/* EMAIL LOGS PANEL */}
           {activeTab === "emailLogs" && (
             <EmailLogsPanel />
+          )}
+
+          {/* COUPONS PANEL */}
+          {activeTab === "coupons" && (
+            <CouponManagementPanel />
           )}
 
           {/* 1. OVERVIEW PANEL */}
@@ -1142,7 +1148,7 @@ function AdminDashboardInner() {
 }
 
 // ── Portal Bottom Nav ── renders directly into document.body so fixed positioning is always relative to viewport
-type TabId = "overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder";
+type TabId = "overview" | "products" | "categories" | "orders" | "settings" | "vlogs" | "vlogCategories" | "achievements" | "sliders" | "users" | "media" | "emailLogs" | "builder" | "coupons";
 
 function BottomNav({ activeTab, setActiveTab, hasRole }: {
   activeTab: TabId;
@@ -1196,6 +1202,7 @@ function BottomNav({ activeTab, setActiveTab, hasRole }: {
         {btn("media", "🖼️", "Media")}
         {btn("emailLogs", "✉️", "Emails")}
         {btn("builder", "🏗️", "Builder")}
+        {btn("coupons", "🎟️", "Coupons")}
       </div>
     </nav>,
     document.body

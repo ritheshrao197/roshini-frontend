@@ -47,7 +47,7 @@ export default function Header() {
     <>
       {/* Top announcement bar */}
       <div className="bg-[#6B3E26] text-[#F5E9DA] text-center text-[11px] font-medium py-2 px-4 tracking-wide">
-        🌿 Free shipping on orders above ₹999 &nbsp;|&nbsp; Handcrafted in Karnataka &nbsp;|&nbsp; 100% Natural Ingredients
+        🌿 Free shipping on orders above ₹499 &nbsp;|&nbsp; Handcrafted in Karnataka &nbsp;|&nbsp; 100% Natural Ingredients
       </div>
 
       <header

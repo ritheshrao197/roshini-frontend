@@ -188,7 +188,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {/* Shipping info */}
             <div className="flex flex-col gap-2">
               {[
-                ["🚚", "Free shipping on orders above ₹999"],
+                ["🚚", "Free shipping on orders above ₹499"],
                 ["📦", "Fresh micro-batch packaging"],
                 ["↩️", "Easy returns within 7 days"],
               ].map(([icon, text]) => (

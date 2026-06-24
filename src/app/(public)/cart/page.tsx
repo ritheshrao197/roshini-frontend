@@ -29,7 +29,14 @@ export default function CartPage() {
   // Payment methods
   const [phonePeEnabled, setPhonePeEnabled] = useState(false);
   const [payUEnabled, setPayUEnabled] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<"phonepe" | "payu" | "">("")
+  const [selectedPayment, setSelectedPayment] = useState<"phonepe" | "payu" | "">("");
+
+  // Coupon state
+  const [couponCodeInput, setCouponCodeInput] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [couponMessage, setCouponMessage] = useState("");
+  const [couponErrorMsg, setCouponErrorMsg] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ discount: number, finalShippingCharge: number } | null>(null);
 
   const refreshCart = () => {
     setCartItems(getCart());
@@ -68,8 +75,59 @@ export default function CartPage() {
     return () => window.removeEventListener("cart_updated", refreshCart);
   }, []);
 
+  // Clear coupon if cart changes
+  useEffect(() => {
+    setAppliedCoupon(null);
+    setCouponMessage("");
+    setCouponErrorMsg("");
+  }, [cartItems]);
+
   const totalCost = getCartTotal();
-  const isFreeShipping = totalCost >= 1000;
+  const baseShippingCharge = totalCost >= 499 ? 0 : 99;
+  const finalShippingCharge = appliedCoupon ? appliedCoupon.finalShippingCharge : baseShippingCharge;
+  const discountAmount = appliedCoupon ? appliedCoupon.discount : 0;
+  const finalOrderAmount = Math.max(0, totalCost - discountAmount + finalShippingCharge);
+
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCouponErrorMsg("");
+    setCouponMessage("");
+    if (!couponCodeInput || cartItems.length === 0) return;
+
+    try {
+      const orderProducts = cartItems.map(item => ({
+        product: { pPrice: item.price }, 
+        quantity: item.quantitiy
+      }));
+      
+      const res = await fetch(`${API_URL}/coupon/apply`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "token": localStorage.getItem("token") || ""
+        },
+        body: JSON.stringify({ code: couponCodeInput, cartItems: orderProducts })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setAppliedCoupon({
+          discount: data.discount,
+          finalShippingCharge: data.finalShippingCharge
+        });
+        setCouponCode(couponCodeInput);
+        setCouponMessage(`Coupon applied! Savings: ₹${data.discount}`);
+      } else {
+        setCouponErrorMsg(data.error || "Invalid coupon");
+        setAppliedCoupon(null);
+        setCouponCode("");
+      }
+    } catch (err) {
+      setCouponErrorMsg("Failed to apply coupon");
+      setAppliedCoupon(null);
+      setCouponCode("");
+    }
+  };
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +148,6 @@ export default function CartPage() {
     }
 
     setIsSubmitting(true);
-    const orderAmount = totalCost + (isFreeShipping ? 0 : 99);
     const orderProducts = cartItems.map(item => ({
       id: item.id,
       quantitiy: item.quantitiy,
@@ -110,9 +167,9 @@ export default function CartPage() {
           body: JSON.stringify({
             allProduct: orderProducts,
             user,
-            amount: orderAmount,
             address,
             phone,
+            couponCode: appliedCoupon ? couponCode : undefined
           }),
         });
 
@@ -142,9 +199,9 @@ export default function CartPage() {
           body: JSON.stringify({
             allProduct: orderProducts,
             user,
-            amount: orderAmount,
             address,
             phone,
+            couponCode: appliedCoupon ? couponCode : undefined
           }),
         });
 
@@ -317,20 +374,46 @@ export default function CartPage() {
                     <span className="text-[#7A5C45]">Cart Subtotal</span>
                     <span className="font-semibold text-[#6B3E26]">₹{totalCost}</span>
                   </div>
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Coupon Discount</span>
+                      <span className="font-semibold">-₹{appliedCoupon.discount}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-[#7A5C45]">Shipping Delivery</span>
-                    <span className="font-medium">{isFreeShipping ? "FREE" : "₹99"}</span>
+                    <span className="font-medium">{finalShippingCharge === 0 ? "FREE" : `₹${finalShippingCharge}`}</span>
                   </div>
-                  {!isFreeShipping && (
+                  {finalShippingCharge > 0 && (
                     <div className="text-[10px] text-[#7A5C45] font-medium bg-white p-2.5 rounded-xl border border-dashed" style={{ borderColor: "#E8D5BC" }}>
-                      💡 Add <span className="font-bold text-[#6B3E26]">₹{1000 - totalCost}</span> more to unlock **FREE SHIPPING**!
+                      💡 Add <span className="font-bold text-[#6B3E26]">₹{499 - totalCost}</span> more to unlock **FREE SHIPPING**!
                     </div>
                   )}
                   <div className="border-t pt-3 flex justify-between text-base font-bold text-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}>
                     <span>Total Amount</span>
-                    <span className="font-serif text-lg">₹{totalCost + (isFreeShipping ? 0 : 99)}</span>
+                    <span className="font-serif text-lg">₹{finalOrderAmount}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Coupon Form */}
+              <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-4" style={{ borderColor: "#E8D5BC" }}>
+                <h3 className="font-serif font-bold text-[#6B3E26] text-lg">Apply Coupon</h3>
+                <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter Coupon Code"
+                    value={couponCodeInput}
+                    onChange={e => setCouponCodeInput(e.target.value.toUpperCase())}
+                    className="flex-1 px-4 py-2.5 rounded-xl border bg-white text-xs focus:outline-none focus:border-[#6B3E26] uppercase"
+                    style={{ borderColor: "#E8D5BC" }}
+                  />
+                  <button type="submit" disabled={!couponCodeInput} className="px-5 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-xl hover:bg-[#4e2c18] transition-all cursor-pointer disabled:opacity-50">
+                    Apply
+                  </button>
+                </form>
+                {couponMessage && <p className="text-green-600 text-xs font-semibold">{couponMessage}</p>}
+                {couponErrorMsg && <p className="text-red-500 text-xs font-semibold">{couponErrorMsg}</p>}
               </div>
 
               {/* Checkout Form */}
