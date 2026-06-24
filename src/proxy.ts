@@ -4,46 +4,28 @@ import type { NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect these routes
+  // Routes requiring any login (cookie OR localStorage — checked client-side)
+  // NOTE: /admin is intentionally NOT checked here because:
+  //   1. We use localStorage-based auth (not HTTP-only cookies) for the token
+  //   2. The cookie is cross-domain (Vercel → Render) and won't be set reliably
+  //   3. The admin/page.tsx has its own robust client-side auth guard
   const protectedRoutes = ["/account", "/checkout", "/wishlist"];
-  
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
-  const isAdminRoute = pathname.startsWith("/admin");
 
-  if (isProtected || isAdminRoute) {
-    // Check for the JWT token in cookies
+  if (isProtected) {
+    // Check for the JWT token in cookies (set by backend on same-domain setups)
     const token = request.cookies.get("token")?.value;
-    
+
     if (!token) {
-      // Not authenticated, redirect to login page
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
-
-    // If it's an admin route, verify role
-    if (isAdminRoute) {
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
-        const decoded = JSON.parse(payloadJson);
-
-        // Role 1 is Admin, or rbacRole is not customer
-        const isAdmin = decoded.role === 1 || decoded.userRole === 1 || (decoded.rbacRole && decoded.rbacRole !== "customer");
-        if (!isAdmin) {
-          // Unauthorized, redirect to home
-          return NextResponse.redirect(new URL("/", request.url));
-        }
-      } catch (e) {
-        // Token invalid, clear it and redirect to login
-        return NextResponse.redirect(new URL("/login", request.url));
-      }
-    }
   }
 
   // A/B Testing Variant Assignment
-  let response = NextResponse.next();
-  
+  const response = NextResponse.next();
+
   if (!request.cookies.has("ab_variant")) {
     const variant = Math.random() < 0.5 ? "A" : "B";
     response.cookies.set("ab_variant", variant, {
