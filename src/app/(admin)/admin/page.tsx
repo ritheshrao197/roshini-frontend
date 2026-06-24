@@ -79,8 +79,9 @@ export default function AdminDashboardPage() {
 function AdminDashboardInner() {
   const router = useRouter();
   const { isLoggedIn, isAdmin, hasRole, login, logout } = useAuth();
+  const [authChecked, setAuthChecked] = React.useState(false);
 
-  // Auth guard — redirect to login if not an admin
+  // Single unified auth guard — wait for localStorage hydration before redirecting
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -88,11 +89,13 @@ function AdminDashboardInner() {
         const parsed = JSON.parse(storedUser);
         const isAdminUser = parsed.role === 1 || parsed.userRole === 1 || (parsed.rbacRole && parsed.rbacRole !== "customer");
         if (isAdminUser) {
+          setAuthChecked(true);
           return; // Authorized
         }
       } catch (e) {}
     }
-    router.push("/login");
+    // Not authorized — redirect to login
+    router.push("/login?callbackUrl=%2Fadmin");
   }, []); // eslint-disable-line
 
 
@@ -100,7 +103,7 @@ function AdminDashboardInner() {
   const handleApiError = (status: number) => {
     if (status === 401 || status === 403) {
       logout();
-      router.push("/login");
+      router.push("/login?callbackUrl=%2Fadmin");
     }
   };
 
@@ -149,11 +152,8 @@ function AdminDashboardInner() {
   const [formSuccess, setFormSuccess] = useState("");
   const [formError, setFormError] = useState("");
 
-  useEffect(() => {
-    if (!loadingAnalytics && !isAdmin) {
-       router.push("/");
-    }
-  }, [isAdmin, loadingAnalytics, router]);
+  // Removed redundant isAdmin guard to prevent race-condition redirect loops.
+  // The localStorage-based guard above is the single source of truth on mount.
 
   // 1. Fetch Analytics Overview
   useEffect(() => {
