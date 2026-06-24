@@ -1,13 +1,30 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Product, BACKEND_URL } from "@/lib/api";
+import { getCart, addToCart, updateQuantity } from "@/lib/cart";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const [quantity, setQuantity] = useState(0);
+
+  const refreshCartQuantity = () => {
+    const cart = getCart();
+    const item = cart.find((i) => i.id === product._id);
+    setQuantity(item ? item.quantitiy : 0);
+  };
+
+  useEffect(() => {
+    refreshCartQuantity();
+    window.addEventListener("cart_updated", refreshCartQuantity);
+    return () => window.removeEventListener("cart_updated", refreshCartQuantity);
+  }, [product._id]);
+
   const imageUrl =
     product.image?.secureUrl ||
     product.images?.[0]?.secureUrl ||
@@ -131,24 +148,62 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-          <Link
-            href={`/product/${productSlug}`}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90"
-            style={{
-              background: isOutOfStock ? "#E8D5BC" : "#6B3E26",
-              color: isOutOfStock ? "#7A5C45" : "#F5E9DA",
-              pointerEvents: isOutOfStock ? "none" : "auto",
-            }}
-          >
-            {isOutOfStock ? "Sold Out" : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Add
-              </>
-            )}
-          </Link>
+          {isOutOfStock ? (
+            <span
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold select-none"
+              style={{ background: "#E8D5BC", color: "#7A5C45" }}
+            >
+              Sold Out
+            </span>
+          ) : quantity > 0 ? (
+            <div className="flex items-center bg-[#F5E9DA] rounded-xl border border-[#E8D5BC] overflow-hidden">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  updateQuantity(product._id, quantity - 1);
+                }}
+                className="px-2.5 py-1.5 text-sm font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none"
+              >
+                −
+              </button>
+              <span className="px-2 text-xs font-bold text-[#6B3E26] min-w-[20px] text-center select-none">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  updateQuantity(product._id, quantity + 1);
+                }}
+                className="px-2.5 py-1.5 text-sm font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none"
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const pImage = product.pImages?.[0] || product.image?.secureUrl || product.images?.[0]?.secureUrl || "/images/product-placeholder.jpg";
+                addToCart(product._id, product.pPrice, product.pName, pImage);
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all hover:opacity-90 cursor-pointer focus:outline-none"
+              style={{
+                background: "#6B3E26",
+                color: "#F5E9DA",
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Add
+            </button>
+          )}
         </div>
       </div>
     </div>

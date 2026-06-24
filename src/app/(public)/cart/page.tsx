@@ -258,27 +258,6 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-[#FFFDF9] text-[#2C1A0E] flex flex-col font-sans">
-      {/* Header */}
-      <header className="border-b sticky top-0 bg-[#FFFDF9]/80 backdrop-blur-md z-50" style={{ borderColor: "#E8D5BC" }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-[#6B3E26] flex items-center justify-center text-[#F5E9DA] font-bold text-lg shadow-sm group-hover:bg-[#4e2c18] transition-colors">
-              R
-            </div>
-            <div className="leading-none">
-              <div className="font-bold text-[#6B3E26] text-base tracking-tight" style={{ fontFamily: "'Merriweather', serif" }}>
-                Roshini's
-              </div>
-              <div className="text-[10px] text-[#7A5C45] font-medium tracking-widest uppercase">
-                Home Products
-              </div>
-            </div>
-          </Link>
-          <Link href="/shop" className="text-xs uppercase font-bold tracking-widest text-[#6B3E26] hover:underline">
-            Continue Shopping
-          </Link>
-        </div>
-      </header>
 
       <main className="max-w-7xl mx-auto w-full px-6 py-12 flex-1 flex flex-col lg:flex-row gap-8">
         {cartItems.length === 0 ? (
