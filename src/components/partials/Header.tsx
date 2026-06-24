@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getCartCount } from "@/lib/cart";
 import { API_URL } from "@/lib/api";
+import { useCustomization } from "@/lib/CustomizationContext";
 
 export default function Header() {
   const router = useRouter();
+  const { settings, logoUrl } = useCustomization();
+  const { shopName, shopSubtitle } = settings;
   const [user, setUser]         = useState<{ name: string; role: number } | null>(null);
   const [cartCount, setCartCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -62,15 +65,19 @@ export default function Header() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-              <div className="w-9 h-9 rounded-xl bg-[#6B3E26] flex items-center justify-center text-[#F5E9DA] font-bold text-lg shadow-sm group-hover:bg-[#4e2c18] transition-colors">
-                R
-              </div>
+              {logoUrl ? (
+                <img src={logoUrl} alt={shopName} className="h-16 w-50  object-cover shadow-sm" />
+              ) : (
+                <div className="w-9 h-9 rounded-xl bg-[#6B3E26] flex items-center justify-center text-[#F5E9DA] font-bold text-lg shadow-sm group-hover:bg-[#4e2c18] transition-colors">
+                  {shopName ? shopName.charAt(0).toUpperCase() : "R"}
+                </div>
+              )}
               <div className="leading-none">
                 <div className="font-bold text-[#6B3E26] text-base tracking-tight" style={{ fontFamily: "'Merriweather', serif" }}>
-                  Roshini's
+                  {shopName}
                 </div>
                 <div className="text-[10px] text-[#7A5C45] font-medium tracking-widest uppercase">
-                  Home Products
+                  {shopSubtitle}
                 </div>
               </div>
             </Link>

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { getAllProducts, getCategories } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
+import ShopSidebar from "@/components/shop/ShopSidebar";
 
 interface ShopPageProps {
   searchParams: Promise<{
@@ -99,98 +100,14 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
           {/* ── Sidebar ─────────────────────────────────── */}
-          <aside className="lg:col-span-1 space-y-5">
-
-            {/* Search */}
-            <div className="rounded-2xl p-5 space-y-3" style={{ background: "#FDF6EC", border: "1.5px solid #E8D5BC" }}>
-              <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: "#6B3E26" }}>Search</h3>
-              <form method="GET" action="/shop">
-                {category && <input type="hidden" name="category" value={category} />}
-                {sort && <input type="hidden" name="sort" value={sort} />}
-                <div className="relative">
-                  <input
-                    name="search"
-                    defaultValue={search || ""}
-                    type="text"
-                    placeholder="Search products..."
-                    className="input pr-10 text-sm"
-                  />
-                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A5C45] hover:text-[#6B3E26]">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/* Categories */}
-            <div className="rounded-2xl p-5 space-y-3" style={{ background: "#FDF6EC", border: "1.5px solid #E8D5BC" }}>
-              <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: "#6B3E26" }}>Categories</h3>
-              <div className="flex flex-col gap-1">
-                <Link
-                  href={`/shop${sort ? `?sort=${sort}` : ""}`}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all"
-                  style={{
-                    background: !category ? "#6B3E26" : "transparent",
-                    color: !category ? "#F5E9DA" : "#2C1A0E",
-                  }}
-                >
-                  <span>All Products</span>
-                  <span className="text-[10px] font-bold opacity-60">{products.length}</span>
-                </Link>
-                {categories.map((cat) => {
-                  const count = products.filter((p) => {
-                    const id = typeof p.pCategory === "object" ? p.pCategory._id : p.pCategory;
-                    return id === cat._id;
-                  }).length;
-                  const isActive = category === cat._id;
-                  return (
-                    <Link
-                      key={cat._id}
-                      href={`/shop?category=${cat._id}${sort ? `&sort=${sort}` : ""}`}
-                      className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-[#F5E9DA]"
-                      style={{
-                        background: isActive ? "#6B3E26" : "transparent",
-                        color: isActive ? "#F5E9DA" : "#2C1A0E",
-                      }}
-                    >
-                      <span>{cat.cName}</span>
-                      <span className="text-[10px] font-bold opacity-60">{count}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Sort */}
-            <div className="rounded-2xl p-5 space-y-3" style={{ background: "#FDF6EC", border: "1.5px solid #E8D5BC" }}>
-              <h3 className="font-bold text-sm uppercase tracking-wider" style={{ color: "#6B3E26" }}>Sort By</h3>
-              <div className="flex flex-col gap-1">
-                {SORT_OPTIONS.map((opt) => {
-                  const isActive = (sort || "") === opt.value;
-                  const href = `/shop?sort=${opt.value}${category ? `&category=${category}` : ""}${search ? `&search=${search}` : ""}`;
-                  return (
-                    <Link
-                      key={opt.value}
-                      href={href}
-                      className="px-3 py-2 rounded-xl text-sm font-medium transition-all hover:bg-[#F5E9DA]"
-                      style={{ color: isActive ? "#6B3E26" : "#7A5C45", fontWeight: isActive ? 700 : 400 }}
-                    >
-                      {isActive && "✓ "}{opt.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Trust card */}
-            <div className="rounded-2xl p-5 text-center space-y-2" style={{ background: "#6B3E26" }}>
-              <div className="text-3xl">🌿</div>
-              <p className="text-xs font-semibold" style={{ color: "#F5E9DA" }}>100% Natural</p>
-              <p className="text-[11px]" style={{ color: "#ede0cc" }}>No preservatives. No artificial additives. Ever.</p>
-            </div>
-          </aside>
+          <ShopSidebar
+            categories={categories}
+            products={products}
+            category={category}
+            sort={sort}
+            search={search}
+            filteredCount={filteredProducts.length}
+          />
 
           {/* ── Product Grid ─────────────────────────────── */}
           <div className="lg:col-span-3">

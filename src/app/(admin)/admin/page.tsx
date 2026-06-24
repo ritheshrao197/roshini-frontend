@@ -77,6 +77,41 @@ export default function AdminDashboardPage() {
   );
 }
 
+const THEME_PRESETS = [
+  {
+    name: "Warm Cinnamon (Default)",
+    primary: "#6B3E26",
+    dark: "#4e2c18",
+    light: "#8a5438",
+    cream: "#F5E9DA",
+    creamDark: "#ede0cc"
+  },
+  {
+    name: "Forest Sage (Organic Green)",
+    primary: "#2D5A27",
+    dark: "#1E3F19",
+    light: "#4B7C44",
+    cream: "#E8F0E6",
+    creamDark: "#D0DEC9"
+  },
+  {
+    name: "Saffron Gold (Royal Saffron)",
+    primary: "#D97706",
+    dark: "#92400E",
+    light: "#F59E0B",
+    cream: "#FEF3C7",
+    creamDark: "#FDE68A"
+  },
+  {
+    name: "Crimson Berry (Rich Traditional)",
+    primary: "#991B1B",
+    dark: "#7F1D1D",
+    light: "#DC2626",
+    cream: "#FEE2E2",
+    creamDark: "#FCA5A5"
+  }
+];
+
 function AdminDashboardInner() {
   const router = useRouter();
   const { isLoggedIn, isAdmin, hasRole, login, logout } = useAuth();
@@ -136,6 +171,20 @@ function AdminDashboardInner() {
   const [phonePeEnabled, setPhonePeEnabled] = useState(true);
   const [payUEnabled, setPayUEnabled] = useState(true);
   const [savingPayment, setSavingPayment] = useState(false);
+
+  // Customization branding/theme settings states
+  const [shopName, setShopName] = useState("Roshini's");
+  const [shopSubtitle, setShopSubtitle] = useState("Home Products");
+  const [themePrimaryColor, setThemePrimaryColor] = useState("#6B3E26");
+  const [themePrimaryColorDark, setThemePrimaryColorDark] = useState("#4e2c18");
+  const [themePrimaryColorLight, setThemePrimaryColorLight] = useState("#8a5438");
+  const [themeCreamColor, setThemeCreamColor] = useState("#F5E9DA");
+  const [themeCreamColorDark, setThemeCreamColorDark] = useState("#ede0cc");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [existingLogo, setExistingLogo] = useState<string | null>(null);
+  const [savingBranding, setSavingBranding] = useState(false);
+  const [settingsActiveSection, setSettingsActiveSection] = useState<"payment" | "branding">("payment");
 
   // Admin Order Drawer
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -272,6 +321,102 @@ function AdminDashboardInner() {
     }
   };
 
+  const fetchBrandingSettings = async () => {
+    try {
+      const res = await fetch(`${API_URL}/customize/get-settings`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.settings) {
+          setShopName(json.settings.shopName || "Roshini's");
+          setShopSubtitle(json.settings.shopSubtitle || "Home Products");
+          setThemePrimaryColor(json.settings.themePrimaryColor || "#6B3E26");
+          setThemePrimaryColorDark(json.settings.themePrimaryColorDark || "#4e2c18");
+          setThemePrimaryColorLight(json.settings.themePrimaryColorLight || "#8a5438");
+          setThemeCreamColor(json.settings.themeCreamColor || "#F5E9DA");
+          setThemeCreamColorDark(json.settings.themeCreamColorDark || "#ede0cc");
+          setExistingLogo(json.settings.logoImage || null);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load branding settings.");
+    }
+  };
+
+  const handleSaveBrandingSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingBranding(true);
+    setFormSuccess("");
+    setFormError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("shopName", shopName);
+      formData.append("shopSubtitle", shopSubtitle);
+      formData.append("themePrimaryColor", themePrimaryColor);
+      formData.append("themePrimaryColorDark", themePrimaryColorDark);
+      formData.append("themePrimaryColorLight", themePrimaryColorLight);
+      formData.append("themeCreamColor", themeCreamColor);
+      formData.append("themeCreamColorDark", themeCreamColorDark);
+      if (logoFile) {
+        formData.append("logo", logoFile);
+      }
+
+      const res = await fetch(`${API_URL}/customize/update-settings`, {
+        method: "POST",
+        headers: {
+          "token": localStorage.getItem("token") || "",
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setFormSuccess("Branding & theme settings saved successfully!");
+        setExistingLogo(data.settings.logoImage || null);
+        setLogoFile(null);
+        setLogoPreview(null);
+        window.location.reload();
+      } else {
+        setFormError(data.error || "Failed to update branding settings.");
+      }
+    } catch (err) {
+      setFormError("Failed to connect to backend server.");
+    } finally {
+      setSavingBranding(false);
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    if (!confirm("Are you sure you want to remove the logo and use the default text/letter icon?")) return;
+    setSavingBranding(true);
+    setFormSuccess("");
+    setFormError("");
+    try {
+      const res = await fetch(`${API_URL}/customize/update-settings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "token": localStorage.getItem("token") || "",
+        },
+        body: JSON.stringify({ removeLogo: true }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFormSuccess("Logo removed successfully!");
+        setExistingLogo(null);
+        setLogoFile(null);
+        setLogoPreview(null);
+        window.location.reload();
+      } else {
+        setFormError(data.error || "Failed to remove logo.");
+      }
+    } catch (err) {
+      setFormError("Failed to connect to backend server.");
+    } finally {
+      setSavingBranding(false);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === "products") {
       fetchProducts();
@@ -279,7 +424,10 @@ function AdminDashboardInner() {
     }
     if (activeTab === "categories") fetchCategories();
     if (activeTab === "orders") fetchOrders();
-    if (activeTab === "settings") fetchPaymentSettings();
+    if (activeTab === "settings") {
+      fetchPaymentSettings();
+      fetchBrandingSettings();
+    }
     if (activeTab === "vlogs") {
       fetchVlogs();
       fetchVlogCategories();
@@ -1056,87 +1204,368 @@ function AdminDashboardInner() {
           {/* 5. SETTINGS PANEL */}
           {activeTab === "settings" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold font-serif text-[#6B3E26]">Payment Settings</h2>
-              <p className="text-sm text-[#7A5C45]">Enable or disable payment gateways displayed at checkout. Changes take effect immediately for all customers.</p>
-
-              {/* PhonePe */}
-              <div className="bg-[#FDF6EC] border p-6 rounded-3xl flex items-center justify-between gap-6" style={{ borderColor: "#E8D5BC" }}>
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-[#5f259f]/10 flex items-center justify-center text-2xl">
-                    📱
-                  </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-[#6B3E26] text-base">PhonePe</h3>
-                    <p className="text-xs text-[#7A5C45] mt-0.5">UPI, Debit/Credit cards & Wallets via PhonePe gateway</p>
-                    <span className={`mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                      phonePeEnabled ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-500 border border-gray-200"
-                    }`}>
-                      {phonePeEnabled ? "ACTIVE" : "DISABLED"}
-                    </span>
-                  </div>
-                </div>
+              {/* Header and Sub-navigation */}
+              <div className="border-b border-[#E8D5BC] pb-2 flex gap-6">
                 <button
                   type="button"
-                  onClick={() => setPhonePeEnabled(prev => !prev)}
-                  className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-                    phonePeEnabled ? "bg-[#6B3E26]" : "bg-gray-300"
+                  onClick={() => { setSettingsActiveSection("payment"); setFormSuccess(""); setFormError(""); }}
+                  className={`pb-3 text-sm font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+                    settingsActiveSection === "payment"
+                      ? "border-[#6B3E26] text-[#6B3E26]"
+                      : "border-transparent text-[#7A5C45] hover:text-[#6B3E26]"
                   }`}
                 >
-                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                    phonePeEnabled ? "translate-x-8" : "translate-x-1"
-                  }`} />
+                  💳 Payment Gateways
                 </button>
-              </div>
-
-              {/* PayU */}
-              <div className="bg-[#FDF6EC] border p-6 rounded-3xl flex items-center justify-between gap-6" style={{ borderColor: "#E8D5BC" }}>
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-[#0065A4]/10 flex items-center justify-center text-2xl">
-                    💳
-                  </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-[#6B3E26] text-base">PayU</h3>
-                    <p className="text-xs text-[#7A5C45] mt-0.5">EMI, Net Banking, Wallets & all major cards via PayU</p>
-                    <span className={`mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                      payUEnabled ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-500 border border-gray-200"
-                    }`}>
-                      {payUEnabled ? "ACTIVE" : "DISABLED"}
-                    </span>
-                  </div>
-                </div>
                 <button
                   type="button"
-                  onClick={() => setPayUEnabled(prev => !prev)}
-                  className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-                    payUEnabled ? "bg-[#6B3E26]" : "bg-gray-300"
+                  onClick={() => { setSettingsActiveSection("branding"); setFormSuccess(""); setFormError(""); }}
+                  className={`pb-3 text-sm font-bold uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+                    settingsActiveSection === "branding"
+                      ? "border-[#6B3E26] text-[#6B3E26]"
+                      : "border-transparent text-[#7A5C45] hover:text-[#6B3E26]"
                   }`}
                 >
-                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                    payUEnabled ? "translate-x-8" : "translate-x-1"
-                  }`} />
+                  🎨 Branding & Theme
                 </button>
               </div>
 
-              {/* Save button */}
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={handleSavePaymentSettings}
-                  disabled={savingPayment}
-                  className="px-8 py-3 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full hover:bg-[#4e2c18] transition-all shadow-sm disabled:opacity-55 uppercase tracking-wider cursor-pointer"
-                >
-                  {savingPayment ? "Saving..." : "Save Payment Settings"}
-                </button>
-                {formSuccess && <span className="text-green-600 text-xs font-semibold">{formSuccess}</span>}
-                {formError && <span className="text-red-500 text-xs font-semibold">{formError}</span>}
-              </div>
+              {settingsActiveSection === "payment" && (
+                <div className="space-y-6">
+                  <h2 className="text-xl font-bold font-serif text-[#6B3E26]">Payment Settings</h2>
+                  <p className="text-sm text-[#7A5C45] -mt-2">Enable or disable payment gateways displayed at checkout. Changes take effect immediately for all customers.</p>
 
-              {/* Info note */}
-              <div className="bg-[#FDF6EC] border border-dashed p-4 rounded-2xl" style={{ borderColor: "#E8D5BC" }}>
-                <p className="text-xs text-[#7A5C45]">
-                  <span className="font-bold text-[#6B3E26]">Note:</span> PhonePe and PayU integrations require valid merchant API keys configured in the server environment variables (<code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PHONEPE_MERCHANT_ID</code>, <code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PAYU_KEY</code>, <code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PAYU_SALT</code>). Contact your developer to complete the gateway onboarding.
-                </p>
-              </div>
+                  {/* PhonePe */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl flex items-center justify-between gap-6" style={{ borderColor: "#E8D5BC" }}>
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-2xl bg-[#5f259f]/10 flex items-center justify-center text-2xl">
+                        📱
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-bold text-[#6B3E26] text-base">PhonePe</h3>
+                        <p className="text-xs text-[#7A5C45] mt-0.5">UPI, Debit/Credit cards & Wallets via PhonePe gateway</p>
+                        <span className={`mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          phonePeEnabled ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-500 border border-gray-200"
+                        }`}>
+                          {phonePeEnabled ? "ACTIVE" : "DISABLED"}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPhonePeEnabled(prev => !prev)}
+                      className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                        phonePeEnabled ? "bg-[#6B3E26]" : "bg-gray-300"
+                      }`}
+                    >
+                      <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                        phonePeEnabled ? "translate-x-8" : "translate-x-1"
+                      }`} />
+                    </button>
+                  </div>
+
+                  {/* PayU */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl flex items-center justify-between gap-6" style={{ borderColor: "#E8D5BC" }}>
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-2xl bg-[#0065A4]/10 flex items-center justify-center text-2xl">
+                        💳
+                      </div>
+                      <div>
+                        <h3 className="font-serif font-bold text-[#6B3E26] text-base">PayU</h3>
+                        <p className="text-xs text-[#7A5C45] mt-0.5">EMI, Net Banking, Wallets & all major cards via PayU</p>
+                        <span className={`mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          payUEnabled ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-500 border border-gray-200"
+                        }`}>
+                          {payUEnabled ? "ACTIVE" : "DISABLED"}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPayUEnabled(prev => !prev)}
+                      className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                        payUEnabled ? "bg-[#6B3E26]" : "bg-gray-300"
+                      }`}
+                    >
+                      <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                        payUEnabled ? "translate-x-8" : "translate-x-1"
+                      }`} />
+                    </button>
+                  </div>
+
+                  {/* Save button */}
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={handleSavePaymentSettings}
+                      disabled={savingPayment}
+                      className="px-8 py-3 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full hover:bg-[#4e2c18] transition-all shadow-sm disabled:opacity-55 uppercase tracking-wider cursor-pointer"
+                    >
+                      {savingPayment ? "Saving..." : "Save Payment Settings"}
+                    </button>
+                    {formSuccess && <span className="text-green-600 text-xs font-semibold">{formSuccess}</span>}
+                    {formError && <span className="text-red-500 text-xs font-semibold">{formError}</span>}
+                  </div>
+
+                  {/* Info note */}
+                  <div className="bg-[#FDF6EC] border border-dashed p-4 rounded-2xl" style={{ borderColor: "#E8D5BC" }}>
+                    <p className="text-xs text-[#7A5C45]">
+                      <span className="font-bold text-[#6B3E26]">Note:</span> PhonePe and PayU integrations require valid merchant API keys configured in the server environment variables (<code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PHONEPE_MERCHANT_ID</code>, <code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PAYU_KEY</code>, <code className="bg-[#F5E9DA] px-1.5 py-0.5 rounded text-[10px]">PAYU_SALT</code>). Contact your developer to complete the gateway onboarding.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {settingsActiveSection === "branding" && (
+                <form onSubmit={handleSaveBrandingSettings} className="space-y-8 max-w-4xl animate-fade-up">
+                  <div>
+                    <h2 className="text-xl font-bold font-serif text-[#6B3E26]">Shop Branding & Custom Theme</h2>
+                    <p className="text-sm text-[#7A5C45] mt-1">Upload your shop logo/icon and select dynamic colors. All changes apply globally in real-time across the client application.</p>
+                  </div>
+
+                  {/* Preset Palettes */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-4" style={{ borderColor: "#E8D5BC" }}>
+                    <h3 className="font-bold text-sm text-[#6B3E26] uppercase tracking-wider">Quick Preset Color Themes</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                      {THEME_PRESETS.map((preset) => (
+                        <button
+                          key={preset.name}
+                          type="button"
+                          onClick={() => {
+                            setThemePrimaryColor(preset.primary);
+                            setThemePrimaryColorDark(preset.dark);
+                            setThemePrimaryColorLight(preset.light);
+                            setThemeCreamColor(preset.cream);
+                            setThemeCreamColorDark(preset.creamDark);
+                          }}
+                          className="p-4 border rounded-2xl hover:border-[#6B3E26] transition-all bg-white text-left cursor-pointer flex flex-col gap-2"
+                          style={{ borderColor: "#E8D5BC" }}
+                        >
+                          <span className="text-[11px] font-bold text-[#2C1A0E]">{preset.name}</span>
+                          <div className="flex gap-1.5 mt-auto">
+                            <span className="w-4 h-4 rounded-full border border-gray-200" style={{ background: preset.primary }} />
+                            <span className="w-4 h-4 rounded-full border border-gray-200" style={{ background: preset.dark }} />
+                            <span className="w-4 h-4 rounded-full border border-gray-200" style={{ background: preset.light }} />
+                            <span className="w-4 h-4 rounded-full border border-gray-200" style={{ background: preset.cream }} />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Brand Information */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-4" style={{ borderColor: "#E8D5BC" }}>
+                    <h3 className="font-bold text-sm text-[#6B3E26] uppercase tracking-wider">Brand Information</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] uppercase">Shop Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={shopName}
+                          onChange={(e) => setShopName(e.target.value)}
+                          className="input"
+                          placeholder="e.g. Roshini's"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] uppercase">Shop Subtitle/Slogan</label>
+                        <input
+                          type="text"
+                          required
+                          value={shopSubtitle}
+                          onChange={(e) => setShopSubtitle(e.target.value)}
+                          className="input"
+                          placeholder="e.g. Home Products"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Logo Management */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-5" style={{ borderColor: "#E8D5BC" }}>
+                    <h3 className="font-bold text-sm text-[#6B3E26] uppercase tracking-wider">Logo & Icon</h3>
+                    <p className="text-xs text-[#7A5C45] -mt-3">Upload a clean square or landscape logo to display in the main header. Default text letter mark is used if no logo is uploaded.</p>
+
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                      <div className="h-20 w-20 rounded-2xl border-2 border-dashed border-[#E8D5BC] bg-white flex items-center justify-center overflow-hidden">
+                        {logoPreview ? (
+                          <img src={logoPreview} alt="Preview" className="h-full w-full object-cover" />
+                        ) : existingLogo ? (
+                          <img src={`${BACKEND_URL}/uploads/customize/${existingLogo}`} alt="Current Logo" className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-xs font-bold text-[#B0886A]">No Logo</span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setLogoFile(file);
+                              setLogoPreview(URL.createObjectURL(file));
+                            }
+                          }}
+                          className="text-xs text-[#7A5C45]"
+                        />
+                        <div className="flex gap-3">
+                          {logoPreview && (
+                            <button
+                              type="button"
+                              onClick={() => { setLogoFile(null); setLogoPreview(null); }}
+                              className="text-[10px] uppercase font-bold text-[#B23A2A] hover:underline cursor-pointer"
+                            >
+                              Cancel Selection
+                            </button>
+                          )}
+                          {existingLogo && (
+                            <button
+                              type="button"
+                              onClick={handleRemoveLogo}
+                              className="text-[10px] uppercase font-bold text-[#B23A2A] hover:underline cursor-pointer"
+                            >
+                              Remove Logo
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Theme Colors */}
+                  <div className="bg-[#FDF6EC] border p-6 rounded-3xl space-y-6" style={{ borderColor: "#E8D5BC" }}>
+                    <h3 className="font-bold text-sm text-[#6B3E26] uppercase tracking-wider">Dynamic Theme Colors</h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                      {/* Color 1 */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] flex justify-between uppercase">
+                          <span>Primary Brand Color</span>
+                          <span className="font-mono text-[10px] opacity-75">{themePrimaryColor}</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={themePrimaryColor}
+                            onChange={(e) => setThemePrimaryColor(e.target.value)}
+                            className="w-10 h-10 border rounded-lg overflow-hidden cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={themePrimaryColor}
+                            onChange={(e) => setThemePrimaryColor(e.target.value)}
+                            className="input text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Color 2 */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] flex justify-between uppercase">
+                          <span>Primary Brand Dark</span>
+                          <span className="font-mono text-[10px] opacity-75">{themePrimaryColorDark}</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={themePrimaryColorDark}
+                            onChange={(e) => setThemePrimaryColorDark(e.target.value)}
+                            className="w-10 h-10 border rounded-lg overflow-hidden cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={themePrimaryColorDark}
+                            onChange={(e) => setThemePrimaryColorDark(e.target.value)}
+                            className="input text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Color 3 */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] flex justify-between uppercase">
+                          <span>Primary Brand Light</span>
+                          <span className="font-mono text-[10px] opacity-75">{themePrimaryColorLight}</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={themePrimaryColorLight}
+                            onChange={(e) => setThemePrimaryColorLight(e.target.value)}
+                            className="w-10 h-10 border rounded-lg overflow-hidden cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={themePrimaryColorLight}
+                            onChange={(e) => setThemePrimaryColorLight(e.target.value)}
+                            className="input text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Color 4 */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] flex justify-between uppercase">
+                          <span>Cream / Base Tint</span>
+                          <span className="font-mono text-[10px] opacity-75">{themeCreamColor}</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={themeCreamColor}
+                            onChange={(e) => setThemeCreamColor(e.target.value)}
+                            className="w-10 h-10 border rounded-lg overflow-hidden cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={themeCreamColor}
+                            onChange={(e) => setThemeCreamColor(e.target.value)}
+                            className="input text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Color 5 */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-[#7A5C45] flex justify-between uppercase">
+                          <span>Cream Tint Dark (Borders)</span>
+                          <span className="font-mono text-[10px] opacity-75">{themeCreamColorDark}</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={themeCreamColorDark}
+                            onChange={(e) => setThemeCreamColorDark(e.target.value)}
+                            className="w-10 h-10 border rounded-lg overflow-hidden cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={themeCreamColorDark}
+                            onChange={(e) => setThemeCreamColorDark(e.target.value)}
+                            className="input text-xs"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Save button branding */}
+                  <div className="flex items-center gap-4 border-t pt-6" style={{ borderColor: "#E8D5BC" }}>
+                    <button
+                      type="submit"
+                      disabled={savingBranding}
+                      className="px-8 py-3 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full hover:bg-[#4e2c18] transition-all shadow-sm disabled:opacity-55 uppercase tracking-wider cursor-pointer"
+                    >
+                      {savingBranding ? "Saving..." : "Save Branding & Theme"}
+                    </button>
+                    {formSuccess && <span className="text-green-600 text-xs font-semibold">{formSuccess}</span>}
+                    {formError && <span className="text-red-500 text-xs font-semibold">{formError}</span>}
+                  </div>
+                </form>
+              )}
             </div>
           )}
         </main>

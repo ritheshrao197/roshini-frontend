@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import HeaderWrapper from "@/components/partials/HeaderWrapper";
+import { CustomizationProvider } from "@/lib/CustomizationContext";
 
 export const metadata: Metadata = {
   title: {
@@ -100,8 +101,10 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <HeaderWrapper />
-        {children}
+        <CustomizationProvider>
+          <HeaderWrapper />
+          {children}
+        </CustomizationProvider>
       </body>
     </html>
   );
