@@ -66,7 +66,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
               {logoUrl ? (
-                <img src={logoUrl} alt={shopName} className="h-16 w-50  object-cover shadow-sm" />
+                <img src={logoUrl} alt={shopName} className="h-16 w-50  object-cover " />
               ) : (
                 <div className="w-9 h-9 rounded-xl bg-[#6B3E26] flex items-center justify-center text-[#F5E9DA] font-bold text-lg shadow-sm group-hover:bg-[#4e2c18] transition-colors">
                   {shopName ? shopName.charAt(0).toUpperCase() : "R"}
