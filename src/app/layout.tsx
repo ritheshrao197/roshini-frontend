@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import HeaderWrapper from "@/components/partials/HeaderWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -98,7 +99,10 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <HeaderWrapper />
+        {children}
+      </body>
     </html>
   );
 }

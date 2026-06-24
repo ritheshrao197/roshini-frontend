@@ -8,15 +8,24 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    if (!token || !storedUser) {
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+    } else {
       try {
         setUser(JSON.parse(storedUser));
-      } catch (e) {}
+        setLoading(false);
+      } catch (e) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      }
     }
-  }, []);
+  }, [pathname, router]);
 
   const menuItems = [
     { label: "Dashboard", href: "/account/dashboard", icon: "📊" },
@@ -36,6 +45,16 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.push("/login");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] pt-24">
+        <div className="text-center text-[#6B3E26] font-semibold animate-pulse">
+          Verifying session details...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen py-10 pt-24" style={{ fontFamily: "'Poppins', sans-serif" }}>

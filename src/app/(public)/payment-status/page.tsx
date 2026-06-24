@@ -29,11 +29,11 @@ function PaymentStatusContent() {
     async function verifyPayment() {
       try {
         const res  = await fetch(
-          `${API_URL}/payment/phonepe-status?txnId=${txnId}`
+          `${API_URL}/payment/${txnId}/verify`
         );
         const data = await res.json();
 
-        if (data.success) {
+        if (data.success && data.status === "SUCCESS") {
           setState("success");
           setOrderId(String(data.orderId));
           setAmount(data.amount);
@@ -41,7 +41,7 @@ function PaymentStatusContent() {
           setTimeout(() => {
             router.push(`/order-success?id=${data.orderId}`);
           }, 3000);
-        } else if (data.status === "PAYMENT_PENDING" || data.status === "PAYMENT_INITIATED") {
+        } else if (data.status === "PENDING") {
           setState("pending");
           setMessage("Your payment is being processed. This may take a moment.");
         } else {

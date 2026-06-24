@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { getProductBySlug, getRelatedProducts, BACKEND_URL } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import Header from "@/components/partials/Header";
 import { Metadata } from "next";
 
 interface ProductPageProps {
@@ -71,8 +70,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      <Header />
 
       {/* Breadcrumb */}
       <div className="px-4 sm:px-6 py-3 border-b" style={{ borderColor: "#E8D5BC", background: "#FDF6EC" }}>

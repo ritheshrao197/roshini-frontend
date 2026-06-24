@@ -1,7 +1,6 @@
 import React from "react";
 import { getVlogs, getFeaturedVlogs } from "@/lib/api";
 import VlogCard from "@/components/vlogs/VlogCard";
-import Header from "@/components/partials/Header";
 
 export const metadata = {
   title: "Blogs | Roshini's Home Products",
@@ -19,7 +18,6 @@ export default async function BlogsPage({
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
-      <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
         {/* Header */}
       <div className="text-center mb-16">

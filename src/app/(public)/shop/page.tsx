@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { getAllProducts, getCategories } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
-import Header from "@/components/partials/Header";
 
 interface ShopPageProps {
   searchParams: Promise<{
@@ -54,8 +53,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
-      <Header />
-
       {/* Page Header Banner */}
       <div style={{ background: "linear-gradient(135deg, #6B3E26 0%, #8a5438 100%)" }} className="py-12 px-4 sm:px-6 text-center md:text-left">
         <div className="max-w-7xl mx-auto">

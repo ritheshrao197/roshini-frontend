@@ -2,7 +2,6 @@ import React from "react";
 import { getVlogBySlug } from "@/lib/api";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Header from "@/components/partials/Header";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -36,7 +35,6 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
-      <Header />
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full">
         {/* Header */}
       <header className="mb-12 text-center">

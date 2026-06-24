@@ -174,8 +174,10 @@ export default function CartPage() {
         });
 
         const data = await res.json();
-        if (data.error || !data.redirectUrl) {
-          setCheckoutError(data.error || "Failed to initiate PhonePe payment. Please try again.");
+        const redirectUrl = data.redirectUrl || data.action;
+
+        if (data.error || !redirectUrl) {
+          setCheckoutError(data.error || "Failed to initiate payment redirection");
           return;
         }
 
@@ -183,7 +185,7 @@ export default function CartPage() {
         clearCart();
         setCheckoutSuccess("Redirecting to PhonePe...");
         // Hard redirect to PhonePe hosted checkout
-        window.location.href = data.redirectUrl;
+        window.location.href = redirectUrl;
         return;
       }
 
@@ -219,17 +221,18 @@ export default function CartPage() {
         form.method = "POST";
         form.action = data.action;
 
+        const fieldsSource = data.additionalFields || data;
         const fields: Record<string, string> = {
-          key:         data.key,
-          txnid:       data.txnid,
-          amount:      data.amount,
-          productinfo: data.productinfo,
-          firstname:   data.firstname,
-          email:       data.email,
-          phone:       data.phone,
-          surl:        data.surl,
-          furl:        data.furl,
-          hash:        data.hash,
+          key:         fieldsSource.key,
+          txnid:       fieldsSource.txnid,
+          amount:      fieldsSource.amount,
+          productinfo: fieldsSource.productinfo,
+          firstname:   fieldsSource.firstname,
+          email:       fieldsSource.email,
+          phone:       fieldsSource.phone,
+          surl:        fieldsSource.surl,
+          furl:        fieldsSource.furl,
+          hash:        fieldsSource.hash,
         };
 
         Object.entries(fields).forEach(([name, value]) => {

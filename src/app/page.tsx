@@ -1,7 +1,6 @@
 import React from "react";
 import { getFeaturedProducts, getCategories, getAchievements, getHeroSliders, getWebsiteSections } from "@/lib/api";
 import HeroSlider from "@/components/home/HeroSlider";
-import Header from "@/components/partials/Header";
 import { 
   TrustBadgesSection, 
   CategoriesSection, 
@@ -41,8 +40,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'Poppins', sans-serif" }}>
-      <Header />
-
       {layout.map((section, index) => {
         switch (section.sectionId) {
           case "hero":

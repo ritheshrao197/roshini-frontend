@@ -8,8 +8,8 @@ export function proxy(request: NextRequest) {
   // NOTE: /admin is intentionally NOT checked here because:
   //   1. We use localStorage-based auth (not HTTP-only cookies) for the token
   //   2. The cookie is cross-domain (Vercel → Render) and won't be set reliably
-  //   3. The admin/page.tsx has its own robust client-side auth guard
-  const protectedRoutes = ["/account", "/checkout", "/wishlist"];
+  // Routes requiring login are handled client-side because token is stored in localStorage.
+  const protectedRoutes: string[] = [];
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtected) {
