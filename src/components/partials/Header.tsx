@@ -79,7 +79,7 @@ export default function Header() {
             <nav className="hidden md:flex items-center gap-1">
               {[
                 { href: "/shop", label: "Shop All" },
-                { href: "/shop?category=health-mixes", label: "Health Mixes" },
+                // { href: "/shop?category=health-mixes", label: "Health Mixes" },
                 { href: "/blogs", label: "Blogs" },
                 { href: "/#values", label: "Our Story" },
               ].map((item) => (
@@ -169,7 +169,7 @@ export default function Header() {
           <div className="md:hidden bg-white border-t border-[#E8D5BC] px-4 pb-4 pt-2 space-y-1 shadow-lg">
             {[
               { href: "/shop", label: "🛍️  Shop All" },
-              { href: "/shop?category=health-mixes", label: "💚  Health Mixes" },
+              // { href: "/shop?category=health-mixes", label: "💚  Health Mixes" },
               { href: "/blogs", label: "📝  Blogs" },
               { href: "/#values", label: "🏡  Our Story" },
               { href: "/cart", label: `🛒  Cart (${cartCount})` },
