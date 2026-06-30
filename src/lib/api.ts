@@ -28,6 +28,8 @@ export interface Product {
   pOffer: string | null;
   pRatingsReviews: any[];
   pStatus: string;
+  comparePrice?: number;
+  productWeight?: string;
   slug?: string;
   seoTitle?: string;
   seoDescription?: string;

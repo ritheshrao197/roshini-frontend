@@ -3,17 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getCart, updateQuantity, removeFromCart, clearCart, getCartTotal } from "@/lib/cart";
+import { getCart, updateQuantity, removeFromCart, clearCart, getCartTotal, CartItem } from "@/lib/cart";
 import { API_URL, BACKEND_URL } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
-
-interface CartItem {
-  id: string;
-  quantitiy: number;
-  price: number;
-  pName?: string;
-  pImage?: string;
-}
 
 export default function CartPage() {
   const router = useRouter();
