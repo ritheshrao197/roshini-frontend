@@ -82,8 +82,8 @@ function PaymentFailureContent() {
           <p>If money was deducted, it will be refunded within 5–7 business days.</p>
           <p>
             Need help?{" "}
-            <a href="mailto:support@roshinishomeproducts.com" className="text-[#6B3E26] font-semibold hover:underline">
-              support@roshinishomeproducts.com
+            <a href="mailto:support@roshinis.com" className="text-[#6B3E26] font-semibold hover:underline">
+              support@roshinis.com
             </a>
           </p>
           {txnId && (

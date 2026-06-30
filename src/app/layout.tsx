@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://roshinishomeproducts.com",
+    url: "https://roshinis.com",
     siteName: "Roshini's Home Products",
     images: [
       {
-        url: "https://roshinishomeproducts.com/images/og-default.jpg",
+        url: "https://roshinis.com/images/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Roshini's Home Products — Traditional Nutrition",

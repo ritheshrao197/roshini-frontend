@@ -133,7 +133,7 @@ export default function ProductSEO({
             <label className="text-xs font-bold text-accent-sage uppercase tracking-wider">Canonical URL (Optional)</label>
             <input
               type="url"
-              placeholder="https://roshinishomeproducts.com/product/..."
+              placeholder="https://roshinis.com/product/..."
               value={canonicalUrl}
               onChange={(e) => setCanonicalUrl(e.target.value)}
               className="px-4 py-3 rounded-xl border border-[#ece7d9] bg-background text-sm focus:outline-none focus:border-accent-green"
