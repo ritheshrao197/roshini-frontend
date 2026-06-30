@@ -1,5 +1,8 @@
 export interface CartItem {
   id: string;
+  productId: string;
+  variantId?: string;
+  variantName?: string;
   quantitiy: number; // Spelling matches backend database models exactly
   price: number;
   // Optional client-only helpers for rendering
@@ -13,13 +16,31 @@ export function getCart(): CartItem[] {
   return cart ? JSON.parse(cart) : [];
 }
 
-export function addToCart(id: string, price: number, pName?: string, pImage?: string, quantityVal: number = 1) {
+export function addToCart(
+  id: string,
+  price: number,
+  pName?: string,
+  pImage?: string,
+  quantityVal: number = 1,
+  productId?: string,
+  variantId?: string,
+  variantName?: string
+) {
   const cart = getCart();
   const existing = cart.find((item) => item.id === id);
   if (existing) {
     existing.quantitiy += quantityVal;
   } else {
-    cart.push({ id, price, quantitiy: quantityVal, pName, pImage });
+    cart.push({
+      id,
+      productId: productId || id,
+      variantId,
+      variantName,
+      price,
+      quantitiy: quantityVal,
+      pName,
+      pImage,
+    });
   }
   localStorage.setItem("cart", JSON.stringify(cart));
   // Dispatch custom event to notify components

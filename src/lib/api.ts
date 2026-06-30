@@ -37,7 +37,17 @@ export interface Product {
   featured?: boolean;
   rating?: number;
   reviewCount?: number;
+  pVariants?: ProductVariant[];
   createdAt: string;
+}
+
+export interface ProductVariant {
+  _id: string;
+  weight: string;
+  price: number;
+  comparePrice?: number;
+  quantity: number;
+  sku?: string;
 }
 
 export interface Category {

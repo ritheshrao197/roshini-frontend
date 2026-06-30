@@ -140,7 +140,9 @@ export default function CartPage() {
 
     setIsSubmitting(true);
     const orderProducts = cartItems.map(item => ({
-      id: item.id,
+      id: item.productId || item.id,
+      variantId: item.variantId || null,
+      variantName: item.variantName || null,
       quantitiy: item.quantitiy,
       price: item.price,
     }));
@@ -288,7 +290,10 @@ export default function CartPage() {
                           style={{ borderColor: "#E8D5BC" }}
                         />
                         <div>
-                          <h3 className="font-serif font-bold text-[#6B3E26] text-sm">{item.pName || "Wellness Blend"}</h3>
+                          <h3 className="font-serif font-bold text-[#6B3E26] text-sm">
+                            {item.pName || "Wellness Blend"}
+                            {item.variantName && ` (${item.variantName})`}
+                          </h3>
                           <span className="text-xs text-[#7A5C45] block mt-0.5">₹{item.price} each</span>
                         </div>
                       </div>

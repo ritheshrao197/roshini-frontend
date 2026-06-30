@@ -56,6 +56,7 @@ export default function ProductForm({
   const [pQuantity, setPQuantity] = useState("");
   const [lowStockThreshold, setLowStockThreshold] = useState("10");
   const [productWeight, setProductWeight] = useState("");
+  const [pVariants, setPVariants] = useState<any[]>([]);
 
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
 
@@ -113,6 +114,7 @@ export default function ProductForm({
       setPQuantity(String(initialProduct.pQuantity || ""));
       setLowStockThreshold(String(initialProduct.lowStockThreshold || "10"));
       setProductWeight(initialProduct.productWeight || "");
+      setPVariants(initialProduct.pVariants || []);
 
       setPCategory(initialProduct.pCategory?._id || initialProduct.pCategory || "");
       setIngredients(initialProduct.ingredients || []);
@@ -227,6 +229,7 @@ export default function ProductForm({
     pQuantity,
     lowStockThreshold,
     productWeight,
+    pVariants,
     galleryImages,
     ingredients,
     nutritionalInfo,
@@ -268,6 +271,7 @@ export default function ProductForm({
           setPPrice(parsed.pPrice || "");
           setPQuantity(parsed.pQuantity || "");
           setPCategory(parsed.pPCategory || "");
+          setPVariants(parsed.pVariants || []);
         } catch (e) {}
       }
     }
@@ -279,12 +283,12 @@ export default function ProductForm({
       const timer = setTimeout(() => {
         localStorage.setItem(
           "rhp_product_draft",
-          JSON.stringify({ pName, pDescription, pPrice, pQuantity, pPCategory: pCategory })
+          JSON.stringify({ pName, pDescription, pPrice, pQuantity, pPCategory: pCategory, pVariants })
         );
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [pName, pDescription, pPrice, pQuantity, pCategory, isEditMode, autoSaveEnabled]);
+  }, [pName, pDescription, pPrice, pQuantity, pCategory, pVariants, isEditMode, autoSaveEnabled]);
 
   // Duplicate / Clone Action
   const handleCloneProduct = () => {
@@ -379,6 +383,7 @@ export default function ProductForm({
       formData.append("pQuantity", pQuantity);
       formData.append("lowStockThreshold", lowStockThreshold);
       formData.append("productWeight", productWeight);
+      formData.append("pVariants", JSON.stringify(pVariants));
 
       formData.append("pCategory", pCategory);
       formData.append("ingredients", JSON.stringify(ingredients));
@@ -609,6 +614,8 @@ export default function ProductForm({
             setLowStockThreshold={setLowStockThreshold}
             productWeight={productWeight}
             setProductWeight={setProductWeight}
+            pVariants={pVariants}
+            setPVariants={setPVariants}
           />
         )}
 

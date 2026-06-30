@@ -9,6 +9,9 @@ interface AddToCartButtonProps {
   pName: string;
   pImage?: string;
   disabled?: boolean;
+  dbProductId?: string;
+  variantId?: string;
+  variantName?: string;
 }
 
 export default function AddToCartButton({
@@ -17,6 +20,9 @@ export default function AddToCartButton({
   pName,
   pImage,
   disabled,
+  dbProductId,
+  variantId,
+  variantName,
 }: AddToCartButtonProps) {
   const [quantity, setQuantity] = useState(0);
 
@@ -33,7 +39,7 @@ export default function AddToCartButton({
   }, [productId]);
 
   const handleAdd = () => {
-    addToCart(productId, price, pName, pImage, 1);
+    addToCart(productId, price, pName, pImage, 1, dbProductId, variantId, variantName);
   };
 
   if (disabled) {
