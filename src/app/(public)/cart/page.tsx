@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getCart, updateQuantity, removeFromCart, clearCart, getCartTotal } from "@/lib/cart";
 import { API_URL, BACKEND_URL } from "@/lib/api";
+import { useAuth } from "@/lib/useAuth";
 
 interface CartItem {
   id: string;
@@ -17,7 +18,7 @@ interface CartItem {
 export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [user, setUser] = useState<{ _id: string; name: string; email: string } | null>(null);
+  const { user } = useAuth();
   
   // Checkout inputs
   const [address, setAddress] = useState("");
@@ -46,17 +47,7 @@ export default function CartPage() {
     // 1. Initial Load
     refreshCart();
 
-    // 2. Auth Session Check
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.error("Session error.");
-      }
-    }
-
-    // 3. Load payment gateway settings
+    // 2. Load payment gateway settings
     fetch(`${API_URL}/customize/payment-settings`)
       .then(r => r.json())
       .then(json => {
@@ -500,7 +491,7 @@ export default function CartPage() {
                 ) : (
                   <div className="text-center p-4 bg-white border rounded-2xl space-y-3" style={{ borderColor: "#E8D5BC" }}>
                     <p className="text-xs text-[#7A5C45]">You must be logged in to complete your purchase.</p>
-                    <Link href="/login" className="px-5 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full inline-block hover:bg-[#4e2c18] transition-all w-full text-center">
+                    <Link href="/login?callbackUrl=/cart" className="px-5 py-2.5 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full inline-block hover:bg-[#4e2c18] transition-all w-full text-center">
                       Sign In to Checkout
                     </Link>
                   </div>

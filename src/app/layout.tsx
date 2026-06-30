@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import HeaderWrapper from "@/components/partials/HeaderWrapper";
 import { CustomizationProvider } from "@/lib/CustomizationContext";
+import { AuthProvider } from "@/lib/AuthContext";
 
 export const metadata: Metadata = {
   title: {
@@ -101,10 +102,12 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <CustomizationProvider>
-          <HeaderWrapper />
-          {children}
-        </CustomizationProvider>
+        <AuthProvider>
+          <CustomizationProvider>
+            <HeaderWrapper />
+            {children}
+          </CustomizationProvider>
+        </AuthProvider>
       </body>
     </html>
   );

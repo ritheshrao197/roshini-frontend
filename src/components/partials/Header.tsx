@@ -6,21 +6,18 @@ import { useRouter } from "next/navigation";
 import { getCartCount } from "@/lib/cart";
 import { API_URL } from "@/lib/api";
 import { useCustomization } from "@/lib/CustomizationContext";
+import { useAuth } from "@/lib/useAuth";
 
 export default function Header() {
   const router = useRouter();
   const { settings, logoUrl } = useCustomization();
   const { shopName, shopSubtitle } = settings;
-  const [user, setUser]         = useState<{ name: string; role: number } | null>(null);
+  const { user, logout } = useAuth();
   const [cartCount, setCartCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      try { setUser(JSON.parse(savedUser)); } catch {}
-    }
     setCartCount(getCartCount());
     const updateCount = () => setCartCount(getCartCount());
     window.addEventListener("cart_updated", updateCount);
@@ -38,10 +35,7 @@ export default function Header() {
     try {
       await fetch(`${API_URL}/signout`, { method: "POST", credentials: "include" });
     } catch {}
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    setUser(null);
+    logout();
     setMenuOpen(false);
     router.push("/login");
   };

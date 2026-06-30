@@ -22,6 +22,8 @@ export interface AuthUser {
   _id: string;
   role: number;       // legacy numeric role from JWT (userRole)
   rbacRole: RbacRole; // new string role from JWT
+  name?: string;
+  email?: string;
   iat: number;
   exp: number;
 }
@@ -31,7 +33,7 @@ interface AuthContextValue {
   token: string | null;
   isLoggedIn: boolean;
   isAdmin: boolean;
-  login: (token: string) => void;
+  login: (userData: any, userToken?: string) => void;
   logout: () => void;
   hasRole: (roles: RbacRole[]) => boolean;
 }
@@ -65,11 +67,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("user");
       }
     }
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
   }, []);
 
-  const login = useCallback((userData: any) => {
+  const login = useCallback((userData: any, userToken?: string) => {
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
+    if (userToken) {
+      localStorage.setItem("token", userToken);
+      setToken(userToken);
+    }
   }, []);
 
   const logout = useCallback(() => {

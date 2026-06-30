@@ -4,11 +4,13 @@ import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { API_URL } from "@/lib/api";
+import { useAuth } from "@/lib/useAuth";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,11 +35,7 @@ function LoginForm() {
       if (data.error) {
         setError(data.error);
       } else {
-        // Success: Store user and token in localStorage.
-        localStorage.setItem("user", JSON.stringify(data.user));
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
+        login(data.user, data.token);
         router.push(callbackUrl);
       }
     } catch (err) {
