@@ -114,7 +114,8 @@ export async function getAllProducts(): Promise<Product[]> {
     });
     if (!res.ok) throw new Error("Failed to fetch products");
     const data = await res.json();
-    return data.Products || [];
+    const products: Product[] = data.Products || [];
+    return products.filter((p) => p.pStatus === "Active");
   } catch (err) {
     console.error("getAllProducts Error:", err);
     return [];
