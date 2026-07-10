@@ -144,24 +144,31 @@ export async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const products = await getAllProducts();
-  // Match slug or match by Mongo ID as fallback
-  const found = products.find(
-    (p) => p.slug === slug || p._id === slug || p.pName.toLowerCase().replace(/[^a-z0-9]+/g, "-") === slug
-  );
-  return found || null;
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/product/slug/${slug}`, {
+      cache: "no-store"
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.product || null;
+  } catch (err) {
+    console.error("getProductBySlug Error:", err);
+    return null;
+  }
 }
 
 export async function getRelatedProducts(product: Product): Promise<Product[]> {
-  const products = await getAllProducts();
-  const catId = typeof product.pCategory === "object" ? product.pCategory._id : product.pCategory;
-  
-  return products
-    .filter((p) => {
-      const pCatId = typeof p.pCategory === "object" ? p.pCategory._id : p.pCategory;
-      return p._id !== product._id && pCatId === catId;
-    })
-    .slice(0, 4);
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/product/${product._id}/related`, {
+      cache: "no-store"
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.related || [];
+  } catch (err) {
+    console.error("getRelatedProducts Error:", err);
+    return [];
+  }
 }
 
 export interface VlogCategory {
