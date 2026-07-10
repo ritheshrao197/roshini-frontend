@@ -207,6 +207,19 @@ export default function CartPage() {
         form.action = data.action;
 
         const fieldsSource = data.additionalFields || data;
+
+        if (!fieldsSource.key) {
+          setCheckoutError("Payment gateway error: PayU Merchant Key is missing. Please check backend environment configuration.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (!fieldsSource.furl || fieldsSource.furl.startsWith("undefined")) {
+          setCheckoutError("Payment gateway error: Backend redirection URL (BACKEND_URL) is missing or misconfigured.");
+          setIsSubmitting(false);
+          return;
+        }
+
         const fields: Record<string, string> = {
           key:         fieldsSource.key,
           txnid:       fieldsSource.txnid,
