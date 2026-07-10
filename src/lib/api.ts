@@ -146,7 +146,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/product/slug/${slug}`, {
-      cache: "no-store"
+      next: { revalidate: 300 } // Cache for 5 minutes
     });
     if (!res.ok) return null;
     const data = await res.json();
@@ -160,7 +160,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 export async function getRelatedProducts(product: Product): Promise<Product[]> {
   try {
     const res = await fetchWithTimeout(`${API_URL}/product/${product._id}/related`, {
-      cache: "no-store"
+      next: { revalidate: 300 } // Cache for 5 minutes
     });
     if (!res.ok) return [];
     const data = await res.json();
