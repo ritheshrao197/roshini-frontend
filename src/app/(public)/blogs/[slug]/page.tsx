@@ -70,9 +70,12 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
         className="relative w-full h-[400px] md:h-[500px] mb-12 rounded-3xl overflow-hidden shadow-lg"
         style={{ border: "2px solid #E8D5BC" }}
       >
-        <img
+        <Image
           src={imageUrl}
           alt={vlog.title}
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 1024px"
           className="absolute inset-0 w-full h-full object-cover"
         />
       </div>

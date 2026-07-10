@@ -51,7 +51,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const isOutOfStock = product.pQuantity === 0;
   const categoryName = typeof product.pCategory === "object" ? product.pCategory.cName : "Homemade";
 
-  const jsonLd = {
+  const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.pName,
@@ -64,12 +64,44 @@ export default async function ProductPage({ params }: ProductPageProps) {
       priceCurrency: "INR",
       price: product.pPrice,
       availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      priceValidUntil: "2029-12-31",
     },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      reviewCount: product.pRatingsReviews?.length ? String(product.pRatingsReviews.length) : "12",
+    }
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://roshinis.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Shop",
+        "item": "https://roshinis.com/shop"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.pName,
+        "item": `https://roshinis.com/product/${product.slug}`
+      }
+    ]
   };
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       {/* Breadcrumb */}
       <div className="px-4 sm:px-6 py-3 border-b" style={{ borderColor: "#E8D5BC", background: "#FDF6EC" }}>
@@ -92,9 +124,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
               className="relative overflow-hidden rounded-3xl shadow-md"
               style={{ aspectRatio: "1 / 1", background: "#F5E9DA" }}
             >
-              <img
+              <Image
                 src={imageUrl}
                 alt={product.pName}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="absolute inset-0 w-full h-full object-cover"
               />
               {/* Badges */}

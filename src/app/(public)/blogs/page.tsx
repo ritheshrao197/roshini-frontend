@@ -1,6 +1,7 @@
 import React from "react";
 import { getVlogs, getFeaturedVlogs } from "@/lib/api";
 import VlogCard from "@/components/vlogs/VlogCard";
+import Link from "next/link";
 
 export const metadata = {
   title: "Blogs | Roshini's Home Products",
@@ -72,22 +73,22 @@ export default async function BlogsPage({
             {totalPages > 1 && (
               <div className="flex justify-center gap-4">
                 {page > 1 && (
-                  <a 
+                  <Link 
                     href={`/blogs?page=${page - 1}`}
                     className="px-6 py-2 rounded-full font-semibold transition-all hover:opacity-90"
                     style={{ background: "#F5E9DA", color: "#6B3E26", border: "1px solid #E8D5BC" }}
                   >
                     Previous
-                  </a>
+                  </Link>
                 )}
                 {page < totalPages && (
-                  <a 
+                  <Link 
                     href={`/blogs?page=${page + 1}`}
                     className="px-6 py-2 rounded-full font-semibold transition-all hover:opacity-90"
                     style={{ background: "#6B3E26", color: "#F5E9DA" }}
                   >
                     Next
-                  </a>
+                  </Link>
                 )}
               </div>
             )}

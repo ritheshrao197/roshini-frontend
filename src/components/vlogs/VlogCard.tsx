@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Vlog } from "@/lib/api";
+import Image from "next/image";
 
 interface VlogCardProps {
   vlog: Vlog;
@@ -24,11 +25,12 @@ export default function VlogCard({ vlog }: VlogCardProps) {
         className="block relative overflow-hidden h-48"
         style={{ background: "#F5E9DA" }}
       >
-        <img
+        <Image
           src={imageUrl}
           alt={vlog.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
         />
         
         {/* Category Badge */}
