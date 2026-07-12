@@ -203,11 +203,33 @@ export interface Vlog {
   featured?: boolean;
   createdAt: string;
   updatedAt: string;
+  status?: string;
+  likesCount?: number;
+  seoKeywords?: string[];
+  canonicalUrl?: string;
+  ogImage?: string;
+  gallery?: any[];
+  relatedProducts?: any[];
+  scheduledPublishDate?: string;
+  readingTime?: number;
 }
 
-export async function getVlogs(page = 1, limit = 10): Promise<{ vlogs: Vlog[], totalPages: number }> {
+export async function getVlogs(
+  page = 1, 
+  limit = 10, 
+  category = "", 
+  tag = "", 
+  search = "", 
+  sort = ""
+): Promise<{ vlogs: Vlog[], totalPages: number }> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/vlogs?page=${page}&limit=${limit}`, {
+    let url = `${API_URL}/vlogs?page=${page}&limit=${limit}`;
+    if (category) url += `&category=${encodeURIComponent(category)}`;
+    if (tag) url += `&tag=${encodeURIComponent(tag)}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (sort) url += `&sort=${encodeURIComponent(sort)}`;
+
+    const res = await fetchWithTimeout(url, {
       cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch vlogs");

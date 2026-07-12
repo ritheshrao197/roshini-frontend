@@ -9,8 +9,10 @@ import {
   BrandStorySection, 
   AchievementsSection, 
   TestimonialsSection, 
-  NewsletterSection 
+  NewsletterSection,
+  HealthHubSection
 } from "@/components/home/HomeSections";
+import { getVlogs } from "@/lib/api";
 
 export const revalidate = 60;
 
@@ -23,17 +25,21 @@ const DEFAULT_LAYOUT = [
   { sectionId: "brand_story" },
   { sectionId: "achievements" },
   { sectionId: "testimonials" },
+  { sectionId: "health_hub" },
   { sectionId: "newsletter" }
 ];
 
 export default async function HomePage() {
-  const [products, categories, achievements, heroSliders, apiSections] = await Promise.all([
+  const [products, categories, achievements, heroSliders, apiSections, vlogsData] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
     getAchievements(),
     getHeroSliders(),
-    getWebsiteSections()
+    getWebsiteSections(),
+    getVlogs(1, 15)
   ]);
+
+  const vlogs = vlogsData?.vlogs || [];
 
   // Use API sections if available, otherwise fallback to default structure
   const layout = apiSections && apiSections.length > 0 ? apiSections : DEFAULT_LAYOUT;
@@ -61,8 +67,7 @@ export default async function HomePage() {
           case "newsletter":
             return <NewsletterSection key={`newsletter-${index}`} />;
           case "health_hub":
-            // Placeholder for Health Hub (Vlogs) which we can implement in the future
-            return null; 
+            return <HealthHubSection key={`healthhub-${index}`} vlogs={vlogs} />;
           default:
             return null;
         }

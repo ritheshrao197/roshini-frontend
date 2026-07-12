@@ -52,6 +52,30 @@ export default function AdminVlogsPage() {
     }
   };
 
+  const handleDeleteVlog = async (id: string, title: string) => {
+    if (!window.confirm(`Are you sure you want to delete the vlog "${title}"?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/api/admin/vlogs/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+      });
+      if (res.ok) {
+        fetchVlogs();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete vlog");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred while deleting the vlog");
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -111,6 +135,12 @@ export default function AdminVlogsPage() {
                     <Link href={`/admin/vlogs/${vlog._id}/edit`} className="text-blue-600 hover:text-blue-900">
                       Edit
                     </Link>
+                    <button 
+                      onClick={() => handleDeleteVlog(vlog._id, vlog.title)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))

@@ -328,3 +328,141 @@ export function NewsletterSection() {
     </section>
   );
 }
+
+export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
+  if (!vlogs || vlogs.length === 0) return null;
+
+  // 1. Featured Blog
+  const featuredBlog = vlogs.find(v => v.featured) || vlogs[0];
+
+  // 2. Latest Blogs (exclude featured)
+  const latestBlogs = vlogs.filter(v => v._id !== featuredBlog._id).slice(0, 3);
+
+  // 3. Recipe of the Week
+  const recipeOfTheWeek = vlogs.find(v => 
+    v.vCategory?.cName?.toLowerCase() === "recipes" || 
+    v.vTags?.some((t: any) => t.name?.toLowerCase() === "recipes")
+  );
+
+  // 4. Health Tip of the Week
+  const healthTipOfTheWeek = vlogs.find(v => 
+    v.vCategory?.cName?.toLowerCase() === "health tips" || 
+    v.vTags?.some((t: any) => t.name?.toLowerCase() === "health tips")
+  );
+
+  // 5. Trending Blogs (sorted by viewCount desc)
+  const trendingBlogs = [...vlogs].sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0)).slice(0, 3);
+
+  const getBlogImageUrl = (v: any) => {
+    return v.thumbnail
+      ? v.thumbnail.startsWith("http")
+        ? v.thumbnail
+        : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${v.thumbnail}`
+      : "/images/blog-placeholder.jpg";
+  };
+
+  return (
+    <section className="py-16 md:py-20 px-4 sm:px-6 w-full max-w-7xl mx-auto" style={{ background: "#FFFDF9" }}>
+      <div className="text-center mb-16">
+        <span className="section-label" style={{ color: "#E6A817" }}>Roshini Wellness Hub</span>
+        <h2 className="text-3xl md:text-4xl font-bold mt-1" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+          Health Tips, Recipes & Guides
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Featured Blog & Latest */}
+        <div className="lg:col-span-2 space-y-8">
+          <div>
+            <h3 className="text-xl font-bold mb-4 font-serif text-[#6B3E26] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#B23A2A]" /> Featured Article
+            </h3>
+            <div className="group border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all bg-[#FFFDF9]" style={{ borderColor: "#E8D5BC" }}>
+              <div className="relative h-64 md:h-80 w-full overflow-hidden">
+                <img src={getBlogImageUrl(featuredBlog)} alt={featuredBlog.title} className="object-cover h-full w-full group-hover:scale-105 transition-all duration-300" />
+              </div>
+              <div className="p-6 space-y-3">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#B23A2A]">{featuredBlog.vCategory?.cName || "Wellness"}</span>
+                <h4 className="text-xl md:text-2xl font-bold font-serif text-[#6B3E26] group-hover:text-[#B23A2A] transition-colors">
+                  <Link href={`/blogs/${featuredBlog.slug}`}>{featuredBlog.title}</Link>
+                </h4>
+                <p className="text-sm text-[#7A5C45] line-clamp-3">{featuredBlog.excerpt}</p>
+                <div className="flex items-center gap-4 text-xs pt-2" style={{ color: "#7A5C45" }}>
+                  <span>{new Date(featuredBlog.publishDate || featuredBlog.createdAt).toLocaleDateString()}</span>
+                  <span>•</span>
+                  <span>{featuredBlog.readingTime || 1} min read</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Latest Blogs List */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold font-serif text-[#6B3E26] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#B23A2A]" /> Latest Blogs
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {latestBlogs.map((blog) => (
+                <div key={blog._id} className="group flex flex-col p-4 border rounded-2xl bg-[#FFFDF9] hover:-translate-y-1 transition-all" style={{ borderColor: "#E8D5BC" }}>
+                  <img src={getBlogImageUrl(blog)} alt={blog.title} className="h-32 w-full object-cover rounded-xl mb-3" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#B23A2A]">{blog.vCategory?.cName}</span>
+                  <h4 className="font-bold text-sm font-serif text-[#6B3E26] line-clamp-2 mt-1 group-hover:text-[#B23A2A]">
+                    <Link href={`/blogs/${blog.slug}`}>{blog.title}</Link>
+                  </h4>
+                  <span className="text-[10px] text-[#7A5C45] mt-auto pt-2">{blog.readingTime || 1} min read</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Weekly Highlights & Trending */}
+        <div className="space-y-8">
+          {/* Highlights */}
+          <div className="p-6 rounded-3xl space-y-6" style={{ background: "#FDF6EC", border: "1.5px solid #E8D5BC" }}>
+            <h3 className="text-lg font-bold font-serif text-[#6B3E26] border-b pb-2 flex items-center gap-2" style={{ borderColor: "#E8D5BC" }}>
+              🎯 Weekly Highlights
+            </h3>
+
+            {healthTipOfTheWeek && (
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold uppercase bg-[#4CAF50]/10 text-[#4CAF50] px-2 py-0.5 rounded-full">Health Tip of the Week</span>
+                <h4 className="font-bold text-sm text-[#6B3E26] hover:text-[#B23A2A]"><Link href={`/blogs/${healthTipOfTheWeek.slug}`}>{healthTipOfTheWeek.title}</Link></h4>
+                <p className="text-xs text-[#7A5C45] line-clamp-2">{healthTipOfTheWeek.excerpt}</p>
+              </div>
+            )}
+
+            {recipeOfTheWeek && (
+              <div className="space-y-2 pt-4 border-t" style={{ borderColor: "#E8D5BC" }}>
+                <span className="text-[10px] font-bold uppercase bg-[#E6A817]/10 text-[#E6A817] px-2 py-0.5 rounded-full">Recipe of the Week</span>
+                <h4 className="font-bold text-sm text-[#6B3E26] hover:text-[#B23A2A]"><Link href={`/blogs/${recipeOfTheWeek.slug}`}>{recipeOfTheWeek.title}</Link></h4>
+                <p className="text-xs text-[#7A5C45] line-clamp-2">{recipeOfTheWeek.excerpt}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Trending Articles */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold font-serif text-[#6B3E26] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#B23A2A]" /> Trending Articles
+            </h3>
+            <div className="divide-y divide-[#E8D5BC]">
+              {trendingBlogs.map((blog, idx) => (
+                <div key={blog._id} className="py-3 flex items-start gap-4 group">
+                  <span className="text-2xl font-bold text-[#E8D5BC] font-serif">0{idx + 1}</span>
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-[#B23A2A]">{blog.vCategory?.cName}</span>
+                    <h4 className="font-bold text-sm font-serif text-[#6B3E26] group-hover:text-[#B23A2A]">
+                      <Link href={`/blogs/${blog.slug}`}>{blog.title}</Link>
+                    </h4>
+                    <span className="text-[10px] text-[#7A5C45] block">{blog.viewCount} views</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

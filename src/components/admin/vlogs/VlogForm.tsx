@@ -24,13 +24,33 @@ export default function VlogForm({
     thumbnail: "",
     seoTitle: "",
     seoDescription: "",
+    seoKeywords: "",
+    canonicalUrl: "",
+    ogImage: "",
     featured: false,
     isPublished: false,
+    status: "Draft",
+    scheduledPublishDate: "",
     tags: ""
   });
+
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [retainedGallery, setRetainedGallery] = useState<any[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
+
+  useEffect(() => {
+    // Fetch all products to allow linking them
+    fetch(`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/api/product/all-product`)
+      .then(res => res.json())
+      .then(data => {
+        setAllProducts(data.Products || []);
+      })
+      .catch(err => console.error("Error loading products for linking:", err));
+  }, []);
 
   useEffect(() => {
     if (initialVlog) {
@@ -42,10 +62,19 @@ export default function VlogForm({
         thumbnail: initialVlog.thumbnail || "",
         seoTitle: initialVlog.seoTitle || "",
         seoDescription: initialVlog.seoDescription || "",
+        seoKeywords: initialVlog.seoKeywords ? initialVlog.seoKeywords.join(", ") : "",
+        canonicalUrl: initialVlog.canonicalUrl || "",
+        ogImage: initialVlog.ogImage || "",
         featured: initialVlog.featured || false,
         isPublished: initialVlog.isPublished || false,
+        status: initialVlog.status || (initialVlog.isPublished ? "Published" : "Draft"),
+        scheduledPublishDate: initialVlog.scheduledPublishDate 
+          ? new Date(initialVlog.scheduledPublishDate).toISOString().slice(0, 16) 
+          : "",
         tags: initialVlog.vTags ? initialVlog.vTags.map((t: any) => t.name).join(", ") : ""
       });
+      setSelectedProducts(initialVlog.relatedProducts ? initialVlog.relatedProducts.map((p: any) => typeof p === 'string' ? p : p._id) : []);
+      setRetainedGallery(initialVlog.gallery || []);
     }
   }, [initialVlog]);
 
@@ -73,13 +102,28 @@ export default function VlogForm({
       payload.append("seoTitle", formData.seoTitle);
       payload.append("seoDescription", formData.seoDescription);
       payload.append("featured", String(formData.featured));
-      payload.append("isPublished", String(formData.isPublished));
+      payload.append("isPublished", String(formData.status === "Published"));
+      payload.append("status", formData.status);
+      payload.append("scheduledPublishDate", formData.scheduledPublishDate);
+      payload.append("canonicalUrl", formData.canonicalUrl);
+      payload.append("ogImage", formData.ogImage);
       payload.append("tags", JSON.stringify(tagsArray));
-      
+      payload.append("relatedProducts", JSON.stringify(selectedProducts));
+      payload.append("currentGallery", JSON.stringify(retainedGallery));
+
+      const keywordsArray = formData.seoKeywords.split(',').map(k => k.trim()).filter(Boolean);
+      payload.append("seoKeywords", JSON.stringify(keywordsArray));
+
       if (thumbnailFile) {
         payload.append("thumbnail", thumbnailFile);
       } else {
         payload.append("thumbnail", formData.thumbnail);
+      }
+
+      if (galleryFiles && galleryFiles.length > 0) {
+        for (let i = 0; i < galleryFiles.length; i++) {
+          payload.append("gallery", galleryFiles[i]);
+        }
       }
 
       const url = isEditMode 
@@ -129,8 +173,8 @@ export default function VlogForm({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-2xl border" style={{ borderColor: "#E8D5BC" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2 col-span-2">
             <label className="block text-xs font-bold text-[#7A5C45] uppercase">Title *</label>
             <input required type="text" name="title" value={formData.title} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" />
           </div>
@@ -146,6 +190,22 @@ export default function VlogForm({
           </div>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Status</label>
+            <select name="status" value={formData.status} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]">
+              <option value="Draft">Draft</option>
+              <option value="Published">Published</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Scheduled Publish Date</label>
+            <input type="datetime-local" name="scheduledPublishDate" value={formData.scheduledPublishDate} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" />
+          </div>
+        </div>
+
         <div className="space-y-2">
           <label className="block text-xs font-bold text-[#7A5C45] uppercase">Excerpt *</label>
           <textarea required name="excerpt" value={formData.excerpt} onChange={handleChange} className="w-full border rounded-xl p-3 h-20 focus:outline-none focus:border-[#6B3E26]" />
@@ -156,28 +216,61 @@ export default function VlogForm({
           <textarea required name="content" value={formData.content} onChange={handleChange} className="w-full border rounded-xl p-3 h-48 font-mono text-sm focus:outline-none focus:border-[#6B3E26]" />
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-xs font-bold text-[#7A5C45] uppercase">Thumbnail Image</label>
-          <input 
-            type="file" 
-            accept="image/*"
-            onChange={(e) => {
-              if (e.target.files && e.target.files[0]) {
-                setThumbnailFile(e.target.files[0]);
-              }
-            }} 
-            className="w-full border rounded-xl p-2.5 focus:outline-none focus:border-[#6B3E26] text-sm bg-white" 
-          />
-          {formData.thumbnail && !thumbnailFile && (
-            <div className="mt-2 text-xs text-gray-500 flex items-center gap-2">
-              <img 
-                src={formData.thumbnail.startsWith("http") ? formData.thumbnail : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${formData.thumbnail}`} 
-                alt="Current thumbnail" 
-                className="w-10 h-10 object-cover rounded-md border" 
-              />
-              <span>Current image uploaded</span>
-            </div>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Thumbnail Image</label>
+            <input 
+              type="file" 
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setThumbnailFile(e.target.files[0]);
+                }
+              }} 
+              className="w-full border rounded-xl p-2.5 focus:outline-none focus:border-[#6B3E26] text-sm bg-white" 
+            />
+            {formData.thumbnail && !thumbnailFile && (
+              <div className="mt-2 text-xs text-gray-500 flex items-center gap-2">
+                <img 
+                  src={formData.thumbnail.startsWith("http") ? formData.thumbnail : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${formData.thumbnail}`} 
+                  alt="Current thumbnail" 
+                  className="w-10 h-10 object-cover rounded-md border" 
+                />
+                <span>Current thumbnail uploaded</span>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Gallery Images</label>
+            <input 
+              type="file" 
+              multiple
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files) {
+                  setGalleryFiles(Array.from(e.target.files));
+                }
+              }} 
+              className="w-full border rounded-xl p-2.5 focus:outline-none focus:border-[#6B3E26] text-sm bg-white" 
+            />
+            {retainedGallery.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {retainedGallery.map((img, i) => (
+                  <div key={i} className="relative group border rounded-lg overflow-hidden h-12 w-12">
+                    <img src={img.secureUrl.startsWith("http") ? img.secureUrl : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${img.secureUrl}`} alt={img.alt || ""} className="object-cover h-full w-full" />
+                    <button 
+                      type="button" 
+                      onClick={() => setRetainedGallery(retainedGallery.filter((_, idx) => idx !== i))} 
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-0.5 text-[8px] leading-none hover:bg-red-700"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -191,19 +284,54 @@ export default function VlogForm({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-xs font-bold text-[#7A5C45] uppercase">Tags (comma separated)</label>
-          <input type="text" name="tags" value={formData.tags} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" placeholder="Healthy, Sugar Free, Diet" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">SEO Keywords (comma separated)</label>
+            <input type="text" name="seoKeywords" value={formData.seoKeywords} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" placeholder="millet, organic" />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Canonical URL</label>
+            <input type="text" name="canonicalUrl" value={formData.canonicalUrl} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" placeholder="https://..." />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Open Graph (OG) Image URL</label>
+            <input type="text" name="ogImage" value={formData.ogImage} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Tags (comma separated)</label>
+            <input type="text" name="tags" value={formData.tags} onChange={handleChange} className="w-full border rounded-xl p-3 focus:outline-none focus:border-[#6B3E26]" placeholder="Healthy, Sugar Free, Diet" />
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-[#7A5C45] uppercase">Linked Roshini Products</label>
+            <div className="border rounded-xl p-3 max-h-36 overflow-y-auto space-y-2 bg-white">
+              {allProducts.map(prod => (
+                <label key={prod._id} className="flex items-center gap-2 text-sm text-[#6B3E26] cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={selectedProducts.includes(prod._id)} 
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedProducts([...selectedProducts, prod._id]);
+                      } else {
+                        setSelectedProducts(selectedProducts.filter(id => id !== prod._id));
+                      }
+                    }} 
+                  />
+                  <span>{prod.pName}</span>
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="flex gap-6 border-t pt-4" style={{ borderColor: "#E8D5BC" }}>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" name="featured" checked={formData.featured} onChange={handleChange} className="w-4 h-4" />
             <span className="text-sm font-bold text-[#6B3E26]">Featured Blog</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" name="isPublished" checked={formData.isPublished} onChange={handleChange} className="w-4 h-4" />
-            <span className="text-sm font-bold text-[#6B3E26]">{isEditMode ? "Published" : "Publish Immediately"}</span>
           </label>
         </div>
 
