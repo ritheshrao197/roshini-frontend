@@ -514,6 +514,60 @@ function AdminDashboardInner() {
     } catch (err) { console.error(err); }
   };
 
+  const handleVlogStatusChange = async (id: string, status: "Draft" | "Archived") => {
+    try {
+      const res = await fetch(`${API_URL}/admin/vlogs/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token") || ""
+        },
+        credentials: "include",
+        body: JSON.stringify({ status })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setFormSuccess(`Blog moved to ${status.toLowerCase()} successfully.`);
+        setFormError("");
+        fetchVlogs();
+      } else {
+        setFormError(data.error || `Failed to move blog to ${status.toLowerCase()}.`);
+        setFormSuccess("");
+      }
+    } catch (err) {
+      setFormError(`Failed to move blog to ${status.toLowerCase()}.`);
+      setFormSuccess("");
+    }
+  };
+
+  const handleDeleteVlog = async (id: string, title: string) => {
+    if (!window.confirm(`Are you sure you want to delete the blog "${title}"?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/admin/vlogs/${id}`, {
+        method: "DELETE",
+        headers: { token: localStorage.getItem("token") || "" },
+        credentials: "include"
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setFormSuccess("Blog deleted successfully.");
+        setFormError("");
+        fetchVlogs();
+      } else {
+        setFormError(data.error || "Failed to delete blog.");
+        setFormSuccess("");
+      }
+    } catch (err) {
+      setFormError("Failed to delete blog.");
+      setFormSuccess("");
+    }
+  };
+
   // 5. Admin: comprehensive order update (status + payment status + tracking + refund)
   const handleAdminOrderUpdate = async (fields: {
     status?: string;
@@ -1136,17 +1190,39 @@ function AdminDashboardInner() {
                             <td className="px-6 py-4 font-semibold text-[#6B3E26]">{v.title}</td>
                             <td className="px-6 py-4 text-[#7A5C45]">{v.vCategory?.cName || "Uncategorized"}</td>
                             <td className="px-6 py-4 text-center">
-                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${v.isPublished ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-600 border border-gray-200"}`}>
-                                {v.isPublished ? "Published" : "Draft"}
+                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                                v.status === "Archived"
+                                  ? "bg-gray-200 text-gray-700 border border-gray-300"
+                                  : v.isPublished
+                                    ? "bg-green-50 text-green-600 border border-green-100"
+                                    : "bg-gray-100 text-gray-600 border border-gray-200"
+                              }`}>
+                                {v.status || (v.isPublished ? "Published" : "Draft")}
                               </span>
                             </td>
                             <td className="px-6 py-4 text-right text-[#7A5C45]">{v.viewCount}</td>
                             <td className="px-6 py-4 text-right space-x-3">
-                              <button onClick={() => handleVlogPublishToggle(v._id, v.isPublished)} className="text-[#B23A2A] hover:underline text-xs font-bold">
+                              <button
+                                onClick={() => handleVlogPublishToggle(v._id, v.isPublished)}
+                                disabled={v.status === "Archived"}
+                                className="text-[#B23A2A] hover:underline text-xs font-bold disabled:text-gray-400 disabled:no-underline"
+                              >
                                 {v.isPublished ? "Unpublish" : "Publish"}
+                              </button>
+                              <button
+                                onClick={() => handleVlogStatusChange(v._id, v.status === "Archived" ? "Draft" : "Archived")}
+                                className="text-amber-700 hover:underline text-xs font-bold"
+                              >
+                                {v.status === "Archived" ? "Restore" : "Archive"}
                               </button>
                               <button onClick={() => { setEditingVlog(v); setShowVlogForm(true); }} className="text-[#6B3E26] hover:underline text-xs font-bold">
                                 Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteVlog(v._id, v.title)}
+                                className="text-red-600 hover:underline text-xs font-bold"
+                              >
+                                Delete
                               </button>
                             </td>
                           </tr>
