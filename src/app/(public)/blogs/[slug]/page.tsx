@@ -40,7 +40,7 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
     ? vlog.thumbnail.startsWith("http")
       ? vlog.thumbnail
       : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${vlog.thumbnail}`
-    : "/images/blog-placeholder.jpg";
+    : null;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
@@ -72,19 +72,21 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
         </header>
 
         {/* Featured Image */}
-        <div 
-          className="relative w-full h-[400px] md:h-[500px] mb-12 rounded-3xl overflow-hidden shadow-lg"
-          style={{ border: "2px solid #E8D5BC" }}
-        >
-          <Image
-            src={imageUrl}
-            alt={vlog.title}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </div>
+        {imageUrl ? (
+          <div 
+            className="relative w-full h-[400px] md:h-[500px] mb-12 rounded-3xl overflow-hidden shadow-lg"
+            style={{ border: "2px solid #E8D5BC" }}
+          >
+            <Image
+              src={imageUrl}
+              alt={vlog.title}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        ) : null}
 
         {/* Content */}
         <div 

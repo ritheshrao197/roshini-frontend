@@ -15,6 +15,7 @@ export default function VlogForm({
   onCancel,
 }: VlogFormProps) {
   const isEditMode = !!initialVlog;
+  const backendBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000";
 
   const [formData, setFormData] = useState({
     title: "",
@@ -116,8 +117,6 @@ export default function VlogForm({
 
       if (thumbnailFile) {
         payload.append("thumbnail", thumbnailFile);
-      } else {
-        payload.append("thumbnail", formData.thumbnail);
       }
 
       if (galleryFiles && galleryFiles.length > 0) {
@@ -232,7 +231,7 @@ export default function VlogForm({
             {formData.thumbnail && !thumbnailFile && (
               <div className="mt-2 text-xs text-gray-500 flex items-center gap-2">
                 <img 
-                  src={formData.thumbnail.startsWith("http") ? formData.thumbnail : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${formData.thumbnail}`} 
+                  src={formData.thumbnail.startsWith("http") ? formData.thumbnail : `${backendBaseUrl}/uploads/vlogs/${formData.thumbnail}`} 
                   alt="Current thumbnail" 
                   className="w-10 h-10 object-cover rounded-md border" 
                 />
@@ -258,7 +257,7 @@ export default function VlogForm({
               <div className="mt-2 flex flex-wrap gap-2">
                 {retainedGallery.map((img, i) => (
                   <div key={i} className="relative group border rounded-lg overflow-hidden h-12 w-12">
-                    <img src={img.secureUrl.startsWith("http") ? img.secureUrl : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${img.secureUrl}`} alt={img.alt || ""} className="object-cover h-full w-full" />
+                    <img src={img.secureUrl.startsWith("http") ? img.secureUrl : `${backendBaseUrl}/uploads/vlogs/${img.secureUrl}`} alt={img.alt || ""} className="object-cover h-full w-full" />
                     <button 
                       type="button" 
                       onClick={() => setRetainedGallery(retainedGallery.filter((_, idx) => idx !== i))} 

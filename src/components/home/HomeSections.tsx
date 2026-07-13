@@ -358,7 +358,7 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
       ? v.thumbnail.startsWith("http")
         ? v.thumbnail
         : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${v.thumbnail}`
-      : "/images/blog-placeholder.jpg";
+      : null;
   };
 
   return (
@@ -378,9 +378,11 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
               <span className="w-2 h-2 rounded-full bg-[#B23A2A]" /> Featured Article
             </h3>
             <div className="group border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all bg-[#FFFDF9]" style={{ borderColor: "#E8D5BC" }}>
-              <div className="relative h-64 md:h-80 w-full overflow-hidden">
-                <img src={getBlogImageUrl(featuredBlog)} alt={featuredBlog.title} className="object-cover h-full w-full group-hover:scale-105 transition-all duration-300" />
-              </div>
+              {getBlogImageUrl(featuredBlog) ? (
+                <div className="relative h-64 md:h-80 w-full overflow-hidden">
+                  <img src={getBlogImageUrl(featuredBlog) || ""} alt={featuredBlog.title} className="object-cover h-full w-full group-hover:scale-105 transition-all duration-300" />
+                </div>
+              ) : null}
               <div className="p-6 space-y-3">
                 <span className="text-xs font-bold uppercase tracking-widest text-[#B23A2A]">{featuredBlog.vCategory?.cName || "Wellness"}</span>
                 <h4 className="text-xl md:text-2xl font-bold font-serif text-[#6B3E26] group-hover:text-[#B23A2A] transition-colors">
@@ -404,7 +406,9 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {latestBlogs.map((blog) => (
                 <div key={blog._id} className="group flex flex-col p-4 border rounded-2xl bg-[#FFFDF9] hover:-translate-y-1 transition-all" style={{ borderColor: "#E8D5BC" }}>
-                  <img src={getBlogImageUrl(blog)} alt={blog.title} className="h-32 w-full object-cover rounded-xl mb-3" />
+                  {getBlogImageUrl(blog) ? (
+                    <img src={getBlogImageUrl(blog) || ""} alt={blog.title} className="h-32 w-full object-cover rounded-xl mb-3" />
+                  ) : null}
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#B23A2A]">{blog.vCategory?.cName}</span>
                   <h4 className="font-bold text-sm font-serif text-[#6B3E26] line-clamp-2 mt-1 group-hover:text-[#B23A2A]">
                     <Link href={`/blogs/${blog.slug}`}>{blog.title}</Link>

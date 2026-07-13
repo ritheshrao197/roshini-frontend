@@ -12,7 +12,7 @@ export default function VlogCard({ vlog }: VlogCardProps) {
     ? vlog.thumbnail.startsWith("http")
       ? vlog.thumbnail
       : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${vlog.thumbnail}`
-    : "/images/blog-placeholder.jpg"; // Fallback image
+    : null;
 
   return (
     <div
@@ -20,31 +20,33 @@ export default function VlogCard({ vlog }: VlogCardProps) {
       style={{ border: "1.5px solid #E8D5BC", boxShadow: "0 2px 8px rgba(107,62,38,0.06)" }}
     >
       {/* Image */}
-      <Link
-        href={`/blogs/${vlog.slug}`}
-        className="block relative overflow-hidden h-48"
-        style={{ background: "#F5E9DA" }}
-      >
-        <Image
-          src={imageUrl}
-          alt={vlog.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        
-        {/* Category Badge */}
-        {vlog.vCategory && (
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-            <span
-              className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-              style={{ background: "rgba(0,0,0,0.6)", color: "#fff" }}
-            >
-              {vlog.vCategory.cName}
-            </span>
-          </div>
-        )}
-      </Link>
+      {imageUrl ? (
+        <Link
+          href={`/blogs/${vlog.slug}`}
+          className="block relative overflow-hidden h-48"
+          style={{ background: "#F5E9DA" }}
+        >
+          <Image
+            src={imageUrl}
+            alt={vlog.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          
+          {/* Category Badge */}
+          {vlog.vCategory && (
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                style={{ background: "rgba(0,0,0,0.6)", color: "#fff" }}
+              >
+                {vlog.vCategory.cName}
+              </span>
+            </div>
+          )}
+        </Link>
+      ) : null}
 
       {/* Details */}
       <div className="p-4 flex flex-col flex-1 gap-3">
