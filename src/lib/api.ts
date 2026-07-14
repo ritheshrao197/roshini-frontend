@@ -4,6 +4,13 @@ export const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const API_URL = `${BACKEND_URL}/api`;
 
+type NextFetchInit = RequestInit & {
+  next?: {
+    revalidate?: number;
+    tags?: string[];
+  };
+};
+
 export interface CloudinaryImage {
   publicId: string;
   secureUrl: string;
@@ -109,10 +116,25 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutM
   }
 }
 
+async function fetchPublicWithTimeout(
+  url: string,
+  options: NextFetchInit = {},
+  timeoutMs = 8000
+): Promise<Response> {
+  return fetchWithTimeout(
+    url,
+    {
+      credentials: "omit",
+      ...options,
+    },
+    timeoutMs
+  );
+}
+
 export async function getAllProducts(): Promise<Product[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/product/all-product`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/product/all-product`, {
+      next: { revalidate: 300, tags: ["products"] },
     });
     if (!res.ok) throw new Error("Failed to fetch products");
     const data = await res.json();
@@ -126,8 +148,8 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/category/all-category`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/category/all-category`, {
+      next: { revalidate: 900, tags: ["categories"] },
     });
     if (!res.ok) throw new Error("Failed to fetch categories");
     const data = await res.json();
@@ -229,8 +251,8 @@ export async function getVlogs(
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (sort) url += `&sort=${encodeURIComponent(sort)}`;
 
-    const res = await fetchWithTimeout(url, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(url, {
+      next: { revalidate: 300, tags: ["vlogs"] },
     });
     if (!res.ok) throw new Error("Failed to fetch vlogs");
     const data = await res.json();
@@ -243,8 +265,8 @@ export async function getVlogs(
 
 export async function getFeaturedVlogs(): Promise<Vlog[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/vlogs/featured`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/vlogs/featured`, {
+      next: { revalidate: 300, tags: ["vlogs"] },
     });
     if (!res.ok) throw new Error("Failed to fetch featured vlogs");
     const data = await res.json();
@@ -271,8 +293,8 @@ export async function getVlogBySlug(slug: string): Promise<Vlog | null> {
 
 export async function getVlogCategories(): Promise<VlogCategory[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/vlog-categories`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/vlog-categories`, {
+      next: { revalidate: 600, tags: ["vlog-categories"] },
     });
     if (!res.ok) throw new Error("Failed to fetch vlog categories");
     const data = await res.json();
@@ -297,8 +319,8 @@ export interface Achievement {
 
 export async function getAchievements(): Promise<Achievement[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/achievements`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/achievements`, {
+      next: { revalidate: 600, tags: ["achievements"] },
     });
     if (!res.ok) throw new Error("Failed to fetch achievements");
     const data = await res.json();
@@ -311,8 +333,8 @@ export async function getAchievements(): Promise<Achievement[]> {
 
 export async function getHeroSliders(): Promise<any[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/sliders/active`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/sliders/active`, {
+      next: { revalidate: 300, tags: ["sliders"] },
     });
     if (!res.ok) throw new Error("Failed to fetch sliders");
     const data = await res.json();
@@ -337,8 +359,8 @@ export async function trackSliderAnalytics(sliderId: string, type: 'impression' 
 
 export async function getWebsiteSections(): Promise<any[]> {
   try {
-    const res = await fetchWithTimeout(`${API_URL}/sections`, {
-      cache: "no-store",
+    const res = await fetchPublicWithTimeout(`${API_URL}/sections`, {
+      next: { revalidate: 300, tags: ["sections"] },
     });
     if (!res.ok) throw new Error("Failed to fetch website sections");
     const data = await res.json();
@@ -346,6 +368,45 @@ export async function getWebsiteSections(): Promise<any[]> {
   } catch (err) {
     console.error("getWebsiteSections Error:", err);
     return [];
+  }
+}
+
+export interface HomePageData {
+  products: Product[];
+  categories: Category[];
+  achievements: Achievement[];
+  heroSliders: any[];
+  sections: any[];
+  vlogs: Vlog[];
+}
+
+export async function getHomePageData(): Promise<HomePageData> {
+  try {
+    const res = await fetchPublicWithTimeout(`${API_URL}/homepage`, {
+      next: { revalidate: 300, tags: ["homepage"] },
+    });
+    if (!res.ok) throw new Error("Failed to fetch homepage data");
+    return res.json();
+  } catch (err) {
+    console.error("getHomePageData Error:", err);
+
+    const [products, categories, achievements, heroSliders, sections, vlogsData] = await Promise.all([
+      getFeaturedProducts(),
+      getCategories(),
+      getAchievements(),
+      getHeroSliders(),
+      getWebsiteSections(),
+      getVlogs(1, 15),
+    ]);
+
+    return {
+      products,
+      categories,
+      achievements,
+      heroSliders,
+      sections,
+      vlogs: vlogsData.vlogs || [],
+    };
   }
 }
 

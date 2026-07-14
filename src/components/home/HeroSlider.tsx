@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
@@ -11,12 +11,10 @@ import "swiper/css/effect-fade";
 import { BACKEND_URL, trackSliderAnalytics } from "@/lib/api";
 
 export default function HeroSlider({ sliders }: { sliders: any[] }) {
-  const [mounted, setMounted] = useState(false);
   const [variant, setVariant] = useState<"A" | "B">("A");
   const trackedImpressions = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    setMounted(true);
     // Read A/B testing variant from cookies
     const match = document.cookie.match(new RegExp('(^| )ab_variant=([^;]+)'));
     if (match) setVariant(match[2] as "A" | "B");
@@ -42,8 +40,6 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
   const trackClick = (id: string) => {
     trackSliderAnalytics(id, 'click');
   };
-
-  if (!mounted) return <div className="h-[70vh] bg-[#F5E9DA] flex items-center justify-center animate-pulse">Loading campaigns...</div>;
   
   if (!sliders || sliders.length === 0) {
     return (
@@ -150,14 +146,14 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
           let description = slide.description;
           let primaryBtnText = slide.primaryButtonText;
           let primaryBtnLink = slide.primaryButtonLink;
-          let bgImage = slide.desktopImage ? `${BACKEND_URL}/uploads/sliders/${slide.desktopImage}` : "/images/hero-bg.jpg"; // Default fallback if no image provided
+          let bgImage = slide.desktopImage?.secureUrl || "/images/hero-bg.jpg";
 
           // Dynamic Overrides
           if (slide.type === "product" && slide.productData) {
             title = slide.title || slide.productData.pName;
             subtitle = slide.subtitle || `₹${slide.productData.pPrice}`;
             primaryBtnText = primaryBtnText || "Shop Now";
-            primaryBtnLink = primaryBtnLink || `/products/${slide.productData.slug || slide.productData._id}`;
+            primaryBtnLink = primaryBtnLink || `/product/${slide.productData.slug || slide.productData._id}`;
             if (!slide.desktopImage && slide.productData.pImages?.[0]) {
               bgImage = slide.productData.pImages[0].startsWith("http")
                 ? slide.productData.pImages[0]

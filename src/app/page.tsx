@@ -1,5 +1,5 @@
 import React from "react";
-import { getFeaturedProducts, getCategories, getAchievements, getHeroSliders, getWebsiteSections } from "@/lib/api";
+import { getHomePageData } from "@/lib/api";
 import HeroSlider from "@/components/home/HeroSlider";
 import { 
   TrustBadgesSection, 
@@ -12,9 +12,8 @@ import {
   NewsletterSection,
   HealthHubSection
 } from "@/components/home/HomeSections";
-import { getVlogs } from "@/lib/api";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 const DEFAULT_LAYOUT = [
   { sectionId: "hero" },
@@ -30,16 +29,7 @@ const DEFAULT_LAYOUT = [
 ];
 
 export default async function HomePage() {
-  const [products, categories, achievements, heroSliders, apiSections, vlogsData] = await Promise.all([
-    getFeaturedProducts(),
-    getCategories(),
-    getAchievements(),
-    getHeroSliders(),
-    getWebsiteSections(),
-    getVlogs(1, 15)
-  ]);
-
-  const vlogs = vlogsData?.vlogs || [];
+  const { products, categories, achievements, heroSliders, sections: apiSections, vlogs } = await getHomePageData();
 
   // Use API sections if available, otherwise fallback to default structure
   const layout = apiSections && apiSections.length > 0 ? apiSections : DEFAULT_LAYOUT;
