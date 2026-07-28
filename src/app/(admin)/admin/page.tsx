@@ -635,9 +635,14 @@ function AdminDashboardInner() {
       {/* Header */}
       <header className="border-b sticky top-0 bg-[#FFFDF9]/80 backdrop-blur-md z-50" style={{ borderColor: "#E8D5BC" }}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg md:text-2xl font-bold tracking-tight text-[#6B3E26] font-serif">
-            Roshini's <span className="font-sans text-sm md:text-lg font-light" style={{ color: "#7A5C45" }}>Admin</span>
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <Link href="/" className="text-lg md:text-2xl font-bold tracking-tight text-[#6B3E26] font-serif">
+              Roshini's <span className="font-sans text-sm md:text-lg font-light" style={{ color: "#7A5C45" }}>Admin</span>
+            </Link>
+            <span className="text-[10px] md:text-xs px-2 py-0.5 bg-[#E8D5BC] text-[#6B3E26] font-sans font-semibold rounded-full select-none">
+              v1.0.0
+            </span>
+          </div>
           <Link href="/" className="text-xs uppercase font-bold tracking-widest text-[#6B3E26] hover:underline flex items-center gap-1">
             <span>👁️</span> <span className="hidden sm:inline">View Storefront</span>
           </Link>

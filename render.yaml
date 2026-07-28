@@ -1,0 +1,28 @@
+services:
+  # ── STAGING FRONTEND ──
+  - type: web
+    name: roshinis-frontend-staging
+    env: node
+    plan: starter
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: staging
+      - key: NEXT_PUBLIC_API_URL
+        value: https://roshinis-backend-staging.onrender.com/api
+
+  # ── PRODUCTION FRONTEND ──
+  - type: web
+    name: roshinis-frontend-production
+    env: node
+    plan: starter
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://roshinis-backend-production.onrender.com/api
