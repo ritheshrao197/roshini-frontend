@@ -171,9 +171,16 @@ export default function CouponManagementPanel() {
               {coupons.map((c) => (
                 <tr key={c._id}>
                   <td className="px-6 py-4 whitespace-nowrap font-bold text-gray-900">{c.code}</td>
-                  <td className="px-6 py-4 whitespace-nowrap capitalize">{c.type}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {c.type === "percentage" ? `${c.value}%` : c.type === "fixed" ? `₹${c.value}` : "-"}
+                    {c.type === "percentage" && "Percentage"}
+                    {c.type === "fixed" && "Fixed Amount"}
+                    {c.type === "shipping" && "Free Shipping"}
+                    {c.type === "tiered" && "Tiered"}
+                    {c.type === "combination" && "Free Shipping + % Discount"}
+                    {c.type === "combination_fixed" && "Free Shipping + Fixed Discount"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {c.type === "percentage" || c.type === "combination" ? `${c.value}%` : c.type === "fixed" || c.type === "combination_fixed" ? `₹${c.value}` : "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {c.usedCount} / {c.usageLimit || "∞"}
@@ -219,12 +226,14 @@ export default function CouponManagementPanel() {
                     <option value="fixed">Fixed Amount</option>
                     <option value="shipping">Free Shipping</option>
                     <option value="tiered">Tiered (Buy More Save More)</option>
+                    <option value="combination">Free Shipping + % Discount</option>
+                    <option value="combination_fixed">Free Shipping + Fixed Discount</option>
                   </select>
                 </div>
                 
                 {formData.type !== "shipping" && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Value {formData.type === "percentage" ? "(%)" : "(₹)"}</label>
+                    <label className="block text-sm font-medium text-gray-700">Value {formData.type === "percentage" || formData.type === "combination" ? "(%)" : "(₹)"}</label>
                     <input type="number" value={formData.value || 0} onChange={e => setFormData({...formData, value: Number(e.target.value)})} className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border" />
                   </div>
                 )}
@@ -234,7 +243,7 @@ export default function CouponManagementPanel() {
                   <input type="number" value={formData.minOrderAmount || 0} onChange={e => setFormData({...formData, minOrderAmount: Number(e.target.value)})} className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border" />
                 </div>
 
-                {formData.type === "percentage" && (
+                {(formData.type === "percentage" || formData.type === "combination") && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Max Discount (₹) [0 for unlimited]</label>
                     <input type="number" value={formData.maxDiscount || 0} onChange={e => setFormData({...formData, maxDiscount: Number(e.target.value)})} className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border" />
