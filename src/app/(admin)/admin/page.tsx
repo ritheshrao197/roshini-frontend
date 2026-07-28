@@ -15,6 +15,7 @@ import EmailLogsPanel from "@/components/admin/EmailLogsPanel";
 import CouponManagementPanel from "@/components/admin/coupons/CouponManagementPanel";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import { API_URL, BACKEND_URL } from "@/lib/api";
+import pkg from "../../../../package.json";
 
 interface Product {
   _id: string;
@@ -116,7 +117,7 @@ function AdminDashboardInner() {
   const router = useRouter();
   const { isLoggedIn, isAdmin, hasRole, login, logout } = useAuth();
   const [authChecked, setAuthChecked] = React.useState(false);
-  const [version, setVersion] = React.useState("v1.0.0");
+  const [version, setVersion] = React.useState(`v${pkg.version}`);
 
   React.useEffect(() => {
     fetch("/build-metadata.json")
