@@ -130,6 +130,18 @@ export default function CartPage() {
       return;
     }
 
+    // Contact number validation
+    const phoneRegex = /^\+?[0-9\s\-()]+$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      setCheckoutError("Contact number contains invalid characters. Use digits, spaces, -, (), and optional leading +.");
+      return;
+    }
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setCheckoutError("Please enter a valid contact number (10 to 15 digits).");
+      return;
+    }
+
     setIsSubmitting(true);
     const orderProducts = cartItems.map(item => ({
       id: item.productId || item.id,
@@ -437,6 +449,8 @@ export default function CartPage() {
                         placeholder="e.g. +91 98765 43210" 
                         value={phone}
                         onChange={e => setPhone(e.target.value)}
+                        pattern="^\+?[0-9\s\-()]{10,20}$"
+                        title="Contact number must contain 10 to 15 digits (spaces, dashes, parentheses and optional leading + are allowed)"
                         className="px-3 py-2.5 rounded-xl border bg-white text-xs focus:outline-none focus:border-[#6B3E26]"
                         style={{ borderColor: "#E8D5BC" }}
                       />
