@@ -116,6 +116,18 @@ function AdminDashboardInner() {
   const router = useRouter();
   const { isLoggedIn, isAdmin, hasRole, login, logout } = useAuth();
   const [authChecked, setAuthChecked] = React.useState(false);
+  const [version, setVersion] = React.useState("v1.0.0");
+
+  React.useEffect(() => {
+    fetch("/build-metadata.json")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.version) {
+          setVersion(`v${data.version}`);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Single unified auth guard — wait for localStorage hydration before redirecting
   useEffect(() => {
@@ -640,7 +652,7 @@ function AdminDashboardInner() {
               Roshini's <span className="font-sans text-sm md:text-lg font-light" style={{ color: "#7A5C45" }}>Admin</span>
             </Link>
             <span className="text-[10px] md:text-xs px-2 py-0.5 bg-[#E8D5BC] text-[#6B3E26] font-sans font-semibold rounded-full select-none">
-              v1.0.0
+              {version}
             </span>
           </div>
           <Link href="/" className="text-xs uppercase font-bold tracking-widest text-[#6B3E26] hover:underline flex items-center gap-1">
