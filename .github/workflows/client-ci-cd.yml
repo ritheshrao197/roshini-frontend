@@ -1,4 +1,4 @@
-name: Client Next.js CI/CD
+name: Client Next.js CI
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   validate-and-test:
-    name: Lint, Test, & Build Client
+    name: Lint & Build Validation
     runs-on: ubuntu-latest
 
     steps:
@@ -35,32 +35,7 @@ jobs:
       - name: Security Check (Dependency Audit)
         run: npm audit --audit-level=high || true
 
-      - name: Build Application
+      - name: Build Validation
         run: npm run build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-
-      - name: Archive Production Artifacts
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-        uses: actions/upload-artifact@v4
-        with:
-          name: client-build-artifacts
-          path: .next
-          retention-days: 7
-
-  deploy:
-    name: Deploy Client
-    needs: validate-and-test
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy to Staging (Render)
-        if: github.ref == 'refs/heads/develop'
-        run: |
-          curl -fX POST "${{ secrets.RENDER_CLIENT_STAGING_DEPLOY_HOOK }}"
-
-      - name: Deploy to Production (Render)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          curl -fX POST "${{ secrets.RENDER_CLIENT_PRODUCTION_DEPLOY_HOOK }}"
