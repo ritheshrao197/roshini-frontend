@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import HeaderWrapper from "@/components/partials/HeaderWrapper";
+import VersionBadge from "@/components/partials/VersionBadge";
 import { CustomizationProvider } from "@/lib/CustomizationContext";
 import { AuthProvider } from "@/lib/AuthContext";
 import { Poppins, Merriweather } from "next/font/google";
@@ -115,6 +116,7 @@ export default function RootLayout({
           <CustomizationProvider>
             <HeaderWrapper />
             {children}
+            <VersionBadge />
           </CustomizationProvider>
         </AuthProvider>
       </body>
