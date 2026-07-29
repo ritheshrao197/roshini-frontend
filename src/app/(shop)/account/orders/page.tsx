@@ -58,12 +58,12 @@ interface TimelineConfig {
 }
 
 function getTimelineConfig(order: Order): TimelineConfig {
-  if (order.status === "Cancelled") {
+  if (order.status === "Cancelled" || order.status === "CANCELLED") {
     const steps = ["Pending"];
-    if (order.paymentStatus === "Paid" || order.paymentStatus === "Refunded") {
+    if (order.paymentStatus === "Paid" || order.paymentStatus === "SUCCESS" || order.paymentStatus === "Refunded" || order.paymentStatus === "REFUNDED") {
       steps.push("Paid");
     }
-    if (order.paymentStatus === "Refunded") {
+    if (order.paymentStatus === "Refunded" || order.paymentStatus === "REFUNDED") {
       steps.push("Refunded");
     }
     steps.push("Cancelled");
@@ -76,10 +76,10 @@ function getTimelineConfig(order: Order): TimelineConfig {
 
   const steps = ["Pending", "Paid", "Processing", "Shipped", "Delivered"];
   let currentStep = 0;
-  if (order.status === "Delivered") currentStep = 4;
-  else if (order.status === "Shipped") currentStep = 3;
+  if (order.status === "Delivered" || order.status === "DELIVERED") currentStep = 4;
+  else if (order.status === "Shipped" || order.status === "SHIPPED") currentStep = 3;
   else if (order.status === "Processing") currentStep = 2;
-  else if (order.paymentStatus === "Paid") currentStep = 1;
+  else if (order.paymentStatus === "Paid" || order.paymentStatus === "SUCCESS" || order.status === "CONFIRMED") currentStep = 1;
 
   return {
     steps,
@@ -91,9 +91,13 @@ function getTimelineConfig(order: Order): TimelineConfig {
 function PaymentBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
     Paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    SUCCESS: "bg-emerald-50 text-emerald-700 border-emerald-200",
     Pending: "bg-amber-50 text-amber-700 border-amber-200",
+    PENDING: "bg-amber-50 text-amber-700 border-amber-200",
     Failed: "bg-red-50 text-red-600 border-red-200",
+    FAILED: "bg-red-50 text-red-600 border-red-200",
     Refunded: "bg-purple-50 text-purple-700 border-purple-200",
+    REFUNDED: "bg-purple-50 text-purple-700 border-purple-200",
   };
   return (
     <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${map[status] || "bg-gray-50 text-gray-600 border-gray-200"}`}>
@@ -105,10 +109,15 @@ function PaymentBadge({ status }: { status: string }) {
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
     "Not processed": "bg-gray-50 text-gray-600 border-gray-200",
+    PENDING: "bg-gray-50 text-gray-600 border-gray-200",
+    CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
     Processing: "bg-blue-50 text-blue-700 border-blue-200",
     Shipped: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    SHIPPED: "bg-indigo-50 text-indigo-700 border-indigo-200",
     Delivered: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-200",
     Cancelled: "bg-red-50 text-red-600 border-red-200",
+    CANCELLED: "bg-red-50 text-red-600 border-red-200",
   };
   return (
     <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${map[status] || "bg-gray-50 text-gray-600 border-gray-200"}`}>
