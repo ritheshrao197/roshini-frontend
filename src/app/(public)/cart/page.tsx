@@ -332,12 +332,13 @@ export default function CartPage() {
             "Content-Type": "application/json",
             "token": localStorage.getItem("token") || "",
           },
+          credentials: "include",
           body: JSON.stringify({
             allProduct: orderProducts,
             user: user._id || user,
             transactionId: freeTxnId,
             address: finalAddress,
-            phone: finalPhone,
+            phone: finalPhone.replace(/\D/g, ""), // Sanitize to numeric digits only for backend Zod validation
             couponCode: appliedCoupon ? couponCode : undefined,
             amount: 0
           }),
