@@ -12,6 +12,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const refreshCartQuantity = () => {
     const cart = getCart();
@@ -19,11 +20,37 @@ export default function ProductCard({ product }: ProductCardProps) {
     setQuantity(item ? item.quantitiy : 0);
   };
 
+  const refreshWishlist = () => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setIsWishlisted(wishlist.includes(product._id));
+  };
+
   useEffect(() => {
     refreshCartQuantity();
+    refreshWishlist();
     window.addEventListener("cart_updated", refreshCartQuantity);
-    return () => window.removeEventListener("cart_updated", refreshCartQuantity);
+    window.addEventListener("wishlist_updated", refreshWishlist);
+    return () => {
+      window.removeEventListener("cart_updated", refreshCartQuantity);
+      window.removeEventListener("wishlist_updated", refreshWishlist);
+    };
   }, [product._id]);
+
+  const toggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    let updated: string[];
+    if (isWishlisted) {
+      updated = wishlist.filter((id: string) => id !== product._id);
+      setIsWishlisted(false);
+    } else {
+      updated = [...wishlist, product._id];
+      setIsWishlisted(true);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(updated));
+    window.dispatchEvent(new Event("wishlist_updated"));
+  };
 
   const imageUrl =
     product.image?.secureUrl ||
@@ -85,13 +112,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Wishlist placeholder */}
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Wishlist handler */}
+        <div 
+          onClick={toggleWishlist}
+          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+        >
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-sm"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-sm transition-transform hover:scale-110 active:scale-95"
             style={{ background: "#fff", border: "1px solid #E8D5BC" }}
           >
-            🤍
+            {isWishlisted ? "❤️" : "🤍"}
           </div>
         </div>
       </Link>
