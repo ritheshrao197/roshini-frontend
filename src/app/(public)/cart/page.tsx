@@ -239,7 +239,7 @@ export default function CartPage() {
       setCheckoutError("Your cart is empty.");
       return;
     }
-    if (!selectedPayment) {
+    if (finalOrderAmount > 0 && !selectedPayment) {
       setCheckoutError("Please select a payment method.");
       return;
     }
@@ -321,6 +321,45 @@ export default function CartPage() {
       quantitiy: item.quantitiy,
       price: item.price,
     }));
+
+    // Bypassing payment gateways for free/0-amount orders
+    if (finalOrderAmount === 0) {
+      const freeTxnId = "FREE_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9).toUpperCase();
+      try {
+        const res = await fetch(`${API_URL}/order/create-order`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "token": localStorage.getItem("token") || "",
+          },
+          body: JSON.stringify({
+            allProduct: orderProducts,
+            user: user._id || user,
+            transactionId: freeTxnId,
+            address: finalAddress,
+            phone: finalPhone,
+            couponCode: appliedCoupon ? couponCode : undefined,
+            amount: 0
+          }),
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          clearCart();
+          setCheckoutSuccess("Order placed successfully! Redirecting...");
+          setTimeout(() => {
+            router.push("/order-success");
+          }, 1500);
+        } else {
+          setCheckoutError(data.error || "Failed to place order.");
+          setIsSubmitting(false);
+        }
+      } catch (err) {
+        setCheckoutError("Failed to place order due to a network error.");
+        setIsSubmitting(false);
+      }
+      return;
+    }
 
     try {
       /* ── PhonePe Flow ─────────────────────────────────────────── */
@@ -795,59 +834,72 @@ export default function CartPage() {
                     )}
 
                     {/* Payment Method Selection */}
-                    <div className="flex flex-col gap-2">
-                      <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider">Payment Method *</label>
-                      <div className="space-y-2">
-                        {phonePeEnabled && (
-                          <button
-                            type="button"
-                            onClick={() => setSelectedPayment("phonepe")}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-xs font-semibold transition-all cursor-pointer ${
-                              selectedPayment === "phonepe"
-                                ? "border-[#5f259f] bg-[#5f259f]/5 text-[#5f259f]"
-                                : "border-[#E8D5BC] bg-white text-foreground/75 hover:border-[#5f259f]/40"
-                            }`}
-                          >
-                            <span className="text-lg">📱</span>
-                            <div className="text-left">
-                              <p className="font-bold">PhonePe</p>
-                              <p className="text-[10px] font-normal opacity-70">UPI · Cards · Wallets</p>
-                            </div>
-                            {selectedPayment === "phonepe" && <span className="ml-auto text-[#5f259f]">✓</span>}
-                          </button>
-                        )}
-                        {payUEnabled && (
-                          <button
-                            type="button"
-                            onClick={() => setSelectedPayment("payu")}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-xs font-semibold transition-all cursor-pointer ${
-                              selectedPayment === "payu"
-                                ? "border-[#0065A4] bg-[#0065A4]/5 text-[#0065A4]"
-                                : "border-[#E8D5BC] bg-white text-foreground/75 hover:border-[#0065A4]/40"
-                            }`}
-                          >
-                            <span className="text-lg">💳</span>
-                            <div className="text-left">
-                              <p className="font-bold">PayU</p>
-                              <p className="text-[10px] font-normal opacity-70">EMI · Net Banking · Cards</p>
-                            </div>
-                            {selectedPayment === "payu" && <span className="ml-auto text-[#0065A4]">✓</span>}
-                          </button>
-                        )}
-                        {!phonePeEnabled && !payUEnabled && (
-                          <div className="text-xs text-foreground/60 text-center p-3 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                            No payment methods are currently active. Please contact the store admin.
-                          </div>
-                        )}
+                    {finalOrderAmount === 0 ? (
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-2xl space-y-1">
+                        <span className="text-xs font-bold text-green-800 block">🎉 Complimentary Order</span>
+                        <p className="text-[10px] text-green-700 leading-relaxed font-medium">
+                          The coupon discount covers the entire cart subtotal and shipping fees. You can place this order directly without entering any payment details.
+                        </p>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider">Payment Method *</label>
+                        <div className="space-y-2">
+                          {phonePeEnabled && (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedPayment("phonepe")}
+                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-xs font-semibold transition-all cursor-pointer ${
+                                selectedPayment === "phonepe"
+                                  ? "border-[#5f259f] bg-[#5f259f]/5 text-[#5f259f]"
+                                  : "border-[#E8D5BC] bg-white text-foreground/75 hover:border-[#5f259f]/40"
+                              }`}
+                            >
+                              <span className="text-lg">📱</span>
+                              <div className="text-left">
+                                <p className="font-bold">PhonePe</p>
+                                <p className="text-[10px] font-normal opacity-70">UPI · Cards · Wallets</p>
+                              </div>
+                              {selectedPayment === "phonepe" && <span className="ml-auto text-[#5f259f]">✓</span>}
+                            </button>
+                          )}
+                          {payUEnabled && (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedPayment("payu")}
+                              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-xs font-semibold transition-all cursor-pointer ${
+                                selectedPayment === "payu"
+                                  ? "border-[#0065A4] bg-[#0065A4]/5 text-[#0065A4]"
+                                  : "border-[#E8D5BC] bg-white text-foreground/75 hover:border-[#0065A4]/40"
+                              }`}
+                            >
+                              <span className="text-lg">💳</span>
+                              <div className="text-left">
+                                <p className="font-bold">PayU</p>
+                                <p className="text-[10px] font-normal opacity-70">EMI · Net Banking · Cards</p>
+                              </div>
+                              {selectedPayment === "payu" && <span className="ml-auto text-[#0065A4]">✓</span>}
+                            </button>
+                          )}
+                          {!phonePeEnabled && !payUEnabled && (
+                            <div className="text-xs text-foreground/60 text-center p-3 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                              No payment methods are currently active. Please contact the store admin.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     <button 
                       type="submit" 
-                      disabled={isSubmitting || !selectedPayment}
+                      disabled={isSubmitting || (finalOrderAmount > 0 && !selectedPayment)}
                       className="w-full py-3 bg-[#6B3E26] text-[#F5E9DA] text-xs font-bold rounded-full hover:bg-[#4e2c18] transition-all shadow-sm uppercase tracking-wider disabled:opacity-55 cursor-pointer"
                     >
-                      {isSubmitting ? "Processing..." : `Pay with ${selectedPayment === "phonepe" ? "PhonePe" : selectedPayment === "payu" ? "PayU" : "..."}`}
+                      {isSubmitting
+                        ? "Processing..."
+                        : finalOrderAmount === 0
+                        ? "Confirm & Place Order"
+                        : `Pay with ${selectedPayment === "phonepe" ? "PhonePe" : selectedPayment === "payu" ? "PayU" : "..."}`}
                     </button>
                   </form>
                 ) : (
