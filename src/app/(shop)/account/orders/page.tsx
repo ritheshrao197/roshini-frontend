@@ -31,22 +31,61 @@ interface Order {
   createdAt: string;
 }
 
-const TIMELINE_STEPS = ["Pending", "Paid", "Processing", "Shipped", "Delivered"];
-
 const TIMELINE_ICONS: Record<string, string> = {
   Pending: "⏳",
   Paid: "✅",
   Processing: "⚙️",
   Shipped: "🚚",
   Delivered: "📦",
+  Cancelled: "❌",
+  Refunded: "🔄",
 };
 
-function getTimelineStep(order: Order): number {
-  if (order.status === "Delivered") return 4;
-  if (order.status === "Shipped") return 3;
-  if (order.status === "Processing") return 2;
-  if (order.paymentStatus === "Paid") return 1;
-  return 0;
+const STEP_COLORS: Record<string, { bg: string; border: string; text: string; ring: string }> = {
+  Pending: { bg: "bg-[#6B3E26]", border: "border-[#6B3E26]", text: "text-[#6B3E26]", ring: "ring-[#6B3E26]/30" },
+  Paid: { bg: "bg-emerald-600", border: "border-emerald-600", text: "text-emerald-600", ring: "ring-emerald-600/30" },
+  Processing: { bg: "bg-[#6B3E26]", border: "border-[#6B3E26]", text: "text-[#6B3E26]", ring: "ring-[#6B3E26]/30" },
+  Shipped: { bg: "bg-indigo-600", border: "border-indigo-600", text: "text-indigo-600", ring: "ring-indigo-600/30" },
+  Delivered: { bg: "bg-emerald-600", border: "border-emerald-600", text: "text-emerald-600", ring: "ring-emerald-600/30" },
+  Cancelled: { bg: "bg-red-600", border: "border-red-600", text: "text-red-600", ring: "ring-red-600/30" },
+  Refunded: { bg: "bg-purple-600", border: "border-purple-600", text: "text-purple-600", ring: "ring-purple-600/30" },
+};
+
+interface TimelineConfig {
+  steps: string[];
+  currentStep: number;
+  isCancelled: boolean;
+}
+
+function getTimelineConfig(order: Order): TimelineConfig {
+  if (order.status === "Cancelled") {
+    const steps = ["Pending"];
+    if (order.paymentStatus === "Paid" || order.paymentStatus === "Refunded") {
+      steps.push("Paid");
+    }
+    if (order.paymentStatus === "Refunded") {
+      steps.push("Refunded");
+    }
+    steps.push("Cancelled");
+    return {
+      steps,
+      currentStep: steps.length - 1,
+      isCancelled: true,
+    };
+  }
+
+  const steps = ["Pending", "Paid", "Processing", "Shipped", "Delivered"];
+  let currentStep = 0;
+  if (order.status === "Delivered") currentStep = 4;
+  else if (order.status === "Shipped") currentStep = 3;
+  else if (order.status === "Processing") currentStep = 2;
+  else if (order.paymentStatus === "Paid") currentStep = 1;
+
+  return {
+    steps,
+    currentStep,
+    isCancelled: false,
+  };
 }
 
 function PaymentBadge({ status }: { status: string }) {
@@ -237,7 +276,7 @@ ${inv.trackingId ? `<div class="row"><span>Tracking ID</span><strong>${inv.track
       ) : (
         <div className="space-y-5">
           {orders.map((order) => {
-            const step = getTimelineStep(order);
+            const { steps, currentStep, isCancelled } = getTimelineConfig(order);
             const isExpanded = expandedOrder === order._id;
 
             return (
@@ -271,27 +310,42 @@ ${inv.trackingId ? `<div class="row"><span>Tracking ID</span><strong>${inv.track
 
                 {/* Order Timeline */}
                 <div className="px-5 pb-4 border-t" style={{ borderColor: "#E8D5BC" }}>
-                  <div className="pt-4 grid grid-cols-5 text-center text-[9px] font-bold text-[#7A5C45] relative pb-1 select-none">
+                  <div
+                    className="pt-4 text-center text-[9px] font-bold text-[#7A5C45] relative pb-1 select-none grid"
+                    style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}
+                  >
                     {/* Base line */}
-                    <div className="absolute top-[22px] left-[10%] right-[10%] h-0.5 bg-[#E8D5BC]" />
+                    <div
+                      className="absolute top-[22px] h-0.5 bg-[#E8D5BC]"
+                      style={{
+                        left: `${50 / steps.length}%`,
+                        right: `${50 / steps.length}%`,
+                      }}
+                    />
                     {/* Progress line */}
                     <div
-                      className="absolute top-[22px] left-[10%] h-0.5 bg-[#6B3E26] transition-all duration-700"
-                      style={{ width: `${step * 20}%` }}
+                      className={`absolute top-[22px] h-0.5 transition-all duration-700 ${
+                        isCancelled ? "bg-red-500" : "bg-[#6B3E26]"
+                      }`}
+                      style={{
+                        left: `${50 / steps.length}%`,
+                        width: `${currentStep * (100 / steps.length)}%`,
+                      }}
                     />
-                    {TIMELINE_STEPS.map((st, sIdx) => {
-                      const active = step >= sIdx;
-                      const current = step === sIdx;
+                    {steps.map((st, sIdx) => {
+                      const active = currentStep >= sIdx;
+                      const current = currentStep === sIdx;
+                      const colorConfig = STEP_COLORS[st] || STEP_COLORS["Pending"];
                       return (
                         <div key={st} className="flex flex-col items-center gap-1.5 relative z-10">
                           <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center text-xs transition-all ${
                             active
-                              ? "bg-[#6B3E26] border-[#6B3E26] text-white shadow-md"
+                              ? `${colorConfig.bg} ${colorConfig.border} text-white shadow-md`
                               : "bg-white border-[#E8D5BC] text-[#2C1A0E]/30"
-                          } ${current ? "ring-2 ring-[#6B3E26]/30 ring-offset-1" : ""}`}>
+                          } ${current ? `ring-2 ${colorConfig.ring} ring-offset-1` : ""}`}>
                             {active ? TIMELINE_ICONS[st] : "○"}
                           </div>
-                          <span className={`text-[9px] leading-tight ${active ? "text-[#6B3E26] font-extrabold" : "text-[#2C1A0E]/40"}`}>
+                          <span className={`text-[9px] leading-tight ${active ? `${colorConfig.text} font-extrabold` : "text-[#2C1A0E]/40"}`}>
                             {st}
                           </span>
                         </div>
