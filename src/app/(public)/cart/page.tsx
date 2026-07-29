@@ -19,6 +19,44 @@ export default function CartPage() {
   const [checkoutSuccess, setCheckoutSuccess] = useState("");
   const [checkoutError, setCheckoutError] = useState("");
 
+  // Address Integration states
+  interface Address {
+    _id?: string;
+    fullName: string;
+    mobileNumber: string;
+    alternateMobile?: string;
+    addressLine1: string;
+    addressLine2?: string;
+    landmark?: string;
+    city: string;
+    state: string;
+    pincode: string;
+    country: string;
+    isDefault: boolean;
+    type: string;
+  }
+
+  const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+  const [saveToProfile, setSaveToProfile] = useState(true);
+
+  // New address form state
+  const [newAddress, setNewAddress] = useState<Address>({
+    fullName: "",
+    mobileNumber: "",
+    alternateMobile: "",
+    addressLine1: "",
+    addressLine2: "",
+    landmark: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "India",
+    isDefault: false,
+    type: "Home",
+  });
+
   // Payment methods
   const [phonePeEnabled, setPhonePeEnabled] = useState(false);
   const [payUEnabled, setPayUEnabled] = useState(false);
@@ -52,6 +90,45 @@ export default function CartPage() {
         else if (pu) setSelectedPayment("payu");
       })
       .catch(() => {});
+
+    // 3. Load user's saved addresses
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_URL}/account/addresses`, {
+        headers: { token },
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.addresses && Array.isArray(data.addresses)) {
+            setSavedAddresses(data.addresses);
+            // Default to the default address if found, otherwise the first address
+            const defaultAddress = data.addresses.find((a: Address) => a.isDefault) || data.addresses[0];
+            if (defaultAddress) {
+              setSelectedAddressId(defaultAddress._id || null);
+              const addrStr = [
+                defaultAddress.fullName,
+                defaultAddress.addressLine1,
+                defaultAddress.addressLine2,
+                defaultAddress.landmark,
+                defaultAddress.city,
+                `${defaultAddress.state} - ${defaultAddress.pincode}`,
+                defaultAddress.country
+              ].filter(Boolean).join(", ");
+              setAddress(addrStr);
+              setPhone(defaultAddress.mobileNumber);
+            } else {
+              setShowNewAddressForm(true);
+            }
+          } else {
+            setShowNewAddressForm(true);
+          }
+        })
+        .catch(() => {
+          setShowNewAddressForm(true);
+        });
+    } else {
+      setShowNewAddressForm(true);
+    }
 
     // 4. Listener
     window.addEventListener("cart_updated", refreshCart);
@@ -112,6 +189,43 @@ export default function CartPage() {
     }
   };
 
+  const handleSelectAddress = (addr: Address) => {
+    setSelectedAddressId(addr._id || null);
+    setShowNewAddressForm(false);
+    const addrStr = [
+      addr.fullName,
+      addr.addressLine1,
+      addr.addressLine2,
+      addr.landmark,
+      addr.city,
+      `${addr.state} - ${addr.pincode}`,
+      addr.country
+    ].filter(Boolean).join(", ");
+    setAddress(addrStr);
+    setPhone(addr.mobileNumber);
+  };
+
+  const handleToggleNewAddress = () => {
+    setSelectedAddressId(null);
+    setShowNewAddressForm(true);
+    setAddress("");
+    setPhone("");
+    setNewAddress({
+      fullName: "",
+      mobileNumber: "",
+      alternateMobile: "",
+      addressLine1: "",
+      addressLine2: "",
+      landmark: "",
+      city: "",
+      state: "",
+      pincode: "",
+      country: "India",
+      isDefault: false,
+      type: "Home",
+    });
+  };
+
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setCheckoutError("");
@@ -130,19 +244,76 @@ export default function CartPage() {
       return;
     }
 
-    // Contact number validation
-    const phoneRegex = /^\+?[0-9\s\-()]+$/;
-    if (!phone || !phoneRegex.test(phone)) {
-      setCheckoutError("Contact number contains invalid characters. Use digits, spaces, -, (), and optional leading +.");
-      return;
-    }
-    const phoneDigits = phone.replace(/\D/g, "");
-    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
-      setCheckoutError("Please enter a valid contact number (10 to 15 digits).");
-      return;
+    let finalAddress = address;
+    let finalPhone = phone;
+
+    if (showNewAddressForm) {
+      // Validate structured fields
+      const { fullName, mobileNumber, addressLine1, city, state, pincode, country } = newAddress;
+      if (!fullName || !mobileNumber || !addressLine1 || !city || !state || !pincode) {
+        setCheckoutError("Please fill out all required address fields.");
+        return;
+      }
+
+      // Contact number validation
+      const phoneRegex = /^\+?[0-9\s\-()]+$/;
+      if (!mobileNumber || !phoneRegex.test(mobileNumber)) {
+        setCheckoutError("New address contact number contains invalid characters.");
+        return;
+      }
+      const newPhoneDigits = mobileNumber.replace(/\D/g, "");
+      if (newPhoneDigits.length < 10 || newPhoneDigits.length > 15) {
+        setCheckoutError("Please enter a valid new address contact number (10 to 15 digits).");
+        return;
+      }
+
+      // Construct address string
+      finalAddress = [
+        fullName,
+        addressLine1,
+        newAddress.addressLine2,
+        newAddress.landmark,
+        city,
+        `${state} - ${pincode}`,
+        country
+      ].filter(Boolean).join(", ");
+      finalPhone = mobileNumber;
+    } else {
+      // Contact number validation for selected address
+      const phoneRegex = /^\+?[0-9\s\-()]+$/;
+      if (!phone || !phoneRegex.test(phone)) {
+        setCheckoutError("Contact number contains invalid characters.");
+        return;
+      }
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+        setCheckoutError("Please enter a valid contact number (10 to 15 digits).");
+        return;
+      }
     }
 
     setIsSubmitting(true);
+
+    // Save to profile if checkbox is checked
+    if (showNewAddressForm && saveToProfile) {
+      try {
+        const token = localStorage.getItem("token");
+        const saveRes = await fetch(`${API_URL}/account/addresses`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token || "",
+          },
+          body: JSON.stringify(newAddress),
+        });
+        if (!saveRes.ok) {
+          console.error("Failed to save address to profile automatically.");
+        }
+      } catch (saveErr) {
+        console.error("Error saving address to profile:", saveErr);
+      }
+    }
+
     const orderProducts = cartItems.map(item => ({
       id: item.productId || item.id,
       variantId: item.variantId || null,
@@ -164,8 +335,8 @@ export default function CartPage() {
           body: JSON.stringify({
             allProduct: orderProducts,
             user,
-            address,
-            phone,
+            address: finalAddress,
+            phone: finalPhone,
             couponCode: appliedCoupon ? couponCode : undefined
           }),
         });
@@ -178,10 +349,8 @@ export default function CartPage() {
           return;
         }
 
-        // Clear cart BEFORE redirect so it's clean when user returns
         clearCart();
         setCheckoutSuccess("Redirecting to PhonePe...");
-        // Hard redirect to PhonePe hosted checkout
         window.location.href = redirectUrl;
         return;
       }
@@ -198,8 +367,8 @@ export default function CartPage() {
           body: JSON.stringify({
             allProduct: orderProducts,
             user,
-            address,
-            phone,
+            address: finalAddress,
+            phone: finalPhone,
             couponCode: appliedCoupon ? couponCode : undefined
           }),
         });
@@ -210,7 +379,6 @@ export default function CartPage() {
           return;
         }
 
-        // Build a hidden form and auto-submit to PayU
         clearCart();
         setCheckoutSuccess("Redirecting to PayU...");
 
@@ -428,33 +596,203 @@ export default function CartPage() {
 
                 {user ? (
                   <form onSubmit={handleCheckout} className="space-y-4">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider">Recipient Address *</label>
-                      <textarea 
-                        required
-                        placeholder="House No, Street, Landmark, Pin code" 
-                        value={address}
-                        onChange={e => setAddress(e.target.value)}
-                        rows={3}
-                        className="px-3 py-2.5 rounded-xl border bg-white text-xs focus:outline-none focus:border-[#6B3E26] resize-none"
-                        style={{ borderColor: "#E8D5BC" }}
-                      />
-                    </div>
+                    {/* Saved Addresses list */}
+                    {savedAddresses.length > 0 ? (
+                      <div className="space-y-3">
+                        <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider block">Deliver To:</label>
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                          {savedAddresses.map((addr) => {
+                            const isSelected = selectedAddressId === addr._id;
+                            return (
+                              <div
+                                key={addr._id}
+                                onClick={() => handleSelectAddress(addr)}
+                                className={`p-3 rounded-xl border-2 text-left cursor-pointer transition-all ${
+                                  isSelected
+                                    ? "border-[#6B3E26] bg-[#FDF6EC]"
+                                    : "border-[#E8D5BC] bg-white hover:bg-gray-50"
+                                }`}
+                              >
+                                <div className="flex justify-between items-center mb-1">
+                                  <span className="font-bold text-xs text-[#6B3E26]">{addr.fullName}</span>
+                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#F5E9DA] text-[#6B3E26] border border-[#E8D5BC]">
+                                    {addr.type}
+                                  </span>
+                                </div>
+                                <p className="text-[10px] text-gray-600 leading-normal mb-1">
+                                  {addr.addressLine1}, {addr.addressLine2 && `${addr.addressLine2}, `}{addr.landmark && `${addr.landmark}, `}{addr.city}, {addr.state} - {addr.pincode}
+                                </p>
+                                <p className="text-[10px] text-gray-500 font-mono">📞 {addr.mobileNumber}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        
+                        <button
+                          type="button"
+                          onClick={handleToggleNewAddress}
+                          className={`w-full py-2.5 rounded-xl border-2 border-dashed text-xs font-bold transition-all cursor-pointer ${
+                            showNewAddressForm
+                              ? "border-[#6B3E26] bg-[#FDF6EC] text-[#6B3E26]"
+                              : "border-[#E8D5BC] text-[#7A5C45] hover:border-[#6B3E26]/50"
+                          }`}
+                        >
+                          {showNewAddressForm ? "✖ Cancel New Address" : "➕ Deliver to a New Address"}
+                        </button>
+                      </div>
+                    ) : null}
 
-                    <div className="flex flex-col gap-1">
-                      <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider">Contact Number *</label>
-                      <input 
-                        type="tel"
-                        required
-                        placeholder="e.g. +91 98765 43210" 
-                        value={phone}
-                        onChange={e => setPhone(e.target.value)}
-                        pattern="^\+?[0-9\s\-()]{10,20}$"
-                        title="Contact number must contain 10 to 15 digits (spaces, dashes, parentheses and optional leading + are allowed)"
-                        className="px-3 py-2.5 rounded-xl border bg-white text-xs focus:outline-none focus:border-[#6B3E26]"
-                        style={{ borderColor: "#E8D5BC" }}
-                      />
-                    </div>
+                    {/* New Address Form */}
+                    {showNewAddressForm ? (
+                      <div className="p-4 bg-white border rounded-2xl space-y-3.5" style={{ borderColor: "#E8D5BC" }}>
+                        <h4 className="text-xs font-bold text-[#6B3E26] border-b pb-1.5" style={{ borderColor: "#F5E9DA" }}>New Delivery Address</h4>
+                        
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Full Name *</label>
+                            <input
+                              type="text"
+                              required
+                              value={newAddress.fullName}
+                              onChange={e => setNewAddress({ ...newAddress, fullName: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Mobile Number *</label>
+                            <input
+                              type="tel"
+                              required
+                              value={newAddress.mobileNumber}
+                              onChange={e => setNewAddress({ ...newAddress, mobileNumber: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Address Line 1 *</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="House No., Building Name, Street"
+                            value={newAddress.addressLine1}
+                            onChange={e => setNewAddress({ ...newAddress, addressLine1: e.target.value })}
+                            className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                            style={{ borderColor: "#E8D5BC" }}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Address Line 2 (Opt)</label>
+                            <input
+                              type="text"
+                              placeholder="Area, Colony, Road"
+                              value={newAddress.addressLine2}
+                              onChange={e => setNewAddress({ ...newAddress, addressLine2: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Landmark (Opt)</label>
+                            <input
+                              type="text"
+                              placeholder="e.g. near temple"
+                              value={newAddress.landmark}
+                              onChange={e => setNewAddress({ ...newAddress, landmark: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">City *</label>
+                            <input
+                              type="text"
+                              required
+                              value={newAddress.city}
+                              onChange={e => setNewAddress({ ...newAddress, city: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">State *</label>
+                            <input
+                              type="text"
+                              required
+                              value={newAddress.state}
+                              onChange={e => setNewAddress({ ...newAddress, state: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Pincode *</label>
+                            <input
+                              type="text"
+                              required
+                              value={newAddress.pincode}
+                              onChange={e => setNewAddress({ ...newAddress, pincode: e.target.value })}
+                              className="px-2.5 py-2 rounded-lg border bg-gray-50/50 text-xs focus:outline-none focus:bg-white focus:border-[#6B3E26]"
+                              style={{ borderColor: "#E8D5BC" }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 pt-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[9px] uppercase font-bold text-[#7A5C45]">Type:</span>
+                            {["Home", "Office", "Other"].map((t) => (
+                              <button
+                                type="button"
+                                key={t}
+                                onClick={() => setNewAddress({ ...newAddress, type: t })}
+                                className={`px-2.5 py-1 rounded text-[10px] font-bold border transition-all cursor-pointer ${
+                                  newAddress.type === t
+                                    ? "bg-[#6B3E26] text-[#F5E9DA] border-[#6B3E26]"
+                                    : "bg-white text-gray-600 border-[#E8D5BC] hover:bg-gray-50"
+                                }`}
+                              >
+                                {t}
+                              </button>
+                            ))}
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              type="checkbox"
+                              id="saveToProfile"
+                              checked={saveToProfile}
+                              onChange={(e) => setSaveToProfile(e.target.checked)}
+                              className="w-3.5 h-3.5 accent-[#6B3E26] cursor-pointer"
+                            />
+                            <label htmlFor="saveToProfile" className="text-[10px] font-bold text-[#7A5C45] cursor-pointer select-none">
+                              Save to profile
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-white border rounded-2xl space-y-2.5" style={{ borderColor: "#E8D5BC" }}>
+                        <div className="flex justify-between items-center">
+                          <span className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider">Active Delivery Destination</span>
+                          <span className="text-[10px] text-green-600 font-bold">✓ Selected</span>
+                        </div>
+                        <p className="text-xs text-gray-700 leading-relaxed font-semibold">
+                          {phone ? `Contact: ${phone}` : "No contact number chosen"}
+                        </p>
+                        <p className="text-xs text-gray-600 leading-relaxed bg-[#FDF6EC]/50 p-2.5 rounded-lg border border-dashed border-[#E8D5BC]">
+                          {address || "Please select or add a delivery address above."}
+                        </p>
+                      </div>
+                    )}
 
                     {/* Payment Method Selection */}
                     <div className="flex flex-col gap-2">
