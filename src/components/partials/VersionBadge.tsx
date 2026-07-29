@@ -18,8 +18,11 @@ export default function VersionBadge() {
 
   useEffect(() => {
     fetch("/build-metadata.json")
-      .then((res) => res.json())
-      .then((data) => setMetadata(data))
+      .then((res) => {
+        if (!res.ok) return null; // gracefully skip 404
+        return res.json();
+      })
+      .then((data) => { if (data) setMetadata(data); })
       .catch(() => {});
   }, []);
 
