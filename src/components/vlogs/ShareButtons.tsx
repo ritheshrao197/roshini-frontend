@@ -72,24 +72,14 @@ export default function ShareButtons({ title, slug }: ShareButtonsProps) {
         🐦
       </a>
 
-      {/* LinkedIn */}
-      <a
-        href={shareLinks.linkedin}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="h-8 w-8 rounded-full border border-[#E8D5BC] bg-white flex items-center justify-center text-sm hover:bg-[#0077B5]/10 hover:border-[#0077B5] text-gray-600 hover:text-[#0077B5] transition-all"
-        title="Share on LinkedIn"
-      >
-        🔗
-      </a>
-
       {/* Copy Link Button */}
       <button
         onClick={copyToClipboard}
-        className="relative h-8 px-3 rounded-full border border-[#E8D5BC] bg-white flex items-center justify-center text-[10px] font-bold uppercase text-gray-600 hover:bg-[#6B3E26]/5 hover:border-[#6B3E26] hover:text-[#6B3E26] transition-all"
+        className="h-8 px-3 rounded-full border border-[#E8D5BC] bg-white flex items-center gap-1.5 text-xs font-semibold text-[#6B3E26] hover:bg-[#6B3E26] hover:text-[#F5E9DA] transition-all cursor-pointer"
         title="Copy Link to Clipboard"
       >
-        {copied ? "Copied! ✓" : "Copy Link"}
+        <span>🔗</span>
+        <span>{copied ? "Copied! ✓" : "Copy Link"}</span>
       </button>
     </div>
   );
