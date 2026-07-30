@@ -7,21 +7,20 @@ import { CustomizationProvider } from "@/lib/CustomizationContext";
 import { AuthProvider } from "@/lib/AuthContext";
 import { ThemeManager } from "@/lib/ThemeProvider";
 import { LanguageProvider } from "@/lib/LanguageContext";
-import { Poppins, Merriweather } from "next/font/google";
+import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
 
-const poppins = Poppins({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
-const merriweather = Merriweather({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-merriweather",
-  display: "swap",
-});
+/* Fraunces is a variable font with optical sizing.
+   next/font/google doesn't yet support opsz + ital axes well,
+   so we load it via the CSS @import in globals.css and just
+   register the variable here for Tailwind. */
 
 export const metadata: Metadata = {
   title: {
@@ -63,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${merriweather.variable} h-full antialiased`}>
+    <html lang="en" className={`${manrope.variable} h-full antialiased`}>
       <head>
         
         {/* Google Analytics */}

@@ -43,25 +43,25 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
   
   if (!sliders || sliders.length === 0) {
     return (
-      <section style={{ background: "linear-gradient(135deg, #F5E9DA 0%, #FFFDF9 60%, #F5E9DA 100%)" }} className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6">
+      <section style={{ background: "linear-gradient(135deg, var(--brand-cream) 0%, var(--bg) 60%, var(--brand-cream) 100%)" }} className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6">
         {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, #E6A817 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
-        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #6B3E26 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--brand-brown) 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
           {/* Text */}
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest" style={{ background: "#6B3E26", color: "#F5E9DA" }}>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest" style={{ background: "var(--brand-brown)", color: "var(--on-brand)", borderRadius: "var(--radius-full)" }}>
               🌿 Karnataka Heritage · Homemade Nutrition
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
               Traditional Nutrition<br />
-              <span style={{ color: "#E6A817" }}>for Modern</span><br />
+              <span style={{ color: "var(--gold)" }}>for Modern</span><br />
               Families
             </h1>
 
-            <p className="text-base md:text-lg leading-relaxed max-w-lg" style={{ color: "#7A5C45" }}>
+            <p className="text-base md:text-lg leading-relaxed max-w-lg" style={{ color: "var(--text-muted)" }}>
               Health Mixes, Seed Mixes, Herbal Teas, Spice Powders and Homemade Nutrition Products — crafted with love, rooted in tradition.
             </p>
 
@@ -82,8 +82,8 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
                 { value: "0g", label: "Added Sugar" },
               ].map((s) => (
                 <div key={s.label}>
-                  <div className="text-xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>{s.value}</div>
-                  <div className="text-xs font-medium" style={{ color: "#7A5C45" }}>{s.label}</div>
+                  <div className="text-xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>{s.value}</div>
+                  <div className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -91,19 +91,19 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
 
           {/* Hero Visual */}
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(135deg, #6B3E26 0%, #8a5438 100%)", minHeight: 400 }}>
+            <div className="relative overflow-hidden shadow-2xl" style={{ background: "linear-gradient(135deg, var(--brand-brown) 0%, var(--brand-brown-dark) 100%)", borderRadius: "var(--radius-xl)", minHeight: 400 }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-5">
                 <div className="text-8xl">🌾</div>
-                <h2 className="text-2xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#F5E9DA" }}>
+                <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--on-brand)" }}>
                   Handcrafted with Love
                 </h2>
-                <p className="text-sm leading-relaxed" style={{ color: "#ede0cc" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--brand-cream-dark)" }}>
                   Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches for maximum nutrition.
                 </p>
                 {/* Badges */}
                 <div className="flex flex-wrap gap-2 justify-center">
                   {["No Sugar", "Preservative Free", "Homemade"].map((b) => (
-                    <span key={b} className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: "rgba(245,233,218,0.15)", color: "#F5E9DA", border: "1px solid rgba(245,233,218,0.3)" }}>
+                    <span key={b} className="text-[10px] font-bold uppercase tracking-wider px-3 py-1" style={{ background: "rgba(245,233,218,0.15)", color: "var(--on-brand)", border: "1px solid rgba(245,233,218,0.3)", borderRadius: "var(--radius-full)" }}>
                       {b}
                     </span>
                   ))}
@@ -112,11 +112,11 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
             </div>
 
             {/* Floating cards */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-2xl px-4 py-3 shadow-lg border border-[#E8D5BC]">
-              <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#7A5C45" }}>Today's Pickup</div>
-              <div className="text-sm font-bold" style={{ color: "#6B3E26" }}>Ragi Health Mix 🌾</div>
+            <div className="absolute -top-4 -right-4 px-4 py-3 shadow-lg" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)" }}>
+              <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Today's Pickup</div>
+              <div className="text-sm font-bold" style={{ color: "var(--brand-brown)" }}>Ragi Health Mix 🌾</div>
             </div>
-            <div className="absolute -bottom-4 -left-4 bg-[#4CAF50] rounded-2xl px-4 py-3 shadow-lg text-white">
+            <div className="absolute -bottom-4 -left-4 px-4 py-3 shadow-lg" style={{ background: "var(--brand-green)", color: "#fff", borderRadius: "var(--radius-lg)" }}>
               <div className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Rating</div>
               <div className="text-sm font-bold">⭐ 4.9 / 5.0</div>
             </div>

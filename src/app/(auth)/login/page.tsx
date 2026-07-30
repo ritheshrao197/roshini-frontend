@@ -45,27 +45,24 @@ function LoginForm() {
     }
   };
 
-  const fieldClass = "w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none" +
-    " bg-white" +
-    " border-[#E8D5BC] focus:border-[#6B3E26] focus:shadow-[0_0_0_3px_rgba(107,62,38,0.1)]" +
-    " placeholder:text-[#B0886A] text-[#2C1A0E]";
+  const fieldClass = "input";
 
   return (
     <div className="w-full max-w-md space-y-7">
       {/* Logo */}
       <div className="text-center space-y-1">
         <Link href="/" className="inline-flex items-center gap-2 justify-center">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl" style={{ background: "#6B3E26", color: "#F5E9DA" }}>R</div>
+          <div className="w-10 h-10 flex items-center justify-center font-bold text-xl" style={{ background: "var(--brand-brown)", color: "var(--on-brand)", borderRadius: "var(--radius-lg)" }}>R</div>
           <div className="text-left">
-            <div className="font-bold text-lg leading-none" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>Roshini's</div>
-            <div className="text-[10px] tracking-widest uppercase leading-none" style={{ color: "#7A5C45" }}>Home Products</div>
+            <div className="font-bold text-lg leading-none" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>Roshini's</div>
+            <div className="text-[10px] tracking-widest uppercase leading-none" style={{ color: "var(--text-muted)" }}>Home Products</div>
           </div>
         </Link>
-        <p className="text-sm pt-2" style={{ color: "#7A5C45" }}>Sign in to your account</p>
+        <p className="text-sm pt-2" style={{ color: "var(--text-muted)" }}>Sign in to your account</p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}>
+        <div className="flex items-start gap-3 p-4 text-sm" style={{ background: "var(--error-light)", border: "1px solid var(--error)", color: "var(--error)", borderRadius: "var(--radius-lg)" }}>
           <span className="text-base mt-0.5">⚠️</span>
           <span>{error}</span>
         </div>
@@ -73,13 +70,13 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Email Address</label>
+          <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Email Address</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required suppressHydrationWarning className={fieldClass} placeholder="name@example.com" />
         </div>
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">
-            <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Password</label>
-            <Link href="/forgot-password" className="text-xs hover:underline" style={{ color: "#7A5C45" }}>
+            <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Password</label>
+            <Link href="/forgot-password" className="text-xs hover:underline" style={{ color: "var(--text-muted)" }}>
               Forgot Password?
             </Link>
           </div>
@@ -95,7 +92,8 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#B0886A] hover:text-[#6B3E26]"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              style={{ color: "var(--text-muted)" }}
             >
               {showPassword ? (
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

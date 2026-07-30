@@ -102,16 +102,17 @@ export default function Header() {
   return (
     <>
       {/* Top announcement bar */}
-      <div className="bg-[#6B3E26] text-[#F5E9DA] text-center text-[11px] font-medium py-2 px-4 tracking-wide">
+      <div className="text-center text-[11px] font-medium py-2 px-4 tracking-wide" style={{ background: "var(--brand-brown)", color: "var(--on-brand)" }}>
         {t("announcement")}
       </div>
 
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(107,62,38,0.12)]"
-            : "bg-[#FFFDF9]"
-        } border-b border-[#E8D5BC]`}
+            ? "backdrop-blur-md"
+            : ""
+        }`}
+        style={{ background: scrolled ? "rgba(255,255,255,0.95)" : "var(--bg)", borderBottom: "1px solid var(--border)", boxShadow: scrolled ? "var(--shadow-sm)" : "none" }}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-15 sm:h-16 md:h-18 gap-2">
@@ -120,10 +121,10 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group flex-shrink min-w-0">
               <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-9 sm:h-12 w-auto object-contain flex-shrink-0" />
               <div className="leading-none min-w-0">
-                <div className="font-bold text-[#6B3E26] text-xs sm:text-base tracking-tight truncate" style={{ fontFamily: "'Merriweather', serif" }}>
+                <div className="font-bold text-xs sm:text-base tracking-tight truncate" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
                   {shopName}
                 </div>
-                <div className="text-[9px] sm:text-[10px] text-[#7A5C45] font-medium tracking-widest uppercase truncate hidden sm:block">
+                <div className="text-[9px] sm:text-[10px] font-medium tracking-widest uppercase truncate hidden sm:block" style={{ color: "var(--text-muted)" }}>
                   {shopSubtitle}
                 </div>
               </div>
@@ -139,7 +140,10 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="px-3 py-2 text-sm font-medium text-[#2C1A0E] hover:text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-all whitespace-nowrap"
+                  className="px-3 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
+                  style={{ color: "var(--text)" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--brand-brown)"; e.currentTarget.style.background = "var(--brand-cream)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.background = "transparent"; }}
                 >
                   {item.label}
                 </Link>
@@ -147,7 +151,8 @@ export default function Header() {
               {user?.role === 1 && (
                 <Link
                   href="/admin"
-                  className="px-3 py-2 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-all"
+                  className="px-3 py-2 text-sm font-semibold rounded-lg transition-all"
+                  style={{ color: "var(--brand-brown)" }}
                 >
                   {t("nav.admin")}
                 </Link>
@@ -163,7 +168,8 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder={t("search.placeholder")}
-                  className="w-full pl-9 pr-8 py-2 text-xs bg-[#F5E9DA]/50 hover:bg-[#F5E9DA]/80 focus:bg-white text-[#2C1A0E] placeholder-[#7A5C45]/70 border border-[#E8D5BC] rounded-full focus:outline-none focus:ring-2 focus:ring-[#6B3E26]/30 focus:border-[#6B3E26] transition-all shadow-inner"
+                  className="w-full pl-9 pr-8 py-2 text-xs rounded-lg focus:outline-none focus:ring-2 transition-all"
+                  style={{ background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}
                 />
                 <svg
                   className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B3E26]"
@@ -178,7 +184,8 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={() => { setSearchQuery(""); setShowDropdown(false); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A5C45] hover:text-[#2C1A0E] text-xs font-bold"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     ✕
                   </button>
@@ -187,10 +194,10 @@ export default function Header() {
 
               {/* Autocomplete Dropdown */}
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-[#E8D5BC] overflow-hidden z-50">
+                <div className="absolute top-full left-0 right-0 mt-2 overflow-hidden z-50" style={{ background: "var(--surface)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", border: "1px solid var(--border)" }}>
                   {searchResults.length > 0 ? (
                     <div>
-                      <div className="px-3.5 py-2 text-[10px] font-bold text-[#7A5C45] uppercase tracking-wider bg-[#FFFDF9] border-b border-[#E8D5BC]">
+                      <div className="px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)", background: "var(--bg)", borderBottom: "1px solid var(--border)" }}>
                         Matching Products ({searchResults.length})
                       </div>
                       {searchResults.map((item) => {
@@ -200,14 +207,15 @@ export default function Header() {
                             key={item._id}
                             href={`/product/${item.slug || item._id}`}
                             onClick={() => { setShowDropdown(false); setSearchQuery(""); }}
-                            className="flex items-center gap-3 px-3.5 py-2.5 hover:bg-[#F5E9DA]/50 transition-colors border-b border-[#E8D5BC]/30 last:border-0 group"
+                            className="flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
+                            style={{ borderBottom: "1px solid color-mix(in srgb, var(--border) 30%, transparent)" }}
                           >
-                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover rounded-lg border border-[#E8D5BC] bg-[#F5E9DA]" />
+                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover" style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--surface-2)" }} />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold text-[#2C1A0E] group-hover:text-[#6B3E26] truncate">
+                              <p className="text-xs font-bold truncate" style={{ color: "var(--text)" }}>
                                 {item.pName}
                               </p>
-                              <p className="text-[11px] text-[#6B3E26] font-semibold">
+                              <p className="text-[11px] font-semibold" style={{ color: "var(--brand-brown)" }}>
                                 ₹{item.pPrice}
                               </p>
                             </div>
@@ -216,14 +224,15 @@ export default function Header() {
                       })}
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full text-center text-xs font-bold text-[#6B3E26] bg-[#F5E9DA]/60 hover:bg-[#F5E9DA] py-2.5 transition-colors border-t border-[#E8D5BC]"
+                        className="w-full text-center text-xs font-bold py-2.5 transition-colors"
+                        style={{ color: "var(--brand-brown)", background: "var(--surface-2)", borderTop: "1px solid var(--border)" }}
                       >
                         See all results for "{searchQuery}" →
                       </button>
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-xs text-[#7A5C45]">
-                      No products found matching "<span className="font-semibold text-[#2C1A0E]">{searchQuery}</span>"
+                    <div className="p-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
+                      No products found matching "<span className="font-semibold" style={{ color: "var(--text)" }}>{searchQuery}</span>"
                     </div>
                   )}
                 </div>
@@ -236,7 +245,8 @@ export default function Header() {
               {/* Mobile Search Toggle Icon */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="lg:hidden p-2 text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-colors"
+                className="lg:hidden p-2 rounded-lg transition-colors"
+                style={{ color: "var(--brand-brown)" }}
                 aria-label="Search"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -247,14 +257,15 @@ export default function Header() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative p-2 text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-colors"
+                className="relative p-2 rounded-lg transition-colors"
+                style={{ color: "var(--brand-brown)" }}
                 aria-label="View cart"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[#E6A817] text-white text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-0.5 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="absolute -top-0.5 -right-0.5 text-white text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-0.5 rounded-full flex items-center justify-center shadow-sm" style={{ background: "var(--gold)" }}>
                     {cartCount}
                   </span>
                 )}
@@ -265,13 +276,15 @@ export default function Header() {
                 <div className="hidden md:flex items-center gap-2">
                   <Link
                     href="/account/dashboard"
-                    className="text-xs font-semibold text-[#6B3E26] bg-[#F5E9DA] hover:bg-[#ede0cc] px-3 py-2 rounded-full transition-all"
+                    className="text-xs font-semibold px-3 py-2 transition-all"
+                    style={{ color: "var(--brand-brown)", background: "var(--brand-cream)", borderRadius: "var(--radius-md)" }}
                   >
                     Hi, {user.name?.split(" ")[0] || "User"} 👋
                   </Link>
                   <button
                     onClick={handleSignout}
-                    className="text-xs font-medium text-[#7A5C45] hover:text-[#B23A2A] transition-colors"
+                    className="text-xs font-medium transition-colors"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     Sign out
                   </button>
@@ -279,7 +292,8 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-[#6B3E26] text-[#F5E9DA] text-sm font-semibold rounded-full hover:bg-[#4e2c18] transition-all shadow-sm"
+                  className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold transition-all"
+                  style={{ background: "var(--brand-brown)", color: "var(--on-brand)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-sm)" }}
                 >
                   Sign In
                 </Link>
@@ -288,7 +302,8 @@ export default function Header() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2 text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-colors"
+                className="md:hidden p-2 rounded-lg transition-colors"
+                style={{ color: "var(--brand-brown)" }}
                 aria-label="Toggle menu"
               >
                 {menuOpen ? (
@@ -306,7 +321,7 @@ export default function Header() {
 
           {/* Mobile Search Bar Expansion */}
           {mobileSearchOpen && (
-            <div className="lg:hidden pb-3 pt-1 border-t border-[#E8D5BC]/50 relative">
+            <div className="lg:hidden pb-3 pt-1 relative" style={{ borderTop: "1px solid var(--border)" }}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
@@ -314,11 +329,13 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder="Search natural products..."
-                  className="w-full pl-9 pr-8 py-2 text-xs bg-[#F5E9DA]/70 focus:bg-white text-[#2C1A0E] placeholder-[#7A5C45] border border-[#E8D5BC] rounded-full focus:outline-none focus:ring-2 focus:ring-[#6B3E26]/30 shadow-inner transition-all"
+                  className="w-full pl-9 pr-8 py-2 text-xs focus:outline-none focus:ring-2 transition-all"
+                  style={{ background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}
                   autoFocus
                 />
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B3E26]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                  style={{ color: "var(--text-muted)" }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -330,7 +347,8 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={() => { setSearchQuery(""); setShowDropdown(false); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A5C45] hover:text-[#2C1A0E] text-xs font-bold"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     ✕
                   </button>
@@ -339,10 +357,10 @@ export default function Header() {
 
               {/* Mobile Autocomplete Dropdown */}
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-[#E8D5BC] overflow-hidden z-50">
+                <div className="absolute top-full left-0 right-0 mt-1 overflow-hidden z-50" style={{ background: "var(--surface)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", border: "1px solid var(--border)" }}>
                   {searchResults.length > 0 ? (
                     <div>
-                      <div className="px-3.5 py-2 text-[10px] font-bold text-[#7A5C45] uppercase tracking-wider bg-[#FFFDF9] border-b border-[#E8D5BC]">
+                      <div className="px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)", background: "var(--bg)", borderBottom: "1px solid var(--border)" }}>
                         Matching Products ({searchResults.length})
                       </div>
                       {searchResults.map((item) => {
@@ -352,14 +370,15 @@ export default function Header() {
                             key={item._id}
                             href={`/product/${item.slug || item._id}`}
                             onClick={() => { setShowDropdown(false); setSearchQuery(""); setMobileSearchOpen(false); }}
-                            className="flex items-center gap-3 px-3.5 py-2.5 hover:bg-[#F5E9DA]/50 transition-colors border-b border-[#E8D5BC]/30 last:border-0 group"
+                            className="flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
+                            style={{ borderBottom: "1px solid color-mix(in srgb, var(--border) 30%, transparent)" }}
                           >
-                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover rounded-lg border border-[#E8D5BC] bg-[#F5E9DA]" />
+                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover" style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--surface-2)" }} />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold text-[#2C1A0E] group-hover:text-[#6B3E26] truncate">
+                              <p className="text-xs font-bold truncate" style={{ color: "var(--text)" }}>
                                 {item.pName}
                               </p>
-                              <p className="text-[11px] text-[#6B3E26] font-semibold">
+                              <p className="text-[11px] font-semibold" style={{ color: "var(--brand-brown)" }}>
                                 ₹{item.pPrice}
                               </p>
                             </div>
@@ -368,14 +387,15 @@ export default function Header() {
                       })}
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full text-center text-xs font-bold text-[#6B3E26] bg-[#F5E9DA]/60 hover:bg-[#F5E9DA] py-2.5 transition-colors border-t border-[#E8D5BC]"
+                        className="w-full text-center text-xs font-bold py-2.5 transition-colors"
+                        style={{ color: "var(--brand-brown)", background: "var(--surface-2)", borderTop: "1px solid var(--border)" }}
                       >
                         See all results for "{searchQuery}" →
                       </button>
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-xs text-[#7A5C45]">
-                      No products found matching "<span className="font-semibold text-[#2C1A0E]">{searchQuery}</span>"
+                    <div className="p-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
+                      No products found matching "<span className="font-semibold" style={{ color: "var(--text)" }}>{searchQuery}</span>"
                     </div>
                   )}
                 </div>
@@ -386,7 +406,7 @@ export default function Header() {
 
         {/* Mobile Drawer Menu */}
         {menuOpen && (
-          <div className="md:hidden bg-white border-t border-[#E8D5BC] px-4 pb-4 pt-2 space-y-1 shadow-lg">
+          <div className="md:hidden px-4 pb-4 pt-2 space-y-1" style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", boxShadow: "var(--shadow-md)" }}>
             {[
               { href: "/shop", label: "🛍️  Shop All" },
               { href: "/blogs", label: "📝  Blogs" },
@@ -397,22 +417,23 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-3 text-sm font-medium text-[#2C1A0E] hover:bg-[#F5E9DA] hover:text-[#6B3E26] rounded-xl transition-all"
+                className="block px-4 py-3 text-sm font-medium transition-all"
+                style={{ color: "var(--text)", borderRadius: "var(--radius-md)" }}
               >
                 {item.label}
               </Link>
             ))}
             {user ? (
               <>
-                <Link href="/account/dashboard" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-xl">
+                <Link href="/account/dashboard" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold" style={{ color: "var(--brand-brown)", borderRadius: "var(--radius-md)" }}>
                   My Orders
                 </Link>
                 {user.role === 1 && (
-                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-xl">
+                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold" style={{ color: "var(--brand-brown)", borderRadius: "var(--radius-md)" }}>
                     Admin Console
                   </Link>
                 )}
-                <button onClick={handleSignout} className="w-full text-left px-4 py-3 text-sm font-medium text-[#B23A2A] hover:bg-red-50 rounded-xl">
+                <button onClick={handleSignout} className="w-full text-left px-4 py-3 text-sm font-medium" style={{ color: "var(--error)", borderRadius: "var(--radius-md)" }}>
                   Sign Out
                 </button>
               </>

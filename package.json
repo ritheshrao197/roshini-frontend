@@ -1,6 +1,6 @@
 {
   "name": "client-next",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "admin": "file:C:/Users/Admin",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
