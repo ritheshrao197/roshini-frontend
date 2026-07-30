@@ -112,7 +112,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
                   key={v._id || v.weight}
                   type="button"
                   onClick={() => setSelectedVariant(v)}
-                  className={`px-4 py-2.5 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     isSelected
                       ? "bg-[#6B3E26] text-[#F5E9DA] border-[#6B3E26]"
                       : "bg-white text-[#6B3E26] border-[#E8D5BC] hover:bg-[#FDF6EC]"
@@ -136,7 +136,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
           ["📦", "Fresh micro-batch packaging"],
           ["↩️", "Easy returns within 7 days"],
         ].map(([icon, text]) => (
-          <div key={text as string} className="flex items-center gap-2.5 text-sm" style={{ color: "#7A5C45" }}>
+          <div key={text as string} className="flex items-center gap-2.5 text-xs sm:text-sm" style={{ color: "#7A5C45" }}>
             <span>{icon}</span>
             <span>{text}</span>
           </div>
@@ -144,7 +144,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-2.5 sm:gap-3 pt-1">
         <AddToCartButton
           productId={selectedVariant ? `${product._id}-${selectedVariant.weight}` : product._id}
           price={price}
@@ -157,7 +157,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
         />
         <Link
           href="/cart"
-          className="px-6 py-4 rounded-2xl text-sm font-bold uppercase tracking-wider transition-all hover:opacity-80 inline-flex items-center"
+          className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all hover:opacity-80 inline-flex items-center justify-center whitespace-nowrap"
           style={{ background: "#F5E9DA", color: "#6B3E26", border: "1.5px solid #E8D5BC" }}
         >
           View Cart
@@ -165,11 +165,11 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       </div>
 
       {/* Security statement badges */}
-      <div className="flex items-center gap-4 pt-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#B0886A" }}>
+      <div className="flex flex-wrap items-center justify-between gap-1.5 pt-1 text-[10px] font-semibold uppercase tracking-wider text-[#7A5C45]">
         <span>🔒 Secure Checkout</span>
-        <span>·</span>
+        <span className="hidden sm:inline">·</span>
         <span>🌿 100% Natural</span>
-        <span>·</span>
+        <span className="hidden sm:inline">·</span>
         <span>✅ Verified Quality</span>
       </div>
     </div>
