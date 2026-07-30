@@ -1,39 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..700,0..1&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-/* ── Design Tokens (Official Brand Guidelines) ─────────────── */
+/* ─────────────────────────────────────────────────────────────
+   ROSHINI'S HOME PRODUCTS — Design Tokens
+   Direction: old-world grocer / heritage pantry label, given a
+   modern press. Deep espresso & ink, warm cream, antique-gold
+   foil accents (not flat yellow-gold), terracotta for spice.
+   Fraunces (a warm, slightly eccentric serif with real optical
+   texture) carries the brand voice; Manrope stays quiet in body
+   copy and UI. Signature: a fine gold hairline with a center
+   diamond mark — a nod to a foil-stamped wax seal.
+   ───────────────────────────────────────────────────────────── */
 :root {
-  /* Primary Brand (Official Brand Guidelines) */
-  --brand-brown:      #5D310E; /* Carnaby Tan - HEX #5D310E */
-  --brand-brown-dark: #422209; /* Deep Carnaby Tan */
-  --brand-brown-light:#AE6837; /* Clay Brown - HEX #AE6837 */
-  --brand-clay:       #AE6837; /* Clay Brown */
+  /* Primary Brand */
+  --brand-brown:      #5A3220;
+  --brand-brown-dark: #3C2015;
+  --brand-brown-light:#7A4A30;
   --brand-green:      #4CAF50;
   --brand-green-dark: #388E3C;
-  --brand-cream:      #F5E9DA;
-  --brand-cream-dark: #ede0cc;
+  --brand-cream:      #F6EEE1;
+  --brand-cream-dark: #ECDFC8;
 
-  /* Secondary Palette */
-  --gold:             #E6A817;
-  --gold-dark:        #c48e10;
-  --spice-red:        #B23A2A;
-  --premium-gold:     #C9A34E;
+  /* Secondary Palette — antique gold foil, not flat yellow */
+  --gold:             #B8863E;
+  --gold-dark:        #9A6E2F;
+  --gold-light:       #D8B36E;
+  --spice-red:        #9E3826;
+  --premium-gold:     #C9A24C;
+
+  /* Foil gradient — used sparingly on the one or two elements
+     that should read as "pressed metal" rather than flat fill */
+  --foil-gradient: linear-gradient(115deg, #9A6E2F 0%, #D8B36E 28%, #C9A24C 45%, #9A6E2F 70%, #D8B36E 100%);
 
   /* Neutrals */
-  --bg:               #FFFDF9;
-  --surface:          #FDF6EC;
-  --surface-2:        #F5E9DA;
-  --border:           #E8D5BC;
-  --border-dark:      #d4b896;
-  --text:             #2C1A0E;
-  --text-muted:       #7A5C45;
-  --text-light:       #B0886A;
+  --bg:               #FBF7F0;
+  --surface:          #FFFFFF;
+  --surface-2:        #F3EADA;
+  --border:           #E4D5BC;
+  --border-dark:      #CBB78E;
+  --text:             #241509;
+  --text-muted:       #6E5540;
+  --text-light:       #A6906F;
 
-  /* Button text pairs — flip per theme instead of hardcoding #fff */
-  --on-brand:         #FFFFFF;
-  --on-gold:           #FFFFFF;
+  --on-brand:         #F6EEE1;
+  --on-gold:           #2A1B0C;
 
-  /* Legacy aliases (kept for existing components) */
+  /* Elevation — warm-tinted, not neutral gray */
+  --shadow-sm: 0 1px 2px rgba(42, 24, 10, 0.06), 0 1px 1px rgba(42, 24, 10, 0.04);
+  --shadow-md: 0 6px 20px -4px rgba(42, 24, 10, 0.14), 0 2px 6px rgba(42, 24, 10, 0.06);
+  --shadow-gold: 0 6px 22px -6px rgba(184, 134, 62, 0.45);
+
+  --hairline: var(--gold);
+
+  /* Legacy aliases */
   --background:       var(--bg);
   --foreground:       var(--text);
   --accent-green:     var(--brand-brown);
@@ -43,29 +62,38 @@
   color-scheme: light;
 }
 
-/* ── Dark Mode: redefine tokens only ─────────────────────────────
-   Everything below (utilities, components) is built on these
-   variables, so dark mode "just works" without chasing every
-   Tailwind arbitrary-value class or inline style individually.  */
+/* ── Dark Mode: espresso room, gold under low light ────────────
+   Redefine tokens only — every component below reads from these,
+   so nothing needs a per-class override. */
 html.dark,
 html[data-theme="dark"] {
-  --bg:               #120D08;
-  --surface:          #1C140E;
-  --surface-2:        #281D14;
-  --border:           #3E2D20;
-  --border-dark:      #523D2C;
-  --text:             #F5E9DA;
-  --text-muted:       #D4C2AD;
-  --text-light:       #A08570;
+  --bg:               #140D07;
+  --surface:          #1E140B;
+  --surface-2:        #291B0F;
+  --border:           #3D2A17;
+  --border-dark:      #4F3820;
+  --text:             #F3E7D4;
+  --text-muted:       #C9AF8E;
+  --text-light:       #8E7154;
 
-  --brand-brown:      #E6A817;   /* headings/accents shift to gold for contrast */
-  --brand-brown-dark: #C48E10;
-  --brand-brown-light:#F5C75D;
-  --brand-cream:      #281D14;   /* used for hovers/selection — one step lighter than surface */
-  --brand-cream-dark: #3E2D20;
+  --brand-brown:      #D8B36E;
+  --brand-brown-dark: #C9A24C;
+  --brand-brown-light:#E8CC8E;
+  --brand-cream:      #291B0F;
+  --brand-cream-dark: #3D2A17;
 
-  --on-brand:         #1C140E;   /* dark text reads better on gold than white does */
-  --on-gold:          #1C140E;
+  --gold:             #D8B36E;
+  --gold-dark:        #C9A24C;
+  --gold-light:       #E8CC8E;
+
+  --foil-gradient: linear-gradient(115deg, #9A6E2F 0%, #E8CC8E 28%, #D8B36E 45%, #9A6E2F 70%, #E8CC8E 100%);
+
+  --on-brand:         #1E140B;
+  --on-gold:           #1E140B;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 10px 28px -6px rgba(0, 0, 0, 0.55);
+  --shadow-gold: 0 8px 26px -6px rgba(216, 179, 110, 0.35);
 
   color-scheme: dark;
 }
@@ -93,8 +121,8 @@ html[data-theme="dark"] {
   --color-text-muted:       var(--text-muted);
   --color-text-light:       var(--text-light);
 
-  --font-sans:   'Poppins', system-ui, sans-serif;
-  --font-serif:  'Merriweather', Georgia, serif;
+  --font-sans:   'Manrope', system-ui, sans-serif;
+  --font-serif:  'Fraunces', Georgia, serif;
 }
 
 /* ── Base Styles ──────────────────────────────────────────────── */
@@ -109,98 +137,154 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   margin: 0;
   padding: 0;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Merriweather', Georgia, serif;
-  line-height: 1.25;
-  color: var(--brand-brown);
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  font-weight: 600;
+}
+
+h1 { font-weight: 500; }
+
+/* A quiet italic beat, reserved for the one line per page that
+   should feel hand-written — a tagline, a pull-quote, a price. */
+.font-display-italic {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ── Signature: gold hairline with a center diamond mark ───────
+   The one recurring flourish. Use once per section, not as
+   general-purpose decoration. */
+.divider-gold {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 2rem 0;
+}
+.divider-gold::before,
+.divider-gold::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+  opacity: 0.6;
+}
+.divider-gold .mark {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
 }
 
 /* ── Utility Classes ──────────────────────────────────────────── */
 .btn-primary {
   background: var(--brand-brown);
   color: var(--on-brand);
-  padding: 0.75rem 2rem;
-  border-radius: 9999px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
+  padding: 0.8rem 2.1rem;
+  border-radius: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-  box-shadow: 0 2px 8px rgba(107, 62, 38, 0.18);
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  box-shadow: var(--shadow-sm);
   display: inline-block;
   cursor: pointer;
-  border: none;
+  border: 1px solid transparent;
 }
 .btn-primary:hover {
   background: var(--brand-brown-dark);
-  box-shadow: 0 4px 16px rgba(107, 62, 38, 0.28);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--brand-brown);
-  padding: 0.7rem 2rem;
-  border-radius: 9999px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
+  padding: 0.75rem 2.1rem;
+  border-radius: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  border: 2px solid var(--brand-brown);
-  transition: all 0.2s;
+  border: 1px solid var(--border-dark);
+  transition: all 0.25s ease;
   display: inline-block;
   cursor: pointer;
 }
 .btn-secondary:hover {
+  border-color: var(--brand-brown);
   background: var(--brand-cream);
 }
 
+/* Foil button — reserve for the single highest-priority CTA on
+   a page (e.g. "Shop the collection"), not every gold action. */
 .btn-gold {
-  background: var(--gold);
+  position: relative;
+  background: var(--foil-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 0%;
   color: var(--on-gold);
-  padding: 0.75rem 2rem;
-  border-radius: 9999px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
+  padding: 0.8rem 2.2rem;
+  border-radius: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  transition: all 0.2s;
-  box-shadow: 0 2px 12px rgba(230, 168, 23, 0.3);
+  transition: background-position 0.6s ease, box-shadow 0.25s ease, transform 0.15s ease;
+  box-shadow: var(--shadow-gold);
   display: inline-block;
   cursor: pointer;
   border: none;
 }
 .btn-gold:hover {
-  background: var(--gold-dark);
+  background-position: 100% 0%;
   transform: translateY(-1px);
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: 0.6rem;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* A card variant with a thin gold top edge — for featured
+   products, not the default card treatment. */
+.card-featured {
+  position: relative;
+  border-top: 2px solid var(--gold);
 }
 
 .section-label {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--text-muted);
+  letter-spacing: 0.22em;
+  color: var(--gold-dark, var(--gold));
 }
 
 /* ── Animations ───────────────────────────────────────────────── */
@@ -214,7 +298,7 @@ h1, h2, h3, h4 {
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.5s ease forwards;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .skeleton {
@@ -231,42 +315,50 @@ h1, h2, h3, h4 {
 
 /* ── Focus Rings ──────────────────────────────────────────────── */
 *:focus-visible {
-  outline: 2px solid var(--brand-brown);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* ── Selection ────────────────────────────────────────────────── */
 ::selection {
-  background: var(--brand-cream);
-  color: var(--brand-brown);
+  background: var(--gold);
+  color: var(--on-gold);
 }
 
 /* ── Form Inputs ──────────────────────────────────────────────── */
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1.5px solid var(--border);
-  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
   background: var(--surface);
   color: var(--text);
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 0.875rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .input:focus {
   outline: none;
-  border-color: var(--brand-brown);
-  box-shadow: 0 0 0 3px rgba(107, 62, 38, 0.1);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 134, 62, 0.15);
 }
 .input::placeholder {
   color: var(--text-light);
 }
 
-/* ── Native form elements (select/textarea) ──────────────────── */
 select,
 textarea {
   background: var(--surface);
   color: var(--text);
   border-color: var(--border);
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
