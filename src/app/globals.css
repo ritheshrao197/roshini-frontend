@@ -37,25 +37,98 @@
   --accent-cream-dark:var(--brand-cream);
 }
 
-/* ── Dark Mode Overrides ────────────────────────────────────── */
+/* ── Dark Mode Comprehensive Theme Overrides ─────────────────── */
 html.dark, html[data-theme="dark"] {
-  --bg:               #18120C;
-  --surface:          #241B14;
-  --surface-2:        #32261D;
-  --border:           #47372A;
-  --border-dark:      #5E4938;
-  --text:             #F5E9DA;
-  --text-muted:       #D4C2AD;
-  --text-light:       #B0886A;
-  --brand-brown:      #E6A817;
-  --brand-cream:      #241B14;
-  --brand-cream-dark: #32261D;
+  --bg:               #120D08 !important;
+  --surface:          #1C140E !important;
+  --surface-2:        #281D14 !important;
+  --border:           #3E2D20 !important;
+  --border-dark:      #523D2C !important;
+  --text:             #F5E9DA !important;
+  --text-muted:       #D4C2AD !important;
+  --text-light:       #B0886A !important;
+  --brand-brown:      #E6A817 !important;
+  --brand-brown-dark: #C48E10 !important;
+  --brand-brown-light:#F5C75D !important;
+  --brand-cream:      #1C140E !important;
+  --brand-cream-dark: #281D14 !important;
   color-scheme: dark;
 }
 
 html.dark body {
-  background-color: var(--bg);
-  color: var(--text);
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* Force dark theme override on elements with hardcoded light backgrounds */
+html.dark [style*="background: #FFFDF9"],
+html.dark [style*="background:#FFFDF9"],
+html.dark [style*="background: #FDF6EC"],
+html.dark [style*="background:#FDF6EC"],
+html.dark [style*="background: #F5E9DA"],
+html.dark [style*="background:#F5E9DA"],
+html.dark [style*="background: #fff"],
+html.dark [style*="background:#fff"],
+html.dark [style*="background: white"],
+html.dark [style*="background: linear-gradient"],
+html.dark [style*="background:linear-gradient"] {
+  background-color: var(--surface) !important;
+  background-image: none !important;
+  color: var(--text) !important;
+}
+
+/* Override light background classes */
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-amber-50 {
+  background-color: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+
+/* Hardcoded borders in dark mode */
+html.dark [style*="border: 1.5px solid #E8D5BC"],
+html.dark [style*="border: 1px solid #E8D5BC"],
+html.dark [style*="borderColor: #E8D5BC"],
+html.dark .border-\[\#E8D5BC\] {
+  border-color: var(--border) !important;
+}
+
+/* Text color overrides for readability in dark mode */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark [style*="color: #6B3E26"],
+html.dark [style*="color:#6B3E26"],
+html.dark .text-\[\#6B3E26\] {
+  color: #F5E9DA !important;
+}
+
+html.dark [style*="color: #7A5C45"],
+html.dark [style*="color:#7A5C45"],
+html.dark .text-\[\#7A5C45\] {
+  color: #D4C2AD !important;
+}
+
+html.dark [style*="color: #2C1A0E"],
+html.dark [style*="color:#2C1A0E"],
+html.dark .text-\[\#2C1A0E\] {
+  color: #F5E9DA !important;
+}
+
+/* Input fields & select dropdowns in dark mode */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #241B14 !important;
+  color: #F5E9DA !important;
+  border-color: #3E2D20 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #A08570 !important;
 }
 
 /* ── Tailwind Theme Registration ──────────────────────────────── */
