@@ -1,0 +1,13 @@
+
+> client-next@0.2.29 dev
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.104:3000
+- Environments: .env
+✓ Ready in 513ms
+Creating turbopack project { dir: 'E:\\Roshinis\\eCommerceWebsite\\client-next', testMode: true }
+
+ GET / 200 in 790ms (next.js: 109ms, proxy.ts: 196ms, application-code: 485ms)
+ GET /build-metadata.json 404 in 536ms (next.js: 466ms, proxy.ts: 5ms, application-code: 65ms)
