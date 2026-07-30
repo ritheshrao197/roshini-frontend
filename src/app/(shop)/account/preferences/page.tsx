@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { API_URL } from "@/lib/api";
+import { applyAppTheme } from "@/lib/ThemeProvider";
 
 const LANGUAGES = ["English", "Hindi", "Tamil", "Malayalam", "Telugu", "Kannada"];
 const THEMES = ["System Default", "Light Mode", "Dark Mode"];
@@ -33,13 +34,15 @@ export default function PreferencesPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.user?.preferences) {
+          const userTheme = data.user.preferences.theme || "System Default";
           setPreferences({
             preferredLanguage: data.user.preferences.preferredLanguage || "English",
-            theme: data.user.preferences.theme || "System Default",
+            theme: userTheme,
             interests: data.user.preferences.interests || [],
             dietaryPreferences: data.user.preferences.dietaryPreferences || [],
             marketingConsent: data.user.preferences.marketingConsent !== false,
           });
+          applyAppTheme(userTheme);
         }
       }
     } catch (err) {
@@ -136,7 +139,11 @@ export default function PreferencesPage() {
             <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider block">App Theme</label>
             <select
               value={preferences.theme}
-              onChange={(e) => setPreferences({ ...preferences, theme: e.target.value })}
+              onChange={(e) => {
+                const newTheme = e.target.value;
+                setPreferences({ ...preferences, theme: newTheme });
+                applyAppTheme(newTheme);
+              }}
               className={selectClass}
               style={{ borderColor: "#E8D5BC" }}
             >

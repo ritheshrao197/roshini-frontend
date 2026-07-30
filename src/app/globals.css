@@ -37,6 +37,27 @@
   --accent-cream-dark:var(--brand-cream);
 }
 
+/* ── Dark Mode Overrides ────────────────────────────────────── */
+html.dark, html[data-theme="dark"] {
+  --bg:               #18120C;
+  --surface:          #241B14;
+  --surface-2:        #32261D;
+  --border:           #47372A;
+  --border-dark:      #5E4938;
+  --text:             #F5E9DA;
+  --text-muted:       #D4C2AD;
+  --text-light:       #B0886A;
+  --brand-brown:      #E6A817;
+  --brand-cream:      #241B14;
+  --brand-cream-dark: #32261D;
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
 /* ── Tailwind Theme Registration ──────────────────────────────── */
 @theme inline {
   --color-background:       var(--bg);

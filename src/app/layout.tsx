@@ -5,6 +5,7 @@ import HeaderWrapper from "@/components/partials/HeaderWrapper";
 import VersionBadge from "@/components/partials/VersionBadge";
 import { CustomizationProvider } from "@/lib/CustomizationContext";
 import { AuthProvider } from "@/lib/AuthContext";
+import { ThemeManager } from "@/lib/ThemeProvider";
 import { Poppins, Merriweather } from "next/font/google";
 
 const poppins = Poppins({
@@ -113,6 +114,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <AuthProvider>
+          <ThemeManager />
           <CustomizationProvider>
             <HeaderWrapper />
             {children}
