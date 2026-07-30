@@ -33,14 +33,14 @@ export function applyAppTheme(themeSetting: string) {
 
 export function ThemeManager() {
   useEffect(() => {
-    // 1. Initial theme load from localStorage or fallback to System Default
-    const savedTheme = localStorage.getItem("rhp_theme") || "System Default";
+    // 1. Initial theme load from localStorage or fallback to Light Mode by default
+    const savedTheme = localStorage.getItem("rhp_theme") || "Light Mode";
     applyAppTheme(savedTheme);
 
-    // 2. Listen to OS system color scheme changes for "System Default" setting
+    // 2. Listen to OS system color scheme changes if user explicitly chose "System Default"
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleSystemChange = () => {
-      const currentTheme = localStorage.getItem("rhp_theme") || "System Default";
+      const currentTheme = localStorage.getItem("rhp_theme");
       if (currentTheme === "System Default") {
         applyAppTheme("System Default");
       }

@@ -14,7 +14,7 @@ export default function PreferencesPage() {
   const { setLanguage, t } = useLanguage();
   const [preferences, setPreferences] = useState({
     preferredLanguage: "English",
-    theme: "System Default",
+    theme: "Light Mode",
     interests: [] as string[],
     dietaryPreferences: [] as string[],
     marketingConsent: true,
@@ -36,7 +36,7 @@ export default function PreferencesPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.user?.preferences) {
-          const userTheme = data.user.preferences.theme || "System Default";
+          const userTheme = data.user.preferences.theme || "Light Mode";
           const userLang = (data.user.preferences.preferredLanguage || "English") as SupportedLanguage;
           setPreferences({
             preferredLanguage: userLang,
