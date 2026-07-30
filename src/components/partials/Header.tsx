@@ -7,9 +7,11 @@ import { getCartCount } from "@/lib/cart";
 import { API_URL, getAllProducts, Product } from "@/lib/api";
 import { useCustomization } from "@/lib/CustomizationContext";
 import { useAuth } from "@/lib/useAuth";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Header() {
   const router = useRouter();
+  const { t } = useLanguage();
   const { settings, logoUrl } = useCustomization();
   const { shopName, shopSubtitle } = settings;
   const { user, logout } = useAuth();
@@ -101,7 +103,7 @@ export default function Header() {
     <>
       {/* Top announcement bar */}
       <div className="bg-[#6B3E26] text-[#F5E9DA] text-center text-[11px] font-medium py-2 px-4 tracking-wide">
-        🌿 Free shipping on orders above ₹499 &nbsp;|&nbsp; Handcrafted in Karnataka &nbsp;|&nbsp; 100% Natural Ingredients
+        {t("announcement")}
       </div>
 
       <header
@@ -130,9 +132,9 @@ export default function Header() {
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-1">
               {[
-                { href: "/shop", label: "Shop All" },
-                { href: "/blogs", label: "Blogs" },
-                { href: "/#values", label: "Our Story" },
+                { href: "/shop", label: t("nav.shop") },
+                { href: "/blogs", label: t("nav.blogs") },
+                { href: "/#values", label: t("nav.story") },
               ].map((item) => (
                 <Link
                   key={item.href}
@@ -147,7 +149,7 @@ export default function Header() {
                   href="/admin"
                   className="px-3 py-2 text-sm font-semibold text-[#6B3E26] hover:bg-[#F5E9DA] rounded-lg transition-all"
                 >
-                  Admin
+                  {t("nav.admin")}
                 </Link>
               )}
             </nav>
@@ -160,7 +162,7 @@ export default function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
-                  placeholder="Search natural products..."
+                  placeholder={t("search.placeholder")}
                   className="w-full pl-9 pr-8 py-2 text-xs bg-[#F5E9DA]/50 hover:bg-[#F5E9DA]/80 focus:bg-white text-[#2C1A0E] placeholder-[#7A5C45]/70 border border-[#E8D5BC] rounded-full focus:outline-none focus:ring-2 focus:ring-[#6B3E26]/30 focus:border-[#6B3E26] transition-all shadow-inner"
                 />
                 <svg

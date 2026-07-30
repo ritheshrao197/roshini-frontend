@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "@/lib/api";
 import { applyAppTheme } from "@/lib/ThemeProvider";
+import { useLanguage, SupportedLanguage } from "@/lib/LanguageContext";
 
 const LANGUAGES = ["English", "Hindi", "Tamil", "Malayalam", "Telugu", "Kannada"];
 const THEMES = ["System Default", "Light Mode", "Dark Mode"];
@@ -10,6 +11,7 @@ const INTEREST_OPTIONS = ["Spices", "Ready Mixes", "Beverages", "Sweets & Snacks
 const DIETARY_OPTIONS = ["Vegetarian", "Vegan", "Gluten Free", "Organic Only", "Sugar Free", "Nut Free"];
 
 export default function PreferencesPage() {
+  const { setLanguage, t } = useLanguage();
   const [preferences, setPreferences] = useState({
     preferredLanguage: "English",
     theme: "System Default",
@@ -35,14 +37,16 @@ export default function PreferencesPage() {
         const data = await res.json();
         if (data.user?.preferences) {
           const userTheme = data.user.preferences.theme || "System Default";
+          const userLang = (data.user.preferences.preferredLanguage || "English") as SupportedLanguage;
           setPreferences({
-            preferredLanguage: data.user.preferences.preferredLanguage || "English",
+            preferredLanguage: userLang,
             theme: userTheme,
             interests: data.user.preferences.interests || [],
             dietaryPreferences: data.user.preferences.dietaryPreferences || [],
             marketingConsent: data.user.preferences.marketingConsent !== false,
           });
           applyAppTheme(userTheme);
+          setLanguage(userLang);
         }
       }
     } catch (err) {
@@ -125,7 +129,11 @@ export default function PreferencesPage() {
             <label className="text-[10px] uppercase font-bold text-[#7A5C45] tracking-wider block">Preferred Language</label>
             <select
               value={preferences.preferredLanguage}
-              onChange={(e) => setPreferences({ ...preferences, preferredLanguage: e.target.value })}
+              onChange={(e) => {
+                const newLang = e.target.value as SupportedLanguage;
+                setPreferences({ ...preferences, preferredLanguage: newLang });
+                setLanguage(newLang);
+              }}
               className={selectClass}
               style={{ borderColor: "#E8D5BC" }}
             >
