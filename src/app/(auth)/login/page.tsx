@@ -148,7 +148,7 @@ export default function LoginPage() {
           <div className="grid grid-cols-3 gap-4 pt-4">
             {[["500+", "Happy Families"], ["100%", "Natural"], ["0g", "Added Sugar"]].map(([v, l]) => (
               <div key={l} className="text-center">
-                <div className="text-xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#E6A817" }}>{v}</div>
+                <div className="text-xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--on-brand)" }}>{v}</div>
                 <div className="text-[10px] mt-0.5" style={{ color: "#ede0cc" }}>{l}</div>
               </div>
             ))}

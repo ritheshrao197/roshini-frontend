@@ -45,7 +45,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
     return (
       <section style={{ background: "linear-gradient(135deg, var(--brand-cream) 0%, var(--bg) 60%, var(--brand-cream) 100%)" }} className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-6">
         {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, var(--gold) 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style={{ background: "radial-gradient(circle, var(--brand-brown) 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
         <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--brand-brown) 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
@@ -57,7 +57,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
               Traditional Nutrition<br />
-              <span style={{ color: "var(--gold)" }}>for Modern</span><br />
+              <span style={{ color: "var(--brand-brown)" }}>for Modern</span><br />
               Families
             </h1>
 
@@ -182,7 +182,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
                   {slide.badgeText && (
                     <span 
                       className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4 shadow-sm"
-                      style={{ backgroundColor: slide.badgeColor || "#E6A817", color: "#FFFDF9" }}
+                      style={{ backgroundColor: slide.badgeColor || "#AE6837", color: "#FFFDF9" }}
                     >
                       {slide.badgeText}
                     </span>
@@ -221,7 +221,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
                         className={`px-8 py-3.5 font-bold rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wide ${
                           variant === "B"
                             ? "bg-[#4CAF50] text-white hover:bg-[#388E3C]" // Variant B: Green CTA
-                            : "bg-[#E6A817] text-[#6B3E26] hover:bg-[#F5E9DA]" // Variant A: Gold CTA
+                            : "bg-[#AE6837] text-white hover:bg-[#8A4D24]" // Variant A: Terracotta/Clay Brown CTA
                         }`}
                       >
                         {primaryBtnText}
@@ -252,7 +252,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
         }
         .hero-swiper .swiper-pagination-bullet-active {
           opacity: 1;
-          background: #E6A817;
+          background: #AE6837;
           width: 30px;
           border-radius: 5px;
           transition: all 0.3s ease;

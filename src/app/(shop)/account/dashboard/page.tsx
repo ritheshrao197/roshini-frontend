@@ -85,7 +85,7 @@ export default function DashboardPage() {
       <div className="bg-white p-6 rounded-2xl border" style={{ borderColor: "#E8D5BC" }}>
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-[#6B3E26]">Recent Orders</h3>
-          <Link href="/account/orders" className="text-sm font-bold text-[#E6A817] hover:underline">
+          <Link href="/account/orders" className="text-sm font-bold hover:underline" style={{ color: "var(--brand-brown)" }}>
             View All
           </Link>
         </div>

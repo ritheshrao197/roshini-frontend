@@ -110,7 +110,7 @@ export function CategoriesSection({ categories }: { categories: any[] }) {
                 </h3>
                 <p className="text-xs mt-1 line-clamp-2" style={{ color: "var(--text-muted)" }}>{cat.cDescription}</p>
               </div>
-              <span className="text-xs font-semibold mt-1" style={{ color: "var(--gold)" }}>Explore →</span>
+              <span className="text-xs font-semibold mt-1" style={{ color: "var(--brand-brown)" }}>Explore →</span>
             </Link>
           ))}
         </div>
@@ -121,7 +121,7 @@ export function CategoriesSection({ categories }: { categories: any[] }) {
 
 const WHY_US = [
   { icon: "🌾", title: "No Added Sugar", desc: "Naturally sweetened with dates, jaggery, and whole fruits.", color: "#4CAF50" },
-  { icon: "🧪", title: "Preservative Free", desc: "Crafted fresh in small batches with zero artificial preservatives.", color: "#E6A817" },
+  { icon: "🧪", title: "Preservative Free", desc: "Crafted fresh in small batches with zero artificial preservatives.", color: "#AE6837" },
   { icon: "🏡", title: "Homemade Quality", desc: "Every product is handcrafted with the same care as a home kitchen.", color: "#6B3E26" },
   { icon: "📦", title: "Micro Batches", desc: "Small-run production ensures absolute freshness and integrity.", color: "#B23A2A" },
   { icon: "🌿", title: "Karnataka Heritage", desc: "Recipes rooted in traditional Karnataka nutrition wisdom.", color: "#4CAF50" },
@@ -208,7 +208,7 @@ export function AchievementsSection({ achievements }: { achievements: any[] }) {
     <section className="py-16 md:py-20 px-4 sm:px-6" style={{ background: "var(--bg)" }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <span className="section-label" style={{ color: "var(--gold)" }}>National Acclaim</span>
+          <span className="section-label" style={{ color: "var(--brand-brown)" }}>National Acclaim</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-2 leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
             🏆 Award-Winning Nutrition<br />Trusted by Families Across India
           </h2>
@@ -294,7 +294,7 @@ export function TestimonialsSection() {
             <div key={t.name} className="p-6 flex flex-col gap-4" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)" }}>
               <div className="flex gap-1">
                 {Array.from({ length: t.rating }).map((_, i) => (
-                  <span key={i} style={{ color: "var(--gold)" }}>★</span>
+                  <span key={i} style={{ color: "var(--brand-brown)" }}>★</span>
                 ))}
               </div>
               <p className="text-sm leading-relaxed italic" style={{ color: "var(--text)" }}>"{t.text}"</p>
@@ -368,7 +368,7 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
   return (
     <section className="py-16 md:py-20 px-4 sm:px-6 w-full max-w-7xl mx-auto" style={{ background: "var(--bg)" }}>
       <div className="text-center mb-16">
-        <span className="section-label" style={{ color: "var(--gold)" }}>Roshini Wellness Hub</span>
+        <span className="section-label" style={{ color: "var(--brand-brown)" }}>Roshini Wellness Hub</span>
         <h2 className="text-3xl md:text-4xl font-bold mt-1" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
           Health Tips, Recipes & Guides
         </h2>
@@ -442,7 +442,7 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
 
             {recipeOfTheWeek && (
               <div className="space-y-2 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
-                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full" style={{ background: "var(--warning-light)", color: "var(--gold)" }}>Recipe of the Week</span>
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full" style={{ background: "var(--warning-light)", color: "var(--warning)" }}>Recipe of the Week</span>
                 <h4 className="font-bold text-sm" style={{ color: "var(--brand-brown)" }}><Link href={`/blogs/${recipeOfTheWeek.slug}`}>{recipeOfTheWeek.title}</Link></h4>
                 <p className="text-xs line-clamp-2" style={{ color: "var(--text-muted)" }}>{recipeOfTheWeek.excerpt}</p>
               </div>

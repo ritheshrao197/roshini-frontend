@@ -48,7 +48,7 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
     type: "image",
     referenceId: "",
     badgeText: "",
-    badgeColor: "#E6A817",
+    badgeColor: "#AE6837",
     showOverlayStats: false,
     animationType: "fade",
     textAlignment: "left",
@@ -76,7 +76,7 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
         type: initialData.type || "image",
         referenceId: initialData.referenceId || "",
         badgeText: initialData.badgeText || "",
-        badgeColor: initialData.badgeColor || "#E6A817",
+        badgeColor: initialData.badgeColor || "#AE6837",
         showOverlayStats: initialData.showOverlayStats || false,
         animationType: initialData.animationType || "fade",
         textAlignment: initialData.textAlignment || "left",
@@ -306,12 +306,12 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 p-4 rounded-xl border" style={{ background: "linear-gradient(to right, #FDF6EC, #fcfcfc)", borderColor: "#E8D5BC" }}>
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-[#E6A817] uppercase tracking-wider">A/B Test Experiment ID</label>
+              <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "#AE6837" }}>A/B Test Experiment ID</label>
               <input type="text" name="experimentId" value={formData.experimentId} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. diwali-promo" />
               <p className="text-[10px] text-gray-500">To A/B test, give multiple slides the exact same Experiment ID.</p>
             </div>
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-[#E6A817] uppercase tracking-wider">Variant Name</label>
+              <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "#AE6837" }}>Variant Name</label>
               <input type="text" name="variant" value={formData.variant} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="e.g. A" />
               <p className="text-[10px] text-gray-500">Name this variant (e.g. 'A', 'B', 'C') for analytics tracking.</p>
             </div>

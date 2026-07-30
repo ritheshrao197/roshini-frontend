@@ -72,7 +72,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       <div className="flex items-center gap-2">
         <div className="flex gap-0.5">
           {[1, 2, 3, 4, 5].map((s) => (
-            <span key={s} className="text-sm" style={{ color: "#E6A817" }}>★</span>
+            <span key={s} className="text-sm" style={{ color: "var(--brand-brown)" }}>★</span>
           ))}
         </div>
         <span className="text-xs" style={{ color: "#7A5C45" }}>4.9 · Trusted by families</span>

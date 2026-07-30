@@ -21,16 +21,15 @@
   --brand-cream:      #F6EEE1;
   --brand-cream-dark: #ECDFC8;
 
-  /* Secondary Palette — antique gold foil, not flat yellow */
-  --gold:             #B8863E;
-  --gold-dark:        #9A6E2F;
-  --gold-light:       #D8B36E;
+  /* Secondary Palette — Terracotta & Clay Brown (replaces gold) */
+  --gold:             #AE6837;
+  --gold-dark:        #8A4D24;
+  --gold-light:       #C8824F;
   --spice-red:        #9E3826;
-  --premium-gold:     #C9A24C;
+  --premium-gold:     #AE6837;
 
-  /* Foil gradient — used sparingly on the one or two elements
-     that should read as "pressed metal" rather than flat fill */
-  --foil-gradient: linear-gradient(115deg, #9A6E2F 0%, #D8B36E 28%, #C9A24C 45%, #9A6E2F 70%, #D8B36E 100%);
+  /* Earth gradient — warm clay brown to deep espresso */
+  --foil-gradient: linear-gradient(115deg, #7A4A30 0%, #AE6837 50%, #5A3220 100%);
 
   /* Neutrals */
   --bg:               #FBF7F0;
@@ -43,13 +42,13 @@
   --text-light:       #A6906F;
 
   --on-brand:         #F6EEE1;
-  --on-gold:           #2A1B0C;
+  --on-gold:           #FFFFFF;
 
   /* Semantic */
   --success:          #2E7D32;
   --success-light:    #E8F5E9;
-  --warning:          #F57F17;
-  --warning-light:    #FFF8E1;
+  --warning:          #D97706;
+  --warning-light:    #FEF3C7;
   --error:            #C62828;
   --error-light:      #FFEBEE;
 
@@ -57,9 +56,9 @@
   --shadow-sm: 0 1px 2px rgba(42, 24, 10, 0.06), 0 1px 1px rgba(42, 24, 10, 0.04);
   --shadow-md: 0 6px 20px -4px rgba(42, 24, 10, 0.14), 0 2px 6px rgba(42, 24, 10, 0.06);
   --shadow-lg: 0 12px 40px -8px rgba(42, 24, 10, 0.18), 0 4px 12px rgba(42, 24, 10, 0.08);
-  --shadow-gold: 0 6px 22px -6px rgba(184, 134, 62, 0.45);
+  --shadow-gold: 0 6px 22px -6px rgba(174, 104, 55, 0.35);
 
-  --hairline: var(--gold);
+  --hairline: var(--brand-brown);
 
   /* Spacing (8-point grid) */
   --space-1:  0.25rem;  /* 4px */
@@ -107,24 +106,24 @@ html[data-theme="dark"] {
   --text-muted:       #C9AF8E;
   --text-light:       #8E7154;
 
-  --brand-brown:      #D8B36E;
-  --brand-brown-dark: #C9A24C;
-  --brand-brown-light:#E8CC8E;
+  --brand-brown:      #E2C4A8;
+  --brand-brown-dark: #C8A585;
+  --brand-brown-light:#F0D6BF;
   --brand-cream:      #291B0F;
   --brand-cream-dark: #3D2A17;
 
-  --gold:             #D8B36E;
-  --gold-dark:        #C9A24C;
-  --gold-light:       #E8CC8E;
+  --gold:             #C8824F;
+  --gold-dark:        #AE6837;
+  --gold-light:       #E2C4A8;
 
-  --foil-gradient: linear-gradient(115deg, #9A6E2F 0%, #E8CC8E 28%, #D8B36E 45%, #9A6E2F 70%, #E8CC8E 100%);
+  --foil-gradient: linear-gradient(115deg, #AE6837 0%, #C8824F 50%, #8A4D24 100%);
 
   --on-brand:         #1E140B;
   --on-gold:           #1E140B;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 10px 28px -6px rgba(0, 0, 0, 0.55);
-  --shadow-gold: 0 8px 26px -6px rgba(216, 179, 110, 0.35);
+  --shadow-gold: 0 8px 26px -6px rgba(174, 104, 55, 0.35);
 
   color-scheme: dark;
 }

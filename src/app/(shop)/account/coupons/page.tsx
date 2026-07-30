@@ -71,7 +71,7 @@ export default function CouponsPage() {
               <div className="absolute right-[-10px] top-[calc(50%-10px)] w-5 h-5 rounded-full bg-white border-l" style={{ borderColor: "#E8D5BC" }} />
 
               <div className="border-b border-dashed pb-3 mb-3" style={{ borderColor: "#F5E9DA" }}>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#E6A817] block mb-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest block mb-1" style={{ color: "var(--brand-brown)" }}>
                   Promo Deal
                 </span>
                 <h3 className="text-lg font-serif font-extrabold text-[#6B3E26] mb-1">
