@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 
-
-/* ── Design Tokens ────────────────────────────────────────────── */
+/* ── Design Tokens (light mode / defaults) ───────────────────── */
 :root {
   /* Primary Brand */
   --brand-brown:      #6B3E26;
@@ -29,188 +28,45 @@
   --text-muted:       #7A5C45;
   --text-light:       #B0886A;
 
-  /* Legacy aliases (keep for existing components that use these) */
+  /* Button text pairs — flip per theme instead of hardcoding #fff */
+  --on-brand:         #FFFFFF;
+  --on-gold:           #FFFFFF;
+
+  /* Legacy aliases (kept for existing components) */
   --background:       var(--bg);
   --foreground:       var(--text);
   --accent-green:     var(--brand-brown);
   --accent-sage:      var(--text-muted);
   --accent-cream-dark:var(--brand-cream);
+
+  color-scheme: light;
 }
 
-/* ── Dark Mode Comprehensive Theme Overrides ─────────────────── */
-html.dark, html[data-theme="dark"] {
-  --bg:               #120D08 !important;
-  --surface:          #1C140E !important;
-  --surface-2:        #281D14 !important;
-  --border:           #3E2D20 !important;
-  --border-dark:      #523D2C !important;
-  --text:             #F5E9DA !important;
-  --text-muted:       #D4C2AD !important;
-  --text-light:       #B0886A !important;
-  --brand-brown:      #E6A817 !important;
-  --brand-brown-dark: #C48E10 !important;
-  --brand-brown-light:#F5C75D !important;
-  --brand-cream:      #1C140E !important;
-  --brand-cream-dark: #281D14 !important;
+/* ── Dark Mode: redefine tokens only ─────────────────────────────
+   Everything below (utilities, components) is built on these
+   variables, so dark mode "just works" without chasing every
+   Tailwind arbitrary-value class or inline style individually.  */
+html.dark,
+html[data-theme="dark"] {
+  --bg:               #120D08;
+  --surface:          #1C140E;
+  --surface-2:        #281D14;
+  --border:           #3E2D20;
+  --border-dark:      #523D2C;
+  --text:             #F5E9DA;
+  --text-muted:       #D4C2AD;
+  --text-light:       #A08570;
+
+  --brand-brown:      #E6A817;   /* headings/accents shift to gold for contrast */
+  --brand-brown-dark: #C48E10;
+  --brand-brown-light:#F5C75D;
+  --brand-cream:      #281D14;   /* used for hovers/selection — one step lighter than surface */
+  --brand-cream-dark: #3E2D20;
+
+  --on-brand:         #1C140E;   /* dark text reads better on gold than white does */
+  --on-gold:          #1C140E;
+
   color-scheme: dark;
-}
-
-html.dark body {
-  background-color: #120D08 !important;
-  color: #F5E9DA !important;
-}
-
-/* Force dark background on all page wrappers, cards and Tailwind light background classes */
-html.dark .bg-\[\#FFFDF9\],
-html.dark .bg-\[\#FDF6EC\],
-html.dark .bg-\[\#F5E9DA\],
-html.dark .bg-\[\#FAFAFA\],
-html.dark .bg-white,
-html.dark .bg-gray-50,
-html.dark .bg-slate-50,
-html.dark .bg-amber-50,
-html.dark .bg-\[\#FFFDF9\]\/80,
-html.dark .bg-\[\#FFFDF9\]\/95,
-html.dark .bg-white\/95,
-html.dark .bg-\[\#F5E9DA\]\/50,
-html.dark .bg-\[\#F5E9DA\]\/80,
-html.dark [class*="bg-[#FFFDF9]"],
-html.dark [class*="bg-[#FDF6EC]"],
-html.dark [class*="bg-[#FAFAFA]"],
-html.dark [class*="bg-white"] {
-  background-color: #1C140E !important;
-  color: #F5E9DA !important;
-}
-
-/* Main page layout containers match deep dark background */
-html.dark main,
-html.dark .min-h-screen,
-html.dark div[class*="min-h-screen"] {
-  background-color: #120D08 !important;
-  color: #F5E9DA !important;
-}
-
-/* Header & sticky top nav in dark mode */
-html.dark header,
-html.dark header.sticky,
-html.dark header div {
-  background-color: #1C140E !important;
-  border-color: #3E2D20 !important;
-  color: #F5E9DA !important;
-}
-
-html.dark header a,
-html.dark header nav a,
-html.dark header button,
-html.dark header span {
-  color: #F5E9DA !important;
-}
-
-html.dark header a:hover,
-html.dark header nav a:hover {
-  background-color: #281D14 !important;
-  color: #E6A817 !important;
-}
-
-/* Cards & Elevated Containers */
-html.dark .rounded-2xl,
-html.dark .rounded-3xl,
-html.dark .rounded-xl,
-html.dark card,
-html.dark aside,
-html.dark .shadow-sm,
-html.dark .shadow-md,
-html.dark .shadow-xl {
-  background-color: #1C140E !important;
-  border-color: #3E2D20 !important;
-}
-
-/* Hardcoded light inline style overrides */
-html.dark [style*="background: #FFFDF9"],
-html.dark [style*="background:#FFFDF9"],
-html.dark [style*="background: #FDF6EC"],
-html.dark [style*="background:#FDF6EC"],
-html.dark [style*="background: #F5E9DA"],
-html.dark [style*="background:#F5E9DA"],
-html.dark [style*="background: #FAFAFA"],
-html.dark [style*="background:#FAFAFA"],
-html.dark [style*="background: #fff"],
-html.dark [style*="background:#fff"],
-html.dark [style*="background: white"],
-html.dark [style*="background: linear-gradient"],
-html.dark [style*="background:linear-gradient"] {
-  background-color: #1C140E !important;
-  background-image: none !important;
-  color: #F5E9DA !important;
-}
-
-/* Typography & Headings */
-html.dark h1,
-html.dark h2,
-html.dark h3,
-html.dark h4,
-html.dark h5,
-html.dark h6,
-html.dark .text-\[\#6B3E26\],
-html.dark .text-\[\#2C1A0E\],
-html.dark [style*="color: #6B3E26"],
-html.dark [style*="color:#6B3E26"],
-html.dark [style*="color: #2C1A0E"],
-html.dark [style*="color:#2C1A0E"] {
-  color: #F5E9DA !important;
-}
-
-html.dark p,
-html.dark label,
-html.dark span,
-html.dark .text-\[\#7A5C45\],
-html.dark .text-gray-500,
-html.dark .text-gray-600,
-html.dark .text-gray-700,
-html.dark [style*="color: #7A5C45"],
-html.dark [style*="color:#7A5C45"] {
-  color: #D4C2AD !important;
-}
-
-/* Input elements, textareas & select dropdowns */
-html.dark input,
-html.dark select,
-html.dark textarea {
-  background-color: #281D14 !important;
-  color: #F5E9DA !important;
-  border-color: #3E2D20 !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-  color: #A08570 !important;
-}
-
-/* Borders */
-html.dark .border-\[\#E8D5BC\],
-html.dark .border-\[\#F5E9DA\],
-html.dark [style*="borderColor: #E8D5BC"],
-html.dark [style*="border: 1.5px solid #E8D5BC"],
-html.dark [style*="border: 1px solid #E8D5BC"] {
-  border-color: #3E2D20 !important;
-}
-
-/* Buttons that are unselected / secondary */
-html.dark button.bg-white,
-html.dark button[class*="bg-white"],
-html.dark button.bg-\[\#FFFDF9\],
-html.dark button[class*="bg-[#FFFDF9]"] {
-  background-color: #281D14 !important;
-  color: #F5E9DA !important;
-  border-color: #3E2D20 !important;
-}
-
-/* Primary brown buttons keep gold/brown contrast in dark mode */
-html.dark .btn-primary,
-html.dark button.bg-\[\#6B3E26\],
-html.dark a.bg-\[\#6B3E26\] {
-  background-color: #6B3E26 !important;
-  color: #F5E9DA !important;
 }
 
 /* ── Tailwind Theme Registration ──────────────────────────────── */
@@ -221,7 +77,6 @@ html.dark a.bg-\[\#6B3E26\] {
   --color-accent-sage:      var(--text-muted);
   --color-accent-cream-dark:var(--brand-cream);
 
-  /* New tokens available as Tailwind classes */
   --color-brand-brown:      var(--brand-brown);
   --color-brand-brown-dark: var(--brand-brown-dark);
   --color-brand-green:      var(--brand-green);
@@ -237,7 +92,6 @@ html.dark a.bg-\[\#6B3E26\] {
   --color-text-muted:       var(--text-muted);
   --color-text-light:       var(--text-light);
 
-  /* Font families */
   --font-sans:   'Poppins', system-ui, sans-serif;
   --font-serif:  'Merriweather', Georgia, serif;
 }
@@ -260,6 +114,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4 {
@@ -271,7 +126,7 @@ h1, h2, h3, h4 {
 /* ── Utility Classes ──────────────────────────────────────────── */
 .btn-primary {
   background: var(--brand-brown);
-  color: #fff;
+  color: var(--on-brand);
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   font-family: 'Poppins', sans-serif;
@@ -312,7 +167,7 @@ h1, h2, h3, h4 {
 
 .btn-gold {
   background: var(--gold);
-  color: #fff;
+  color: var(--on-gold);
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   font-family: 'Poppins', sans-serif;
@@ -361,9 +216,8 @@ h1, h2, h3, h4 {
   animation: fadeUp 0.5s ease forwards;
 }
 
-/* Skeleton loader */
 .skeleton {
-  background: linear-gradient(90deg, var(--brand-cream) 25%, var(--brand-cream-dark) 50%, var(--brand-cream) 75%);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -393,7 +247,7 @@ h1, h2, h3, h4 {
   padding: 0.75rem 1rem;
   border: 1.5px solid var(--border);
   border-radius: 0.75rem;
-  background: #fff;
+  background: var(--surface);
   color: var(--text);
   font-family: 'Poppins', sans-serif;
   font-size: 0.875rem;
@@ -406,4 +260,12 @@ h1, h2, h3, h4 {
 }
 .input::placeholder {
   color: var(--text-light);
+}
+
+/* ── Native form elements (select/textarea) ──────────────────── */
+select,
+textarea {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
 }
