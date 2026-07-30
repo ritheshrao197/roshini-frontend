@@ -1,14 +1,17 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
 import NewsletterForm from "@/components/home/NewsletterForm";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export function TrustBadgesSection() {
   return (
     <section style={{ background: "#6B3E26" }} className="py-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
         {[
-          { icon: "🚚", title: "Free Shipping", sub: "Orders above ₹999" },
+          { icon: "🚚", title: "Free Shipping", sub: "Orders above ₹499" },
           { icon: "🔒", title: "Secure Payment", sub: "PhonePe & PayU" },
           { icon: "♻️", title: "Eco Packaging", sub: "Sustainable materials" },
           { icon: "📞", title: "WhatsApp Support", sub: "Mon–Sat 9am–7pm" },
@@ -27,17 +30,18 @@ export function TrustBadgesSection() {
 }
 
 export function FeaturedProductsSection({ products }: { products: any[] }) {
+  const { t } = useLanguage();
   return (
     <section id="featured" className="py-16 md:py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
-          <span className="section-label">Our Bestsellers</span>
+          <span className="section-label">{t("home.bestsellers")}</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-1" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
-            Featured Products
+            {t("home.featured")}
           </h2>
         </div>
         <Link href="/shop" className="text-sm font-semibold flex items-center gap-1 hover:underline" style={{ color: "#6B3E26" }}>
-          View All Products →
+          {t("home.viewall")}
         </Link>
       </div>
 

@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/api";
 import AddToCartButton from "./AddToCartButton";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface ProductInteractiveDetailsProps {
   product: Product;
 }
 
 export default function ProductInteractiveDetails({ product }: ProductInteractiveDetailsProps) {
+  const { t } = useLanguage();
   const variants = product.pVariants || [];
   const hasVariants = variants.length > 0;
 
@@ -57,7 +59,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
             color: isOutOfStock ? "#B91C1C" : "#15803D" 
           }}
         >
-          {isOutOfStock ? "Out of Stock" : "In Stock"}
+          {isOutOfStock ? t("product.outofstock") : t("product.instock")}
         </span>
       </div>
 
@@ -102,7 +104,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       {hasVariants && (
         <div className="space-y-2.5 pt-2">
           <span className="text-xs font-bold text-[#7A5C45] uppercase tracking-wider block">
-            Select Packaging / Size:
+            {t("product.selectsize")}
           </span>
           <div className="flex flex-wrap gap-2">
             {variants.map((v) => {
@@ -118,7 +120,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
                       : "bg-white text-[#6B3E26] border-[#E8D5BC] hover:bg-[#FDF6EC]"
                   }`}
                 >
-                  {v.weight} {v.quantity === 0 ? "(Sold Out)" : `- ₹${v.price}`}
+                  {v.weight} {v.quantity === 0 ? `(${t("product.outofstock")})` : `- ₹${v.price}`}
                 </button>
               );
             })}
@@ -160,7 +162,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
           className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all hover:opacity-80 inline-flex items-center justify-center whitespace-nowrap"
           style={{ background: "#F5E9DA", color: "#6B3E26", border: "1.5px solid #E8D5BC" }}
         >
-          View Cart
+          {t("product.viewcart")}
         </Link>
       </div>
 
