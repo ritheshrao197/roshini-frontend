@@ -162,20 +162,20 @@ export function WhyUsSection() {
 
 export function BrandStorySection() {
   return (
-    <section style={{ background: "linear-gradient(135deg, #6B3E26 0%, #8a5438 100%)" }} className="py-16 md:py-20 px-4 sm:px-6">
+    <section style={{ background: "linear-gradient(135deg, #5D310E 0%, #AE6837 100%)" }} className="py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="space-y-5">
           <span className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full" style={{ background: "rgba(245,233,218,0.15)", color: "#F5E9DA" }}>
             Our Story
           </span>
           <h2 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#F5E9DA" }}>
-            From Roshini's Kitchen<br />to Your Family Table
+            Handmade Wellness<br />Passed Down Generations
           </h2>
           <p className="text-base leading-relaxed" style={{ color: "#ede0cc" }}>
-            Born from a passion for authentic nutrition and a deep respect for Karnataka's food heritage, Roshini's Home Products brings time-tested recipes to modern families across India.
+            Roshini’s Home Products is a women-led, family-run wellness brand dedicated to creating natural, preservative-free products inspired by India's rich traditions.
           </p>
           <p className="text-base leading-relaxed" style={{ color: "#ede0cc" }}>
-            Every product is crafted in small, loving batches — ensuring the same quality and care your grandmother would approve of.
+            From our Nutrimix Superfood Health Mix and Bananthi Maddu (postnatal tonic) to Pure Honey, Ubtan Face Pack, and Seeds Power Pack — each product is handmade with love, care, authenticity, and purity.
           </p>
           <Link href="/shop" className="btn-gold inline-block">
             Explore Our Products

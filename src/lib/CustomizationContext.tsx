@@ -24,10 +24,10 @@ interface CustomizationContextValue {
 const defaultSettings: CustomizationSettings = {
   logoImage: null,
   shopName: "Roshini's",
-  shopSubtitle: "Home Products",
-  themePrimaryColor: "#6B3E26",
-  themePrimaryColorDark: "#4e2c18",
-  themePrimaryColorLight: "#8a5438",
+  shopSubtitle: "Pure Ingredients, Zero Compromises",
+  themePrimaryColor: "#5D310E",
+  themePrimaryColorDark: "#422209",
+  themePrimaryColorLight: "#AE6837",
   themeCreamColor: "#F5E9DA",
   themeCreamColorDark: "#ede0cc",
 };

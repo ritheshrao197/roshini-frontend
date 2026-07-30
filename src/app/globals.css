@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 
-/* ── Design Tokens (light mode / defaults) ───────────────────── */
+/* ── Design Tokens (Official Brand Guidelines) ─────────────── */
 :root {
-  /* Primary Brand */
-  --brand-brown:      #6B3E26;
-  --brand-brown-dark: #4e2c18;
-  --brand-brown-light:#8a5438;
+  /* Primary Brand (Official Brand Guidelines) */
+  --brand-brown:      #5D310E; /* Carnaby Tan - HEX #5D310E */
+  --brand-brown-dark: #422209; /* Deep Carnaby Tan */
+  --brand-brown-light:#AE6837; /* Clay Brown - HEX #AE6837 */
+  --brand-clay:       #AE6837; /* Clay Brown */
   --brand-green:      #4CAF50;
   --brand-green-dark: #388E3C;
   --brand-cream:      #F5E9DA;
