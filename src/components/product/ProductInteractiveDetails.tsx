@@ -27,7 +27,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
   let discountPercent = 0;
   if (comparePrice && price && comparePrice > price) {
     discountPercent = Math.round(((comparePrice - price) / comparePrice) * 100);
-  } else if (product.pOffer) {
+  } else if (Number(product.pOffer) > 0) {
     discountPercent = Number(product.pOffer);
   }
 

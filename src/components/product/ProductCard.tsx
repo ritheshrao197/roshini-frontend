@@ -94,7 +94,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          {product.pOffer && (
+          {Number(product.pOffer) > 0 && (
             <span
               className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
               style={{ background: "#B23A2A", color: "#fff" }}
@@ -173,7 +173,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             >
               ₹{product.pPrice}
             </span>
-            {product.pOffer && (
+            {Number(product.pOffer) > 0 && (
               <span className="text-xs line-through ml-2" style={{ color: "#B0886A" }}>
                 ₹{Math.round(product.pPrice / (1 - Number(product.pOffer) / 100))}
               </span>

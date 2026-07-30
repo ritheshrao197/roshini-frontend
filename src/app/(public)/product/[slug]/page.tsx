@@ -134,7 +134,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               />
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
-                {product.pOffer && (
+                {Number(product.pOffer) > 0 && (
                   <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: "#B23A2A", color: "#fff" }}>
                     {product.pOffer}% OFF
                   </span>

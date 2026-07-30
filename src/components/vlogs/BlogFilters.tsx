@@ -86,17 +86,24 @@ export default function BlogFilters({ categories }: BlogFiltersProps) {
         </form>
 
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-          <span className="text-xs font-bold uppercase text-[#7A5C45]">Sort By:</span>
-          <select
-            value={currentSort}
-            onChange={(e) => updateFilters({ sort: e.target.value })}
-            className="border rounded-full px-4 py-2 text-sm bg-[#FFFDF9] focus:outline-none focus:border-[#6B3E26] cursor-pointer"
-            style={{ borderColor: "#E8D5BC", color: "#6B3E26" }}
-          >
-            <option value="">Latest Articles</option>
-            <option value="popular">Most Viewed</option>
-            <option value="featured">Featured Articles</option>
-          </select>
+          <span className="text-xs font-bold uppercase text-[#7A5C45] whitespace-nowrap">Sort By:</span>
+          <div className="relative inline-block">
+            <select
+              value={currentSort}
+              onChange={(e) => updateFilters({ sort: e.target.value })}
+              className="appearance-none border rounded-full pl-4 pr-10 py-2 text-sm bg-[#FFFDF9] focus:outline-none focus:border-[#6B3E26] cursor-pointer font-medium"
+              style={{ borderColor: "#E8D5BC", color: "#6B3E26" }}
+            >
+              <option value="">Latest Articles</option>
+              <option value="popular">Most Viewed</option>
+              <option value="featured">Featured Articles</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#6B3E26]">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 

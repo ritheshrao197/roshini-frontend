@@ -111,17 +111,17 @@ export default function Header() {
             : "bg-[#FFFDF9]"
         } border-b border-[#E8D5BC]`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-18 gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          <div className="flex items-center justify-between h-15 sm:h-16 md:h-18 gap-2">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-              <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-12 w-auto object-contain" />
-              <div className="leading-none hidden sm:block">
-                <div className="font-bold text-[#6B3E26] text-base tracking-tight" style={{ fontFamily: "'Merriweather', serif" }}>
+            <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group flex-shrink min-w-0">
+              <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-9 sm:h-12 w-auto object-contain flex-shrink-0" />
+              <div className="leading-none min-w-0">
+                <div className="font-bold text-[#6B3E26] text-xs sm:text-base tracking-tight truncate" style={{ fontFamily: "'Merriweather', serif" }}>
                   {shopName}
                 </div>
-                <div className="text-[10px] text-[#7A5C45] font-medium tracking-widest uppercase">
+                <div className="text-[9px] sm:text-[10px] text-[#7A5C45] font-medium tracking-widest uppercase truncate hidden sm:block">
                   {shopSubtitle}
                 </div>
               </div>
