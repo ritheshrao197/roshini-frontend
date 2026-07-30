@@ -48,8 +48,8 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] pt-24">
-        <div className="text-center text-[#6B3E26] font-semibold animate-pulse">
+      <div className="min-h-screen flex items-center justify-center pt-24">
+        <div className="text-center text-[#6B3E26] dark:text-[#F5E9DA] font-semibold animate-pulse">
           Verifying session details...
         </div>
       </div>
@@ -57,29 +57,29 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   }
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen py-10 pt-24" style={{ fontFamily: "'Poppins', sans-serif" }}>
+    <div className="min-h-screen py-10 pt-24" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#6B3E26]" style={{ fontFamily: "'Merriweather', serif" }}>
+          <h1 className="text-3xl font-bold text-[#6B3E26] dark:text-[#F5E9DA]" style={{ fontFamily: "'Merriweather', serif" }}>
             My Account
           </h1>
-          <p className="text-gray-500">Manage your orders, profile, and preferences</p>
+          <p className="text-gray-500 dark:text-[#D4C2AD]">Manage your orders, profile, and preferences</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="w-full lg:w-1/4">
-            <div className="bg-white rounded-2xl shadow-sm border p-4 sticky top-24" style={{ borderColor: "#E8D5BC" }}>
+            <div className="bg-white dark:bg-[#1C140E] rounded-2xl shadow-sm border p-4 sticky top-24 border-[#E8D5BC] dark:border-[#3E2D20]">
               
               {/* User Snapshot */}
-              <div className="flex items-center gap-4 p-4 border-b mb-4" style={{ borderColor: "#F5E9DA" }}>
+              <div className="flex items-center gap-4 p-4 border-b mb-4 border-[#F5E9DA] dark:border-[#3E2D20]">
                 <div className="w-12 h-12 rounded-full bg-[#6B3E26] text-white flex items-center justify-center font-bold text-xl uppercase">
                   {user?.name ? user.name.charAt(0) : "U"}
                 </div>
                 <div>
-                  <p className="font-bold text-[#6B3E26] truncate w-40">{user?.name || "User"}</p>
-                  <p className="text-xs text-gray-500 truncate w-40">{user?.email}</p>
+                  <p className="font-bold text-[#6B3E26] dark:text-[#F5E9DA] truncate w-40">{user?.name || "User"}</p>
+                  <p className="text-xs text-gray-500 dark:text-[#D4C2AD] truncate w-40">{user?.email}</p>
                 </div>
               </div>
 
