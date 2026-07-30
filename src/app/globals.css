@@ -358,25 +358,43 @@ h1 { font-weight: 500; }
   color: var(--on-gold);
 }
 
-/* ── Form Inputs ──────────────────────────────────────────────── */
+/* ── Form Inputs & Textarea & Select ───────────────────────────── */
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
-  border-radius: 0.4rem;
+  border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--text);
   font-family: 'Manrope', sans-serif;
   font-size: 0.875rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 .input:focus {
   outline: none;
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(184, 134, 62, 0.15);
+  box-shadow: 0 0 0 3px rgba(174, 104, 55, 0.15);
 }
 .input::placeholder {
   color: var(--text-light);
+}
+.input[disabled] {
+  background: var(--surface-2);
+  color: var(--text-light);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.input-error {
+  border-color: var(--error) !important;
+}
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15) !important;
+}
+.input-success {
+  border-color: var(--success) !important;
+}
+.input-success:focus {
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15) !important;
 }
 
 select,
@@ -384,6 +402,366 @@ textarea {
   background: var(--surface);
   color: var(--text);
   border-color: var(--border);
+}
+
+/* ── Checkbox / Radio ─────────────────────────────────────────── */
+.checkbox, .radio {
+  accent-color: var(--brand-brown);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: transform 0.1s ease;
+}
+.checkbox:active, .radio:active {
+  transform: scale(0.9);
+}
+
+/* ── Buttons (Idle → Hover → Focus → Pressed → Loading → Success → Disabled) ── */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-ghost:hover {
+  background: var(--surface-2);
+  color: var(--brand-brown);
+}
+.btn-ghost:active {
+  transform: scale(0.98);
+}
+.btn-primary:active, .btn-secondary:active, .btn-gold:active {
+  transform: scale(0.98);
+}
+.btn-primary[disabled], .btn-secondary[disabled], .btn-gold[disabled], .btn-ghost[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: calc(50% - 0.5rem);
+  left: calc(50% - 0.5rem);
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radius-full);
+  animation: shimmer 0.75s linear infinite;
+}
+
+/* ── Cards (Default, Featured, Interactive, Loading, Error, Success) ── */
+.card-interactive {
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold-light);
+}
+.card-interactive:active {
+  transform: translateY(-2px);
+}
+.card-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.card-error {
+  border-color: var(--error) !important;
+  background: var(--error-light) !important;
+}
+.card-success {
+  border-color: var(--success) !important;
+  background: var(--success-light) !important;
+}
+
+/* ── Badges (Success, Warning, Error, Info, Gold) ──────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+}
+.badge-success {
+  background: var(--success-light);
+  color: var(--success);
+  border-color: rgba(46, 125, 50, 0.15);
+}
+.badge-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+  border-color: rgba(217, 119, 6, 0.15);
+}
+.badge-error {
+  background: var(--error-light);
+  color: var(--error);
+  border-color: rgba(198, 40, 40, 0.15);
+}
+.badge-info {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.badge-gold {
+  background: var(--foil-gradient);
+  color: var(--on-gold);
+}
+
+/* ── Avatar (With group) ────────────────────────────────────────── */
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface);
+  object-cover: cover;
+  background: var(--surface-2);
+  display: inline-block;
+}
+.avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+.avatar-group .avatar {
+  margin-right: -0.75rem;
+  transition: transform 0.2s ease, z-index 0.2s ease;
+}
+.avatar-group .avatar:hover {
+  transform: translateY(-2px);
+  z-index: 10;
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────────── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.breadcrumb a {
+  transition: color 0.2s ease;
+}
+.breadcrumb a:hover {
+  color: var(--brand-brown);
+}
+.breadcrumb-separator {
+  color: var(--text-light);
+}
+
+/* ── Alert (All variants) ─────────────────────────────────────── */
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.alert-success {
+  background: var(--success-light);
+  color: var(--success);
+  border-color: rgba(46, 125, 50, 0.15);
+}
+.alert-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+  border-color: rgba(217, 119, 6, 0.15);
+}
+.alert-error {
+  background: var(--error-light);
+  color: var(--error);
+  border-color: rgba(198, 40, 40, 0.15);
+}
+.alert-info {
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* ── Tooltip (All positions) ──────────────────────────────────── */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+.tooltip {
+  position: absolute;
+  background: var(--brand-brown-dark);
+  color: var(--on-brand);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+.tooltip-container:hover .tooltip {
+  opacity: 1;
+}
+/* Top */
+.tooltip-top {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+}
+.tooltip-container:hover .tooltip-top {
+  transform: translateX(-50%) translateY(-8px);
+}
+/* Bottom */
+.tooltip-bottom {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+.tooltip-container:hover .tooltip-bottom {
+  transform: translateX(-50%) translateY(8px);
+}
+/* Left */
+.tooltip-left {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+}
+.tooltip-container:hover .tooltip-left {
+  transform: translateY(-50%) translateX(-8px);
+}
+/* Right */
+.tooltip-right {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+}
+.tooltip-container:hover .tooltip-right {
+  transform: translateY(-50%) translateX(8px);
+}
+
+/* ── Modal (All sizes) ────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(42, 24, 10, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1.5rem;
+}
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-sm { width: 100%; max-width: 24rem; }
+.modal-md { width: 100%; max-width: 32rem; }
+.modal-lg { width: 100%; max-width: 48rem; }
+.modal-xl { width: 100%; max-width: 64rem; }
+.modal-full { width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; }
+
+/* ── Drawer / Sheet ───────────────────────────────────────────── */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(42, 24, 10, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+}
+.drawer-content {
+  position: fixed;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 101;
+}
+.drawer-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 28rem;
+  border-left: 1px solid var(--border);
+}
+.drawer-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 28rem;
+  border-right: 1px solid var(--border);
+}
+
+/* ── Premium Glassmorphism ────────────────────────────────────── */
+.glass {
+  background: rgba(255, 253, 249, 0.7);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(232, 213, 188, 0.4);
+}
+html.dark .glass {
+  background: rgba(30, 20, 11, 0.7);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(61, 42, 23, 0.4);
+}
+
+/* ── Stagger Animation Library ────────────────────────────────── */
+.animate-stagger > * {
+  opacity: 0;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+
+/* ── Print Styles ─────────────────────────────────────────────── */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+  .no-print, nav, footer, header, button {
+    display: none !important;
+  }
+  .card, .modal-content {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────── */
