@@ -134,7 +134,7 @@ async function fetchPublicWithTimeout(
 export async function getAllProducts(): Promise<Product[]> {
   try {
     const res = await fetchPublicWithTimeout(`${API_URL}/product/all-product`, {
-      next: { revalidate: 300, tags: ["products"] },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error("Failed to fetch products");
     const data = await res.json();
