@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..700,0..1&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─────────────────────────────────────────────────────────────
    ROSHINI'S HOME PRODUCTS — Design Tokens
    Direction: old-world grocer / heritage pantry label, given a

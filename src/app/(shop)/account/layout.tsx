@@ -57,29 +57,29 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   }
 
   return (
-    <div className="min-h-screen py-10 pt-24" style={{ fontFamily: "'Poppins', sans-serif" }}>
+    <div className="min-h-screen py-10 pt-24" style={{ background: "var(--bg)", color: "var(--text)" }}>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#6B3E26] dark:text-[#F5E9DA]" style={{ fontFamily: "'Merriweather', serif" }}>
+          <h1 className="text-3xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
             My Account
           </h1>
-          <p className="text-gray-500 dark:text-[#D4C2AD]">Manage your orders, profile, and preferences</p>
+          <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>Manage your orders, profile, and preferences</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="w-full lg:w-1/4">
-            <div className="bg-white dark:bg-[#1C140E] rounded-2xl shadow-sm border p-4 sticky top-24 border-[#E8D5BC] dark:border-[#3E2D20]">
+            <div className="p-4 sticky top-24 shadow-sm" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)" }}>
               
               {/* User Snapshot */}
-              <div className="flex items-center gap-4 p-4 border-b mb-4 border-[#F5E9DA] dark:border-[#3E2D20]">
-                <div className="w-12 h-12 rounded-full bg-[#6B3E26] text-white flex items-center justify-center font-bold text-xl uppercase">
+              <div className="flex items-center gap-4 p-4 border-b mb-4" style={{ borderColor: "var(--border)" }}>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl uppercase shadow-sm" style={{ background: "var(--brand-brown)", color: "var(--on-brand)" }}>
                   {user?.name ? user.name.charAt(0) : "U"}
                 </div>
-                <div>
-                  <p className="font-bold text-[#6B3E26] dark:text-[#F5E9DA] truncate w-40">{user?.name || "User"}</p>
-                  <p className="text-xs text-gray-500 dark:text-[#D4C2AD] truncate w-40">{user?.email}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold truncate" style={{ color: "var(--brand-brown)" }}>{user?.name || "User"}</p>
+                  <p className="text-xs truncate" style={{ color: "var(--text-muted)" }}>{user?.email}</p>
                 </div>
               </div>
 
@@ -91,11 +91,13 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${
-                        isActive 
-                          ? "bg-[#6B3E26] text-[#F5E9DA] shadow-md" 
-                          : "text-gray-600 hover:bg-[#FDF6EC] hover:text-[#6B3E26]"
-                      }`}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all"
+                      style={{
+                        borderRadius: "var(--radius-md)",
+                        background: isActive ? "var(--brand-brown)" : "transparent",
+                        color: isActive ? "var(--on-brand)" : "var(--text)",
+                        boxShadow: isActive ? "var(--shadow-sm)" : "none"
+                      }}
                     >
                       <span className="text-lg">{item.icon}</span>
                       {item.label}
@@ -104,11 +106,12 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                 })}
               </nav>
 
-              <hr className="my-4 border-[#F5E9DA]" />
+              <hr className="my-4" style={{ borderColor: "var(--border)" }} />
               
               <button 
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium text-red-600 hover:bg-red-50"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all"
+                style={{ color: "var(--error)", borderRadius: "var(--radius-md)" }}
               >
                 <span className="text-lg">🚪</span>
                 Logout
