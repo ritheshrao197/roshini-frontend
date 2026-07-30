@@ -56,72 +56,127 @@ html.dark, html[data-theme="dark"] {
 }
 
 html.dark body {
-  background-color: var(--bg) !important;
-  color: var(--text) !important;
+  background-color: #120D08 !important;
+  color: #F5E9DA !important;
 }
 
-/* Force dark theme override on elements with hardcoded light backgrounds */
+/* Force dark background on all page wrappers, cards and Tailwind light background classes */
+html.dark .bg-\[\#FFFDF9\],
+html.dark .bg-\[\#FDF6EC\],
+html.dark .bg-\[\#F5E9DA\],
+html.dark .bg-\[\#FAFAFA\],
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-amber-50,
+html.dark .bg-\[\#FFFDF9\]\/80,
+html.dark .bg-\[\#FFFDF9\]\/95,
+html.dark .bg-white\/95,
+html.dark .bg-\[\#F5E9DA\]\/50,
+html.dark .bg-\[\#F5E9DA\]\/80,
+html.dark [class*="bg-[#FFFDF9]"],
+html.dark [class*="bg-[#FDF6EC]"],
+html.dark [class*="bg-[#FAFAFA]"],
+html.dark [class*="bg-white"] {
+  background-color: #1C140E !important;
+  color: #F5E9DA !important;
+}
+
+/* Main page layout containers match deep dark background */
+html.dark main,
+html.dark .min-h-screen,
+html.dark div[class*="min-h-screen"] {
+  background-color: #120D08 !important;
+  color: #F5E9DA !important;
+}
+
+/* Header & sticky top nav in dark mode */
+html.dark header,
+html.dark header.sticky,
+html.dark header div {
+  background-color: #1C140E !important;
+  border-color: #3E2D20 !important;
+  color: #F5E9DA !important;
+}
+
+html.dark header a,
+html.dark header nav a,
+html.dark header button,
+html.dark header span {
+  color: #F5E9DA !important;
+}
+
+html.dark header a:hover,
+html.dark header nav a:hover {
+  background-color: #281D14 !important;
+  color: #E6A817 !important;
+}
+
+/* Cards & Elevated Containers */
+html.dark .rounded-2xl,
+html.dark .rounded-3xl,
+html.dark .rounded-xl,
+html.dark card,
+html.dark aside,
+html.dark .shadow-sm,
+html.dark .shadow-md,
+html.dark .shadow-xl {
+  background-color: #1C140E !important;
+  border-color: #3E2D20 !important;
+}
+
+/* Hardcoded light inline style overrides */
 html.dark [style*="background: #FFFDF9"],
 html.dark [style*="background:#FFFDF9"],
 html.dark [style*="background: #FDF6EC"],
 html.dark [style*="background:#FDF6EC"],
 html.dark [style*="background: #F5E9DA"],
 html.dark [style*="background:#F5E9DA"],
+html.dark [style*="background: #FAFAFA"],
+html.dark [style*="background:#FAFAFA"],
 html.dark [style*="background: #fff"],
 html.dark [style*="background:#fff"],
 html.dark [style*="background: white"],
 html.dark [style*="background: linear-gradient"],
 html.dark [style*="background:linear-gradient"] {
-  background-color: var(--surface) !important;
+  background-color: #1C140E !important;
   background-image: none !important;
-  color: var(--text) !important;
+  color: #F5E9DA !important;
 }
 
-/* Override light background classes */
-html.dark .bg-white,
-html.dark .bg-gray-50,
-html.dark .bg-slate-50,
-html.dark .bg-amber-50 {
-  background-color: var(--surface-2) !important;
-  color: var(--text) !important;
-}
-
-/* Hardcoded borders in dark mode */
-html.dark [style*="border: 1.5px solid #E8D5BC"],
-html.dark [style*="border: 1px solid #E8D5BC"],
-html.dark [style*="borderColor: #E8D5BC"],
-html.dark .border-\[\#E8D5BC\] {
-  border-color: var(--border) !important;
-}
-
-/* Text color overrides for readability in dark mode */
+/* Typography & Headings */
 html.dark h1,
 html.dark h2,
 html.dark h3,
 html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark .text-\[\#6B3E26\],
+html.dark .text-\[\#2C1A0E\],
 html.dark [style*="color: #6B3E26"],
 html.dark [style*="color:#6B3E26"],
-html.dark .text-\[\#6B3E26\] {
+html.dark [style*="color: #2C1A0E"],
+html.dark [style*="color:#2C1A0E"] {
   color: #F5E9DA !important;
 }
 
+html.dark p,
+html.dark label,
+html.dark span,
+html.dark .text-\[\#7A5C45\],
+html.dark .text-gray-500,
+html.dark .text-gray-600,
+html.dark .text-gray-700,
 html.dark [style*="color: #7A5C45"],
-html.dark [style*="color:#7A5C45"],
-html.dark .text-\[\#7A5C45\] {
+html.dark [style*="color:#7A5C45"] {
   color: #D4C2AD !important;
 }
 
-html.dark [style*="color: #2C1A0E"],
-html.dark [style*="color:#2C1A0E"],
-html.dark .text-\[\#2C1A0E\] {
-  color: #F5E9DA !important;
-}
-
-/* Input fields & select dropdowns in dark mode */
+/* Input elements, textareas & select dropdowns */
 html.dark input,
 html.dark select,
 html.dark textarea {
-  background-color: #241B14 !important;
+  background-color: #281D14 !important;
   color: #F5E9DA !important;
   border-color: #3E2D20 !important;
 }
@@ -129,6 +184,33 @@ html.dark textarea {
 html.dark input::placeholder,
 html.dark textarea::placeholder {
   color: #A08570 !important;
+}
+
+/* Borders */
+html.dark .border-\[\#E8D5BC\],
+html.dark .border-\[\#F5E9DA\],
+html.dark [style*="borderColor: #E8D5BC"],
+html.dark [style*="border: 1.5px solid #E8D5BC"],
+html.dark [style*="border: 1px solid #E8D5BC"] {
+  border-color: #3E2D20 !important;
+}
+
+/* Buttons that are unselected / secondary */
+html.dark button.bg-white,
+html.dark button[class*="bg-white"],
+html.dark button.bg-\[\#FFFDF9\],
+html.dark button[class*="bg-[#FFFDF9]"] {
+  background-color: #281D14 !important;
+  color: #F5E9DA !important;
+  border-color: #3E2D20 !important;
+}
+
+/* Primary brown buttons keep gold/brown contrast in dark mode */
+html.dark .btn-primary,
+html.dark button.bg-\[\#6B3E26\],
+html.dark a.bg-\[\#6B3E26\] {
+  background-color: #6B3E26 !important;
+  color: #F5E9DA !important;
 }
 
 /* ── Tailwind Theme Registration ──────────────────────────────── */
