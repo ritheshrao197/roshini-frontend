@@ -38,14 +38,14 @@ export default function NewsletterForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center gap-3 py-6">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl" style={{ background: "#4CAF5020", border: "2px solid #4CAF50" }}>
+      <div className="flex flex-col items-center gap-3 py-6 animate-fade-up">
+        <div className="badge badge-sage w-14 h-14 rounded-full flex items-center justify-center text-2xl">
           ✅
         </div>
-        <p className="font-semibold" style={{ color: "#6B3E26", fontFamily: "'Merriweather', serif" }}>
+        <p className="font-display text-[var(--color-espresso)] font-semibold">
           You're in! Thank you for subscribing.
         </p>
-        <p className="text-xs" style={{ color: "#7A5C45" }}>
+        <p className="site-muted text-xs">
           Expect wellness tips and exclusive offers in your inbox.
         </p>
       </div>
@@ -54,7 +54,7 @@ export default function NewsletterForm() {
 
   return (
     <div className="max-w-md mx-auto">
-      {error && <p className="text-red-500 text-sm mb-2 text-center">{error}</p>}
+      {error && <p className="alert alert-error text-sm mb-2">{error}</p>}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col sm:flex-row gap-3"

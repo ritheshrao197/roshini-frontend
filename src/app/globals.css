@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..700,0..1&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -10,6 +9,18 @@
    ───────────────────────────────────────────────────────────── */
 
 :root {
+  /* Public token names used by application components. */
+  --color-espresso: var(--espresso);
+  --color-walnut: var(--walnut);
+  --color-terracotta: var(--terracotta);
+  --color-ivory: var(--ivory);
+  --color-linen: var(--linen);
+  --color-warm-white: var(--warm-white);
+  --color-sage: var(--sage);
+  --color-charcoal: var(--charcoal);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
   /* ── Primary Brand ────────────────────────────────────────── */
   --espresso: #3B2418;
   --walnut: #5B3A29;
@@ -452,8 +463,8 @@ html[data-theme="dark"] {
   --color-border-dark:      var(--border-dark);
 
   /* Typography */
-  --font-sans:  'Manrope', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: Georgia, Cambria, "Times New Roman", serif;
 
   /* Font Sizes */
   --text-xs:    var(--font-size-xs);
@@ -644,14 +655,14 @@ a:hover {
   width: 100%;
 }
 
-@media (min-width: var(--breakpoint-sm)) {
+@media (min-width: 40rem) {
   .container {
     padding-left: calc(var(--container-padding) * 1.5);
     padding-right: calc(var(--container-padding) * 1.5);
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .container {
     padding-left: calc(var(--container-padding) * 2);
     padding-right: calc(var(--container-padding) * 2);
@@ -1476,6 +1487,47 @@ a:hover {
 .font-display-italic { font-family: var(--font-serif); font-style: italic; }
 .font-sans-condensed { font-family: var(--font-sans); letter-spacing: var(--letter-spacing-widest); text-transform: uppercase; }
 
+/* Storefront compositions: keep layout choices in the design system, not JSX styles. */
+.site-announcement { background: var(--color-espresso); color: var(--color-ivory); }
+.site-header { background: var(--bg); border-bottom: 1px solid var(--color-border); }
+.site-header.is-scrolled { background: color-mix(in srgb, var(--surface) 95%, transparent); box-shadow: var(--shadow-sm); }
+.site-logo-name, .product-card-title { color: var(--color-espresso); }
+.site-logo-name, .product-card-title, .hero-title { font-family: var(--font-serif); }
+.site-muted { color: var(--color-text-muted); }
+.site-link { color: var(--color-text); border-radius: var(--radius-md); }
+.site-link:hover, .site-link:focus-visible { color: var(--color-espresso); background: var(--color-linen); }
+.icon-action { color: var(--color-espresso); border-radius: var(--radius-md); }
+.cart-count { background: var(--color-espresso); color: var(--color-ivory); }
+.search-dropdown { background: var(--surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.search-dropdown-heading { color: var(--color-text-muted); background: var(--bg); border-bottom: 1px solid var(--color-border); }
+.search-result { border-bottom: 1px solid var(--color-border); }
+.search-result-image { background: var(--surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.header-mobile-panel { background: var(--surface); border-top: 1px solid var(--color-border); box-shadow: var(--shadow-md); }
+
+.product-card { background: var(--surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.product-card-image { aspect-ratio: 1 / 1; background: var(--surface-2); }
+.product-card-badge { border-radius: var(--radius-full); }
+.product-card-offer { background: var(--color-terracotta); color: var(--color-ivory); }
+.product-card-stock { background: var(--color-charcoal); color: var(--color-ivory); }
+.product-wishlist { background: var(--surface); border: 1px solid var(--color-border); border-radius: var(--radius-full); }
+.product-chip { background: var(--surface-2); color: var(--color-espresso); border: 1px solid var(--color-border); border-radius: var(--radius-full); }
+.product-card-price { color: var(--color-espresso); font-family: var(--font-serif); }
+.product-card-footer { border-top: 1px solid var(--color-border); }
+.quantity-control { background: var(--surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-espresso); }
+
+.hero-fallback { background: linear-gradient(135deg, var(--color-linen), var(--color-ivory) 60%, var(--color-linen)); }
+.hero-panel { background: linear-gradient(135deg, var(--color-espresso), var(--color-walnut)); border-radius: var(--radius-xl); min-height: 25rem; }
+.hero-title { color: var(--color-ivory); }
+.hero-subtitle { color: var(--color-linen); }
+.hero-overlay { background: linear-gradient(90deg, color-mix(in srgb, var(--color-espresso) 85%, transparent), color-mix(in srgb, var(--color-walnut) 50%, transparent), transparent); }
+.hero-slide { background: var(--color-espresso); }
+.hero-slide-image { object-fit: cover; }
+.hero-stat { background: color-mix(in srgb, var(--color-ivory) 20%, transparent); border: 1px solid color-mix(in srgb, var(--color-ivory) 35%, transparent); color: var(--color-ivory); border-radius: var(--radius-lg); }
+.hero-swiper .swiper-pagination-bullet { background: var(--color-linen); opacity: .6; width: 10px; height: 10px; }
+.hero-swiper .swiper-pagination-bullet-active { opacity: 1; background: var(--color-terracotta); width: 30px; border-radius: var(--radius-sm); transition: all var(--duration-medium) var(--ease-default); }
+.hero-swiper .swiper-button-next, .hero-swiper .swiper-button-prev { color: var(--color-linen); transform: scale(.7); opacity: .5; transition: opacity var(--duration-medium); }
+.hero-swiper:hover .swiper-button-next, .hero-swiper:hover .swiper-button-prev { opacity: 1; }
+
 /* ─────────────────────────────────────────────────────────────
    PRINT STYLES
    ───────────────────────────────────────────────────────────── */
@@ -1505,16 +1557,16 @@ a:hover {
 }
 
 .hide-sm { display: none; }
-@media (min-width: var(--breakpoint-sm)) { .hide-sm { display: revert; } .show-sm { display: none; } }
+@media (min-width: 40rem) { .hide-sm { display: revert; } .show-sm { display: none; } }
 
 .hide-md { display: none; }
-@media (min-width: var(--breakpoint-md)) { .hide-md { display: revert; } .show-md { display: none; } }
+@media (min-width: 48rem) { .hide-md { display: revert; } .show-md { display: none; } }
 
 .hide-lg { display: none; }
-@media (min-width: var(--breakpoint-lg)) { .hide-lg { display: revert; } .show-lg { display: none; } }
+@media (min-width: 64rem) { .hide-lg { display: revert; } .show-lg { display: none; } }
 
 .hide-xl { display: none; }
-@media (min-width: var(--breakpoint-xl)) { .hide-xl { display: revert; } .show-xl { display: none; } }
+@media (min-width: 80rem) { .hide-xl { display: revert; } .show-xl { display: none; } }
 
 /* ─────────────────────────────────────────────────────────────
    LEGACY ALIASES

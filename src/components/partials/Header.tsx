@@ -102,17 +102,16 @@ export default function Header() {
   return (
     <>
       {/* Top announcement bar */}
-      <div className="text-center text-[11px] font-medium py-2 px-4 tracking-wide" style={{ background: "var(--brand-brown)", color: "var(--on-brand)" }}>
+      <div className="site-announcement text-center text-[11px] font-medium py-2 px-4 tracking-wide">
         {t("announcement")}
       </div>
 
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`site-header sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "backdrop-blur-md"
+            ? "is-scrolled backdrop-blur-md"
             : ""
         }`}
-        style={{ background: scrolled ? "rgba(255,255,255,0.95)" : "var(--bg)", borderBottom: "1px solid var(--border)", boxShadow: scrolled ? "var(--shadow-sm)" : "none" }}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-15 sm:h-16 md:h-18 gap-2">
@@ -121,10 +120,10 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group flex-shrink min-w-0">
               <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-9 sm:h-12 w-auto object-contain flex-shrink-0" />
               <div className="leading-none min-w-0">
-                <div className="font-bold text-xs sm:text-base tracking-tight truncate" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
+                <div className="site-logo-name font-bold text-xs sm:text-base tracking-tight truncate">
                   {shopName}
                 </div>
-                <div className="text-[9px] sm:text-[10px] font-medium tracking-widest uppercase truncate hidden sm:block" style={{ color: "var(--text-muted)" }}>
+                <div className="site-muted text-[9px] sm:text-[10px] font-medium tracking-widest uppercase truncate hidden sm:block">
                   {shopSubtitle}
                 </div>
               </div>
@@ -140,10 +139,7 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="px-3 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap"
-                  style={{ color: "var(--text)" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = "var(--brand-brown)"; e.currentTarget.style.background = "var(--brand-cream)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.background = "transparent"; }}
+                  className="site-link px-3 py-2 text-sm font-medium transition-all whitespace-nowrap"
                 >
                   {item.label}
                 </Link>
@@ -151,8 +147,7 @@ export default function Header() {
               {user?.role === 1 && (
                 <Link
                   href="/admin"
-                  className="px-3 py-2 text-sm font-semibold rounded-lg transition-all"
-                  style={{ color: "var(--brand-brown)" }}
+                  className="site-link px-3 py-2 text-sm font-semibold transition-all"
                 >
                   {t("nav.admin")}
                 </Link>
@@ -168,11 +163,10 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder={t("search.placeholder")}
-                  className="w-full pl-9 pr-8 py-2 text-xs rounded-lg focus:outline-none focus:ring-2 transition-all"
-                  style={{ background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}
+                  className="input input-sm w-full pl-9 pr-8 text-xs"
                 />
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B3E26]"
+                  className="icon-action absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -184,8 +178,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={() => { setSearchQuery(""); setShowDropdown(false); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
-                    style={{ color: "var(--text-muted)" }}
+                    className="site-muted absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
                   >
                     ✕
                   </button>
@@ -194,10 +187,10 @@ export default function Header() {
 
               {/* Autocomplete Dropdown */}
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 overflow-hidden z-50" style={{ background: "var(--surface)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", border: "1px solid var(--border)" }}>
+                <div className="search-dropdown absolute top-full left-0 right-0 mt-2 overflow-hidden z-50">
                   {searchResults.length > 0 ? (
                     <div>
-                      <div className="px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)", background: "var(--bg)", borderBottom: "1px solid var(--border)" }}>
+                      <div className="search-dropdown-heading px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider">
                         Matching Products ({searchResults.length})
                       </div>
                       {searchResults.map((item) => {
@@ -207,15 +200,14 @@ export default function Header() {
                             key={item._id}
                             href={`/product/${item.slug || item._id}`}
                             onClick={() => { setShowDropdown(false); setSearchQuery(""); }}
-                            className="flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
-                            style={{ borderBottom: "1px solid color-mix(in srgb, var(--border) 30%, transparent)" }}
+                            className="search-result flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
                           >
-                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover" style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--surface-2)" }} />
+                            <img src={imgUrl} alt={item.pName} className="search-result-image w-10 h-10 object-cover" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold truncate" style={{ color: "var(--text)" }}>
+                              <p className="text-xs font-bold truncate">
                                 {item.pName}
                               </p>
-                              <p className="text-[11px] font-semibold" style={{ color: "var(--brand-brown)" }}>
+                              <p className="product-card-title text-[11px] font-semibold">
                                 ₹{item.pPrice}
                               </p>
                             </div>
@@ -224,15 +216,14 @@ export default function Header() {
                       })}
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full text-center text-xs font-bold py-2.5 transition-colors"
-                        style={{ color: "var(--brand-brown)", background: "var(--surface-2)", borderTop: "1px solid var(--border)" }}
+                        className="btn-ghost w-full text-center text-xs font-bold py-2.5"
                       >
                         See all results for "{searchQuery}" →
                       </button>
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
-                      No products found matching "<span className="font-semibold" style={{ color: "var(--text)" }}>{searchQuery}</span>"
+                    <div className="site-muted p-4 text-center text-xs">
+                      No products found matching "<span className="font-semibold text-[var(--color-text)]">{searchQuery}</span>"
                     </div>
                   )}
                 </div>
@@ -245,8 +236,7 @@ export default function Header() {
               {/* Mobile Search Toggle Icon */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="lg:hidden p-2 rounded-lg transition-colors"
-                style={{ color: "var(--brand-brown)" }}
+                className="icon-action lg:hidden p-2 transition-colors"
                 aria-label="Search"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -257,15 +247,14 @@ export default function Header() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative p-2 rounded-lg transition-colors"
-                style={{ color: "var(--brand-brown)" }}
+                className="icon-action relative p-2 transition-colors"
                 aria-label="View cart"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 text-white text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-0.5 rounded-full flex items-center justify-center shadow-sm" style={{ background: "var(--brand-brown)" }}>
+                  <span className="cart-count absolute -top-0.5 -right-0.5 text-[10px] font-bold h-4.5 w-4.5 min-w-[18px] px-0.5 rounded-full flex items-center justify-center shadow-sm">
                     {cartCount}
                   </span>
                 )}
@@ -276,15 +265,13 @@ export default function Header() {
                 <div className="hidden md:flex items-center gap-2">
                   <Link
                     href="/account/dashboard"
-                    className="text-xs font-semibold px-3 py-2 transition-all"
-                    style={{ color: "var(--brand-brown)", background: "var(--brand-cream)", borderRadius: "var(--radius-md)" }}
+                    className="site-link text-xs font-semibold px-3 py-2 transition-all"
                   >
                     Hi, {user.name?.split(" ")[0] || "User"} 👋
                   </Link>
                   <button
                     onClick={handleSignout}
-                    className="text-xs font-medium transition-colors"
-                    style={{ color: "var(--text-muted)" }}
+                    className="site-muted text-xs font-medium transition-colors"
                   >
                     Sign out
                   </button>
@@ -292,8 +279,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold transition-all"
-                  style={{ background: "var(--brand-brown)", color: "var(--on-brand)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-sm)" }}
+                  className="btn-primary btn-sm hidden md:inline-flex items-center gap-1.5"
                 >
                   Sign In
                 </Link>
@@ -302,8 +288,7 @@ export default function Header() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2 rounded-lg transition-colors"
-                style={{ color: "var(--brand-brown)" }}
+                className="icon-action md:hidden p-2 transition-colors"
                 aria-label="Toggle menu"
               >
                 {menuOpen ? (
@@ -321,7 +306,7 @@ export default function Header() {
 
           {/* Mobile Search Bar Expansion */}
           {mobileSearchOpen && (
-            <div className="lg:hidden pb-3 pt-1 relative" style={{ borderTop: "1px solid var(--border)" }}>
+            <div className="lg:hidden pb-3 pt-1 relative border-t border-[var(--color-border)]">
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
@@ -329,13 +314,11 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder="Search natural products..."
-                  className="w-full pl-9 pr-8 py-2 text-xs focus:outline-none focus:ring-2 transition-all"
-                  style={{ background: "var(--surface-2)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}
+                  className="input input-sm w-full pl-9 pr-8 text-xs"
                   autoFocus
                 />
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-                  style={{ color: "var(--text-muted)" }}
+                  className="site-muted absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -347,8 +330,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={() => { setSearchQuery(""); setShowDropdown(false); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
-                    style={{ color: "var(--text-muted)" }}
+                    className="site-muted absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
                   >
                     ✕
                   </button>
@@ -357,10 +339,10 @@ export default function Header() {
 
               {/* Mobile Autocomplete Dropdown */}
               {showDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 overflow-hidden z-50" style={{ background: "var(--surface)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)", border: "1px solid var(--border)" }}>
+                <div className="search-dropdown absolute top-full left-0 right-0 mt-1 overflow-hidden z-50">
                   {searchResults.length > 0 ? (
                     <div>
-                      <div className="px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)", background: "var(--bg)", borderBottom: "1px solid var(--border)" }}>
+                      <div className="search-dropdown-heading px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider">
                         Matching Products ({searchResults.length})
                       </div>
                       {searchResults.map((item) => {
@@ -370,15 +352,14 @@ export default function Header() {
                             key={item._id}
                             href={`/product/${item.slug || item._id}`}
                             onClick={() => { setShowDropdown(false); setSearchQuery(""); setMobileSearchOpen(false); }}
-                            className="flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
-                            style={{ borderBottom: "1px solid color-mix(in srgb, var(--border) 30%, transparent)" }}
+                            className="search-result flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
                           >
-                            <img src={imgUrl} alt={item.pName} className="w-10 h-10 object-cover" style={{ borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--surface-2)" }} />
+                            <img src={imgUrl} alt={item.pName} className="search-result-image w-10 h-10 object-cover" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold truncate" style={{ color: "var(--text)" }}>
+                              <p className="text-xs font-bold truncate">
                                 {item.pName}
                               </p>
-                              <p className="text-[11px] font-semibold" style={{ color: "var(--brand-brown)" }}>
+                              <p className="product-card-title text-[11px] font-semibold">
                                 ₹{item.pPrice}
                               </p>
                             </div>
@@ -387,15 +368,14 @@ export default function Header() {
                       })}
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full text-center text-xs font-bold py-2.5 transition-colors"
-                        style={{ color: "var(--brand-brown)", background: "var(--surface-2)", borderTop: "1px solid var(--border)" }}
+                        className="btn-ghost w-full text-center text-xs font-bold py-2.5"
                       >
                         See all results for "{searchQuery}" →
                       </button>
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
-                      No products found matching "<span className="font-semibold" style={{ color: "var(--text)" }}>{searchQuery}</span>"
+                    <div className="site-muted p-4 text-center text-xs">
+                      No products found matching "<span className="font-semibold text-[var(--color-text)]">{searchQuery}</span>"
                     </div>
                   )}
                 </div>
@@ -406,7 +386,7 @@ export default function Header() {
 
         {/* Mobile Drawer Menu */}
         {menuOpen && (
-          <div className="md:hidden px-4 pb-4 pt-2 space-y-1" style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", boxShadow: "var(--shadow-md)" }}>
+          <div className="header-mobile-panel md:hidden px-4 pb-4 pt-2 space-y-1">
             {[
               { href: "/shop", label: "🛍️  Shop All" },
               { href: "/blogs", label: "📝  Blogs" },
@@ -417,23 +397,22 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-3 text-sm font-medium transition-all"
-                style={{ color: "var(--text)", borderRadius: "var(--radius-md)" }}
+                className="site-link block px-4 py-3 text-sm font-medium transition-all"
               >
                 {item.label}
               </Link>
             ))}
             {user ? (
               <>
-                <Link href="/account/dashboard" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold" style={{ color: "var(--brand-brown)", borderRadius: "var(--radius-md)" }}>
+                <Link href="/account/dashboard" onClick={() => setMenuOpen(false)} className="site-link block px-4 py-3 text-sm font-semibold">
                   My Orders
                 </Link>
                 {user.role === 1 && (
-                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold" style={{ color: "var(--brand-brown)", borderRadius: "var(--radius-md)" }}>
+                  <Link href="/admin" onClick={() => setMenuOpen(false)} className="site-link block px-4 py-3 text-sm font-semibold">
                     Admin Console
                   </Link>
                 )}
-                <button onClick={handleSignout} className="w-full text-left px-4 py-3 text-sm font-medium" style={{ color: "var(--error)", borderRadius: "var(--radius-md)" }}>
+                <button onClick={handleSignout} className="btn-ghost w-full justify-start text-left px-4 py-3 text-sm font-medium text-red-700">
                   Sign Out
                 </button>
               </>
