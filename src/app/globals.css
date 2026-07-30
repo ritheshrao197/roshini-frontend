@@ -5,7 +5,7 @@
 /* ─────────────────────────────────────────────────────────────
    ROSHINI'S HOME PRODUCTS — Premium Design System
    Direction: Old-world grocer reimagined for modern luxury.
-   Warm earth tones, layered browns, subtle tan, and gold foil.
+   Warm earth tones, handcrafted warmth, and clean natural surfaces.
    ───────────────────────────────────────────────────────────── */
 
 :root {
@@ -63,20 +63,7 @@
   --charcoal-light: #4A4A4A;
 
   /* ── Gold / Foil Accents ──────────────────────────────────── */
-  --gold-900: #5A3418;
-  --gold-800: #7A4824;
-  --gold-700: #9E6030;
-  --gold-600: #B87A48;
-  --gold-500: #D49A60;
-  --gold-400: #E8B880;
-  --gold-300: #F2D0A8;
-  --gold-200: #F8E4CC;
-  --gold-100: #FCF0E0;
-  --gold-50:  #FFF9F0;
-
   /* ── Foil Gradient ────────────────────────────────────────── */
-  --foil-gradient: linear-gradient(135deg, #5B3A29 0%, #B87A48 35%, #D49A60 60%, #8A4D36 100%);
-  --foil-gradient-subtle: linear-gradient(135deg, #8A4D36 0%, #D49A60 50%, #5B3A29 100%);
 
   /* ── Surface & Background ────────────────────────────────── */
   --bg:               var(--ivory);
@@ -108,7 +95,6 @@
   --on-charcoal:      var(--ivory);
   --on-accent:        var(--ivory);
   --on-surface:       var(--text);
-  --on-gold:          var(--text);
 
   /* ── Semantics ────────────────────────────────────────────── */
   --success:          #3D7A4A;
@@ -337,21 +323,8 @@ html[data-theme="dark"] {
   --on-charcoal: var(--text);
   --on-accent: var(--text);
   --on-surface: var(--text);
-  --on-gold: var(--text);
 
   /* ── Golds ────────────────────────────────────────────────── */
-  --gold-900: #2C180A;
-  --gold-800: #4A2A14;
-  --gold-700: #6E4020;
-  --gold-600: #8A5834;
-  --gold-500: #A67448;
-  --gold-400: #C49868;
-  --gold-300: #DAB888;
-  --gold-200: #E8D0A8;
-  --gold-100: #F2E4CC;
-  --gold-50:  #FCF5EC;
-
-  --foil-gradient: linear-gradient(135deg, #5B3A29 0%, #A67448 35%, #C49868 60%, #8A4D36 100%);
 
   /* ── Glass ────────────────────────────────────────────────── */
   --glass-bg:         rgba(44, 34, 28, 0.85);
@@ -419,17 +392,6 @@ html[data-theme="dark"] {
   --color-charcoal-light:   var(--charcoal-light);
 
   /* Golds */
-  --color-gold-900:         var(--gold-900);
-  --color-gold-800:         var(--gold-800);
-  --color-gold-700:         var(--gold-700);
-  --color-gold-600:         var(--gold-600);
-  --color-gold-500:         var(--gold-500);
-  --color-gold-400:         var(--gold-400);
-  --color-gold-300:         var(--gold-300);
-  --color-gold-200:         var(--gold-200);
-  --color-gold-100:         var(--gold-100);
-  --color-gold-50:          var(--gold-50);
-
   /* On-colors */
   --color-on-espresso:      var(--on-espresso);
   --color-on-walnut:        var(--on-walnut);
@@ -438,7 +400,6 @@ html[data-theme="dark"] {
   --color-on-charcoal:      var(--on-charcoal);
   --color-on-accent:        var(--on-accent);
   --color-on-surface:       var(--on-surface);
-  --color-on-gold:          var(--on-gold);
 
   /* Semantic */
   --color-success:          var(--success);

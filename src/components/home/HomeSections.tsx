@@ -120,12 +120,12 @@ export function CategoriesSection({ categories }: { categories: any[] }) {
 }
 
 const WHY_US = [
-  { icon: "🌾", title: "No Added Sugar", desc: "Naturally sweetened with dates, jaggery, and whole fruits.", color: "#4CAF50" },
-  { icon: "🧪", title: "Preservative Free", desc: "Crafted fresh in small batches with zero artificial preservatives.", color: "#AE6837" },
-  { icon: "🏡", title: "Homemade Quality", desc: "Every product is handcrafted with the same care as a home kitchen.", color: "#6B3E26" },
-  { icon: "📦", title: "Micro Batches", desc: "Small-run production ensures absolute freshness and integrity.", color: "#B23A2A" },
-  { icon: "🌿", title: "Karnataka Heritage", desc: "Recipes rooted in traditional Karnataka nutrition wisdom.", color: "#4CAF50" },
-  { icon: "🚚", title: "Pan-India Delivery", desc: "Carefully packed and shipped fresh across India.", color: "#6B3E26" },
+  { icon: "🌾", title: "No Added Sugar", desc: "Naturally sweetened with dates, jaggery, and whole fruits.", color: "var(--color-sage)" },
+  { icon: "🧪", title: "Preservative Free", desc: "Crafted fresh in small batches with zero artificial preservatives.", color: "var(--color-terracotta)" },
+  { icon: "🏡", title: "Homemade Quality", desc: "Every product is handcrafted with the same care as a home kitchen.", color: "var(--color-walnut)" },
+  { icon: "📦", title: "Micro Batches", desc: "Small-run production ensures absolute freshness and integrity.", color: "var(--color-terracotta)" },
+  { icon: "🌿", title: "Karnataka Heritage", desc: "Recipes rooted in traditional Karnataka nutrition wisdom.", color: "var(--color-sage)" },
+  { icon: "🚚", title: "Pan-India Delivery", desc: "Carefully packed and shipped fresh across India.", color: "var(--color-walnut)" },
 ];
 
 export function WhyUsSection() {
@@ -177,7 +177,7 @@ export function BrandStorySection() {
           <p className="text-base leading-relaxed" style={{ color: "var(--brand-cream-dark)" }}>
             From our Nutrimix Superfood Health Mix and Bananthi Maddu (postnatal tonic) to Pure Honey, Ubtan Face Pack, and Seeds Power Pack — each product is handmade with love, care, authenticity, and purity.
           </p>
-          <Link href="/shop" className="btn-gold inline-block">
+          <Link href="/shop" className="btn-terracotta inline-block">
             Explore Our Products
           </Link>
         </div>
