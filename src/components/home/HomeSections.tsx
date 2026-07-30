@@ -48,7 +48,7 @@ export function FeaturedProductsSection({ products }: { products: any[] }) {
           <p className="text-sm mt-1" style={{ color: "#7A5C45" }}>Our artisan kitchen is preparing the next batch. Check back shortly!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}

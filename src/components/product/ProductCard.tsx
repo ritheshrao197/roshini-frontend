@@ -127,7 +127,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* Details */}
-      <div className="p-4 flex flex-col flex-1 gap-2">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 gap-1.5 sm:gap-2">
         {/* Category */}
         <span
           className="text-[10px] font-bold uppercase tracking-widest"
