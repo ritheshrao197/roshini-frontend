@@ -142,7 +142,7 @@ export default function PreferencesPage() {
             </select>
           </div>
 
-          <div className="space-y-1.5">
+          {/* <div className="space-y-1.5">
             <label className="text-[10px] uppercase font-bold text-text-muted tracking-wider block">App Theme</label>
             <select
               value={preferences.theme}
@@ -157,7 +157,7 @@ export default function PreferencesPage() {
                 <option key={theme} value={theme}>{theme}</option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
 
         {/* Interests */}

@@ -184,28 +184,40 @@ export function WhyUsSection() {
 
 export function BrandStorySection() {
   return (
-    <section style={{ background: "linear-gradient(135deg, var(--brand-brown-dark) 0%, var(--brand-brown-light) 100%)" }} className="py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #5D310E 0%, #3D1E08 100%)" }}>
+      {/* Decorative subtle background elements */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-15 pointer-events-none" style={{ background: "radial-gradient(circle, #C28B36 0%, transparent 70%)" }} />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full opacity-15 pointer-events-none" style={{ background: "radial-gradient(circle, #5E7D32 0%, transparent 70%)" }} />
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
         <div className="space-y-6">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest px-3.5 py-1.5" style={{ background: "rgba(245,233,218,0.15)", color: "var(--on-brand)", borderRadius: "var(--radius-full)" }}>
-            Our Story
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full" style={{ background: "rgba(194, 139, 54, 0.2)", color: "#E5B534", border: "1px solid rgba(194, 139, 54, 0.4)" }}>
+            🌿 Our Story
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--on-brand)" }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "#FFFFFF" }}>
             Handmade Wellness<br />Passed Down Generations
           </h2>
-          <p className="text-base md:text-lg leading-relaxed" style={{ color: "var(--brand-cream-dark)" }}>
+          <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#FAF6F2" }}>
             Roshini’s Home Products is a women-led, family-run wellness brand dedicated to creating natural, preservative-free products inspired by India's rich traditions.
           </p>
-          <p className="text-base leading-relaxed" style={{ color: "var(--brand-cream-dark)" }}>
+          <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#F3E8DC" }}>
             From our Nutrimix Superfood Health Mix and Bananthi Maddu (postnatal tonic) to Pure Honey, Ubtan Face Pack, and Seeds Power Pack — each product is handmade with love, care, authenticity, and purity.
           </p>
-          <div className="pt-2">
-            <Link href="/shop" className="btn-terracotta btn-lg inline-block">
+          <div className="pt-4">
+            <Link 
+              href="/shop" 
+              className="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all shadow-lg hover:-translate-y-1 hover:shadow-2xl cursor-pointer" 
+              style={{ background: "#C28B36", color: "#FFFFFF", boxShadow: "0 10px 25px rgba(61, 30, 8, 0.4)" }}
+            >
               Explore Our Products
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {[
             { icon: "🌾", title: "Traditional Recipes", sub: "Generational wisdom" },
             { icon: "🏡", title: "Home Kitchen", sub: "Made with love" },
@@ -214,17 +226,16 @@ export function BrandStorySection() {
           ].map((v) => (
             <div
               key={v.title}
-              className="p-5 sm:p-6 flex flex-col gap-1.5"
+              className="p-6 flex flex-col gap-2 rounded-2xl transition-all duration-300 hover:-translate-y-1 group"
               style={{
-                background: "rgba(252,250,247,0.12)",
-                border: "1px solid rgba(252,250,247,0.25)",
-                borderRadius: "var(--radius-lg)",
-                backdropFilter: "blur(4px)",
+                background: "rgba(255, 255, 255, 0.08)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                backdropFilter: "blur(12px)",
               }}
             >
-              <div className="text-3xl mb-2">{v.icon}</div>
-              <div className="font-bold text-sm sm:text-base" style={{ color: "#FCFAF7" }}>{v.title}</div>
-              <div className="text-xs leading-relaxed" style={{ color: "rgba(245,233,218,0.85)" }}>{v.sub}</div>
+              <div className="text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">{v.icon}</div>
+              <div className="font-bold text-base sm:text-lg" style={{ color: "#FFFFFF" }}>{v.title}</div>
+              <div className="text-xs sm:text-sm leading-relaxed" style={{ color: "#F3E8DC" }}>{v.sub}</div>
             </div>
           ))}
         </div>

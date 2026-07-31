@@ -109,7 +109,7 @@ function LoginForm() {
           </div>
         </div>
 
-        <button type="submit" disabled={loading} className="btn-primary w-full text-center disabled:opacity-60">
+        <button type="submit" disabled={loading} className="btn-primary rounded-xl w-full text-center disabled:opacity-60">
           {loading ? "Signing In..." : "Sign In"}
         </button>
       </form>

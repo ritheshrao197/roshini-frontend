@@ -66,13 +66,13 @@ export default function NewsletterForm() {
         placeholder="Your email address"
         required
         suppressHydrationWarning
-        className="input flex-1"
+        className="input flex-1 rounded-xl"
         autoComplete="email"
       />
       <button
         type="submit"
         disabled={loading}
-        className="btn-primary whitespace-nowrap disabled:opacity-60"
+        className="btn-primary rounded-xl whitespace-nowrap disabled:opacity-60"
       >
         {loading ? "Subscribing..." : "Subscribe Free"}
       </button>

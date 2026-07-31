@@ -279,7 +279,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="btn-primary btn-sm hidden md:inline-flex items-center gap-1.5"
+                  className="btn-primary btn-sm rounded-lg hidden md:inline-flex items-center gap-1.5"
                 >
                   Sign In
                 </Link>
@@ -417,7 +417,7 @@ export default function Header() {
                 </button>
               </>
             ) : (
-              <Link href="/login" onClick={() => setMenuOpen(false)} className="block text-center btn-primary mt-2">
+              <Link href="/login" onClick={() => setMenuOpen(false)} className="block text-center btn-primary rounded-xl mt-2">
                 Sign In
               </Link>
             )}

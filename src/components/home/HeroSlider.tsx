@@ -49,8 +49,8 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
             </div>
 
             <div className="flex flex-wrap gap-4 sm:gap-6 pt-3">
-              <Link href="/shop" className="btn-primary btn-lg">Shop Now</Link>
-              <Link href="/#featured" className="btn-secondary btn-lg">Explore Collections</Link>
+              <Link href="/shop" className="btn-primary btn-lg rounded-xl">Shop Now</Link>
+              <Link href="/#featured" className="btn-secondary btn-lg rounded-xl">Explore Collections</Link>
             </div>
           </div>
 
@@ -96,7 +96,7 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
             {subtitle && <h2 className="hero-subtitle text-xl md:text-3xl font-medium mb-6 drop-shadow-sm max-w-3xl">{subtitle}</h2>}
             {description && <p className="text-sm md:text-lg text-[var(--color-ivory)] mb-8 max-w-2xl leading-relaxed">{description}</p>}
             {slide.showOverlayStats && <div className="flex flex-wrap gap-3 mb-8"><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">⭐ 4.84/5 Rating</span><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">🌿 30+ Ingredients</span></div>}
-            <div className="flex flex-wrap gap-4">{primaryBtnText && primaryBtnLink && <Link href={primaryBtnLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className={variant === "B" ? "btn-primary btn-lg" : "btn-terracotta btn-lg"}>{primaryBtnText}</Link>}{slide.secondaryButtonText && slide.secondaryButtonLink && <Link href={slide.secondaryButtonLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className="btn-secondary btn-lg">{slide.secondaryButtonText}</Link>}</div>
+            <div className="flex flex-wrap gap-4">{primaryBtnText && primaryBtnLink && <Link href={primaryBtnLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className={variant === "B" ? "btn-primary btn-lg rounded-xl" : "btn-terracotta btn-lg rounded-xl"}>{primaryBtnText}</Link>}{slide.secondaryButtonText && slide.secondaryButtonLink && <Link href={slide.secondaryButtonLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className="btn-secondary btn-lg rounded-xl">{slide.secondaryButtonText}</Link>}</div>
           </div></div></SwiperSlide>;
         })}
       </Swiper>
