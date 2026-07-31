@@ -5,7 +5,19 @@ import { API_URL } from "@/lib/api";
 import { applyAppTheme } from "@/lib/ThemeProvider";
 import { useLanguage, SupportedLanguage } from "@/lib/LanguageContext";
 
-const LANGUAGES = ["English", "Hindi", "Tamil", "Malayalam", "Telugu", "Kannada"];
+const LANGUAGES = [
+  "English",
+  "Hindi",
+  "Kannada",
+  "Tamil",
+  "Telugu",
+  "Malayalam",
+  "Marathi",
+  "Bengali",
+  "Gujarati",
+  "Spanish",
+  "French",
+];
 const THEMES = ["System Default", "Light Mode", "Dark Mode"];
 const INTEREST_OPTIONS = ["Spices", "Ready Mixes", "Beverages", "Sweets & Snacks", "Pickles", "Health Food"];
 const DIETARY_OPTIONS = ["Vegetarian", "Vegan", "Gluten Free", "Organic Only", "Sugar Free", "Nut Free"];

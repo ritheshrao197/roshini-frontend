@@ -965,6 +965,7 @@ input[type="button"] {
 
 .input-sm { height: var(--size-input-sm); font-size: var(--font-size-sm); padding: 0 var(--space-3); }
 .input-lg { height: var(--size-input-lg); font-size: var(--font-size-lg); padding: 0 var(--space-6); }
+.search-input { padding-left: 2.75rem !important; padding-right: 2.25rem !important; }
 
 .input-group { display: flex; align-items: stretch; width: 100%; }
 .input-group .input { flex: 1; min-width: 0; }
@@ -1638,6 +1639,42 @@ input[type="button"] {
 
 .hide-sm { display: none; }
 @media (min-width: 40rem) { .hide-sm { display: revert; } .show-sm { display: none; } }
+
+/* ── Google Translate Seamless Integration ─────────────────── */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-te-gadget {
+  font-size: 0px !important;
+  color: transparent !important;
+}
+
+.goog-te-gadget span,
+.goog-te-gadget div {
+  display: none !important;
+}
+
+.goog-te-combo {
+  background: var(--bg-cream);
+  color: var(--primary-brown);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  outline: none;
+}
 
 .hide-md { display: none; }
 @media (min-width: 48rem) { .hide-md { display: revert; } .show-md { display: none; } }

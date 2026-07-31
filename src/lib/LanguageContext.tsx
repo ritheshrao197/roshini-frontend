@@ -2,7 +2,32 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type SupportedLanguage = "English" | "Hindi" | "Kannada" | "Tamil" | "Telugu" | "Malayalam";
+export type SupportedLanguage = 
+  | "English" 
+  | "Hindi" 
+  | "Kannada" 
+  | "Tamil" 
+  | "Telugu" 
+  | "Malayalam"
+  | "Marathi"
+  | "Bengali"
+  | "Gujarati"
+  | "Spanish"
+  | "French";
+
+export const LANG_CODES: Record<SupportedLanguage, string> = {
+  English: "en",
+  Hindi: "hi",
+  Kannada: "kn",
+  Tamil: "ta",
+  Telugu: "te",
+  Malayalam: "ml",
+  Marathi: "mr",
+  Bengali: "bn",
+  Gujarati: "gu",
+  Spanish: "es",
+  French: "fr",
+};
 
 interface LanguageContextType {
   language: SupportedLanguage;
@@ -10,7 +35,7 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const DICTIONARY: Record<SupportedLanguage, Record<string, string>> = {
+const DICTIONARY: Record<string, Record<string, string>> = {
   English: {
     "nav.shop": "Shop All",
     "nav.blogs": "Blogs",
@@ -96,7 +121,7 @@ const DICTIONARY: Record<SupportedLanguage, Record<string, string>> = {
     "nav.signout": "ಸೈನ್ ಔಟ್",
     "nav.account": "ನನ್ನ ಖಾತೆ",
     "nav.cart": "ಕಾರ್ಟ್",
-    "search.placeholder": "ಸೈಸರ್ಗಿಕ ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...",
+    "search.placeholder": "ನೈಸರ್ಗಿಕ ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...",
     "announcement": "🌿 ₹499 ಕ್ಕಿಂತ ಹೆಚ್ಚಿನ ಆರ್ಡರ್‌ಗಳಿಗೆ ಉಚಿತ ಡೆಲಿವರಿ | ಕರ್ನಾಟಕದಲ್ಲಿ ತಯಾರಿಸಲಾಗಿದೆ | 100% ನೈಸರ್ಗಿಕ ಪದಾರ್ಥಗಳು",
     "home.bestsellers": "ನಮ್ಮ ಅತ್ಯುತ್ತಮ ಉತ್ಪನ್ನಗಳು",
     "home.featured": "ವಿಶೇಷ ಉತ್ಪನ್ನಗಳು",
@@ -241,6 +266,20 @@ const DICTIONARY: Record<SupportedLanguage, Record<string, string>> = {
   },
 };
 
+const setGoogleTranslateCookie = (langCode: string) => {
+  if (typeof document === "undefined") return;
+  const domain = window.location.hostname;
+  if (langCode === "en") {
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`;
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain};`;
+  } else {
+    document.cookie = `googtrans=/en/${langCode}; path=/;`;
+    document.cookie = `googtrans=/en/${langCode}; path=/; domain=${domain};`;
+    document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${domain};`;
+  }
+};
+
 const LanguageContext = createContext<LanguageContextType>({
   language: "English",
   setLanguage: () => {},
@@ -252,15 +291,49 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedLang = localStorage.getItem("rhp_language") as SupportedLanguage;
-    if (savedLang && DICTIONARY[savedLang]) {
+    if (savedLang && LANG_CODES[savedLang]) {
       setLanguageState(savedLang);
+    }
+
+    // Inject Google Translate script dynamically if not present
+    if (typeof window !== "undefined" && !document.getElementById("google-translate-script")) {
+      const div = document.createElement("div");
+      div.id = "google_translate_element";
+      div.style.display = "none";
+      document.body.appendChild(div);
+
+      const script = document.createElement("script");
+      script.id = "google-translate-script";
+      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+
+      (window as any).googleTranslateElementInit = () => {
+        new (window as any).google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: "en,hi,kn,ta,te,ml,mr,bn,gu,es,fr",
+            autoDisplay: false,
+          },
+          "google_translate_element"
+        );
+      };
     }
   }, []);
 
   const setLanguage = (lang: SupportedLanguage) => {
-    if (DICTIONARY[lang]) {
-      setLanguageState(lang);
-      localStorage.setItem("rhp_language", lang);
+    setLanguageState(lang);
+    localStorage.setItem("rhp_language", lang);
+    const langCode = LANG_CODES[lang] || "en";
+    setGoogleTranslateCookie(langCode);
+
+    // Trigger translate dropdown change in Google Translate widget if present
+    const selectElem = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+    if (selectElem) {
+      selectElem.value = langCode;
+      selectElem.dispatchEvent(new Event("change"));
+    } else {
+      window.location.reload();
     }
   };
 

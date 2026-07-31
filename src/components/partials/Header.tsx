@@ -11,7 +11,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Header() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { settings, logoUrl } = useCustomization();
   const { shopName, shopSubtitle } = settings;
   const { user, logout } = useAuth();
@@ -101,9 +101,31 @@ export default function Header() {
 
   return (
     <>
-      {/* Top announcement bar */}
-      <div className="site-announcement text-center text-[11px] font-medium py-2.5 px-4 tracking-wide">
-        {t("announcement")}
+      {/* Top announcement bar with language selector */}
+      <div className="site-announcement flex items-center justify-between text-[11px] font-medium py-2 px-4 sm:px-8 tracking-wide">
+        <div className="flex-1 text-center truncate">
+          {t("announcement")}
+        </div>
+        <div className="flex items-center gap-1.5 ml-3 flex-shrink-0">
+          <span className="text-xs">🌐</span>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as any)}
+            className="bg-black/25 text-white rounded px-2 py-0.5 text-[10.5px] font-bold border border-white/25 focus:outline-none cursor-pointer hover:bg-black/40 transition-colors"
+          >
+            <option value="English" className="text-black">English</option>
+            <option value="Hindi" className="text-black">हिंदी (Hindi)</option>
+            <option value="Kannada" className="text-black">ಕನ್ನಡ (Kannada)</option>
+            <option value="Tamil" className="text-black">தமிழ் (Tamil)</option>
+            <option value="Telugu" className="text-black">తెలుగు (Telugu)</option>
+            <option value="Malayalam" className="text-black">മലയാളം (Malayalam)</option>
+            <option value="Marathi" className="text-black">मराठी (Marathi)</option>
+            <option value="Bengali" className="text-black">বাংলা (Bengali)</option>
+            <option value="Gujarati" className="text-black">ગુજરાતી (Gujarati)</option>
+            <option value="Spanish" className="text-black">Español (Spanish)</option>
+            <option value="French" className="text-black">Français (French)</option>
+          </select>
+        </div>
       </div>
 
       <header
@@ -156,14 +178,15 @@ export default function Header() {
 
             {/* Desktop Search Bar */}
             <div ref={searchContainerRef} className="hidden lg:block relative flex-1 max-w-xs mx-4">
-              <form onSubmit={handleSearchSubmit} className="relative">
+              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder={t("search.placeholder")}
-                  className="input input-sm w-full pl-10 pr-8 text-xs"
+                  className="input input-sm search-input w-full text-xs"
+                  style={{ paddingLeft: "2.75rem", paddingRight: "2.25rem" }}
                 />
                 <svg
                   className="icon-action absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
@@ -307,14 +330,15 @@ export default function Header() {
           {/* Mobile Search Bar Expansion */}
           {mobileSearchOpen && (
             <div className="lg:hidden pb-3 pt-1 relative border-t border-[var(--color-border)]">
-              <form onSubmit={handleSearchSubmit} className="relative">
+              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
-                  placeholder="Search natural products..."
-                  className="input input-sm w-full pl-10 pr-8 text-xs"
+                  placeholder={t("search.placeholder")}
+                  className="input input-sm search-input w-full text-xs"
+                  style={{ paddingLeft: "2.75rem", paddingRight: "2.25rem" }}
                   autoFocus
                 />
                 <svg
