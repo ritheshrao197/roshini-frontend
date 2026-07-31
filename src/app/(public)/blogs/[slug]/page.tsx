@@ -42,6 +42,28 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
       : `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}/uploads/vlogs/${vlog.thumbnail}`
     : null;
 
+  const cleanContent = (content: string, title: string) => {
+    if (!content) return "";
+    let cleaned = content.trim();
+    // Remove leading <h1> tag (since article header already renders the page <h1>)
+    // or leading <h2> if text matches the article title
+    cleaned = cleaned.replace(/^<h[12][^>]*>[\s\S]*?<\/h[12]>/i, (match) => {
+      const textOnly = match.replace(/<[^>]*>/g, "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      const titleOnly = (title || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (
+        match.toLowerCase().startsWith("<h1") ||
+        !textOnly ||
+        textOnly === titleOnly ||
+        titleOnly.includes(textOnly) ||
+        textOnly.includes(titleOnly)
+      ) {
+        return "";
+      }
+      return match;
+    });
+    return cleaned.trim();
+  };
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#FFFDF9", color: "#2C1A0E", fontFamily: "'Poppins', sans-serif" }}>
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full">
@@ -91,7 +113,7 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
         {/* Content */}
         <div 
           className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-[#6B3E26] prose-p:text-[#4A3B32] prose-a:text-[#B23A2A] mb-12"
-          dangerouslySetInnerHTML={{ __html: vlog.content }}
+          dangerouslySetInnerHTML={{ __html: cleanContent(vlog.content, vlog.title) }}
         />
 
         {/* Interactions: Likes & Social Sharing */}
