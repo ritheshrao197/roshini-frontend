@@ -64,28 +64,28 @@ export default async function HomePage() {
       })}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer className="pt-14 pb-6 px-4 sm:px-6 mt-auto" style={{ background: "var(--brand-brown-dark, #3C2015)", color: "var(--brand-cream)" }}>
+      <footer className="pt-16 pb-8 px-4 sm:px-6 lg:px-8 mt-auto" style={{ background: "var(--brand-brown-dark, #3C2015)", color: "var(--brand-cream)" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10" style={{ borderBottom: "1px solid rgba(246, 238, 225, 0.2)" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-12" style={{ borderBottom: "1px solid rgba(246, 238, 225, 0.2)" }}>
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 flex items-center justify-center font-bold text-lg" style={{ borderRadius: "var(--radius-lg)", background: "var(--brand-cream)", color: "var(--brand-brown-dark, #3C2015)" }}>R</div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 flex items-center justify-center font-bold text-xl shadow-sm" style={{ borderRadius: "var(--radius-lg)", background: "var(--brand-cream)", color: "var(--brand-brown-dark, #3C2015)" }}>R</div>
                 <div>
-                  <div className="font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-cream)" }}>Roshini's</div>
-                  <div className="text-[10px] tracking-widest uppercase" style={{ color: "var(--brand-cream-dark)" }}>Home Products</div>
+                  <div className="font-bold text-lg leading-none" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-cream)" }}>Roshini's</div>
+                  <div className="text-[10px] tracking-widest uppercase mt-1" style={{ color: "var(--brand-cream-dark)" }}>Home Products</div>
                 </div>
               </div>
-              <p className="text-xs leading-relaxed" style={{ color: "var(--brand-cream-dark)" }}>
+              <p className="text-xs leading-relaxed max-w-xs" style={{ color: "var(--brand-cream-dark)" }}>
                 Traditional nutrition crafted with love in Karnataka. Homemade quality, delivered to your door.
               </p>
             </div>
             {/* Quick Links */}
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider mb-4" style={{ color: "var(--brand-cream)" }}>Shop</h4>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {[["All Products", "/shop"], ["Health Mixes", "/shop?category=health-mixes"], ["Herbal Teas", "/shop?category=herbal-tea"], ["Spice Powders", "/shop?category=spice"]].map(([label, href]) => (
                   <li key={label}>
-                    <a href={href} className="text-xs transition-colors" style={{ color: "var(--brand-cream-dark)" }}>{label}</a>
+                    <a href={href} className="text-xs transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>{label}</a>
                   </li>
                 ))}
               </ul>
@@ -93,10 +93,10 @@ export default async function HomePage() {
             {/* Account */}
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider mb-4" style={{ color: "var(--brand-cream)" }}>Account</h4>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {[["Sign In", "/login"], ["Register", "/register"], ["My Orders", "/account/dashboard"]].map(([label, href]) => (
                   <li key={label}>
-                    <a href={href} className="text-xs transition-colors" style={{ color: "var(--brand-cream-dark)" }}>{label}</a>
+                    <a href={href} className="text-xs transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>{label}</a>
                   </li>
                 ))}
               </ul>
@@ -104,19 +104,19 @@ export default async function HomePage() {
             {/* Contact */}
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wider mb-4" style={{ color: "var(--brand-cream)" }}>Contact</h4>
-              <ul className="space-y-2 text-xs" style={{ color: "var(--brand-cream-dark)" }}>
-                <li>📍 Karnataka, India</li>
-                <li>📞 +91 95918 96917</li>
-                <li>✉️roshinishomeproducts@gmail.com</li>
-                <li>🕐 Mon–Sat: 9am – 7pm IST</li>
+              <ul className="space-y-3 text-xs" style={{ color: "var(--brand-cream-dark)" }}>
+                <li className="flex items-center gap-2"><span>📍</span><span>Karnataka, India</span></li>
+                <li className="flex items-center gap-2"><span>📞</span><span>+91 95918 96917</span></li>
+                <li className="flex items-center gap-2"><span>✉️</span><span>roshinishomeproducts@gmail.com</span></li>
+                <li className="flex items-center gap-2"><span>🕐</span><span>Mon–Sat: 9am – 7pm IST</span></li>
               </ul>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 text-xs" style={{ color: "var(--text-light)" }}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs" style={{ color: "var(--brand-cream-dark)" }}>
             <div>© 2026 Roshini's Home Products. All rights reserved.</div>
-            <div className="flex gap-4">
-              <a href="#" className="transition-colors" style={{ color: "var(--brand-cream-dark)" }}>Privacy Policy</a>
-              <a href="#" className="transition-colors" style={{ color: "var(--brand-cream-dark)" }}>Terms of Service</a>
+            <div className="flex gap-6">
+              <a href="#" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Privacy Policy</a>
+              <a href="#" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Terms of Service</a>
             </div>
           </div>
         </div>

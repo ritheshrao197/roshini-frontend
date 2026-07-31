@@ -114,7 +114,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* Details */}
-      <div className="p-3 sm:p-4 flex flex-col flex-1 gap-1.5 sm:gap-2">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 gap-2 sm:gap-2.5">
         {/* Category */}
         <span className="site-muted text-[10px] font-bold uppercase tracking-widest">
           {categoryName}
@@ -122,27 +122,27 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Name */}
         <Link href={`/product/${productSlug}`} className="block">
-          <h3 className="product-card-title font-bold text-base leading-snug group-hover:opacity-80 transition-opacity line-clamp-2">
+          <h3 className="product-card-title font-bold text-base leading-snug group-hover:opacity-80 transition-opacity">
             {product.pName}
           </h3>
         </Link>
 
         {/* Description */}
-        <p className="site-muted text-xs leading-relaxed line-clamp-2 flex-1">
+        <p className="site-muted text-xs leading-relaxed line-clamp-2 flex-1 my-0.5">
           {product.pDescription}
         </p>
 
         {/* Badges row */}
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="flex gap-2 flex-wrap my-1">
           {["No Sugar", "Homemade"].map((b) => (
-            <span key={b} className="product-chip text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5">
+            <span key={b} className="product-chip text-[9.5px] font-semibold uppercase tracking-wider px-2.5 py-0.5">
               {b}
             </span>
           ))}
         </div>
 
         {/* Price + CTA */}
-        <div className="product-card-footer flex items-center justify-between pt-3 mt-1">
+        <div className="product-card-footer flex items-center justify-between gap-2 pt-3 mt-auto">
           <div>
             <span className="product-card-price text-xl font-bold">
               ₹{product.pPrice}

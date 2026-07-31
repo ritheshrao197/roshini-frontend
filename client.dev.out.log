@@ -11,3 +11,11 @@ Creating turbopack project { dir: 'E:\\Roshinis\\eCommerceWebsite\\client-next',
 
  GET / 200 in 790ms (next.js: 109ms, proxy.ts: 196ms, application-code: 485ms)
  GET /build-metadata.json 404 in 536ms (next.js: 466ms, proxy.ts: 5ms, application-code: 65ms)
+✓ Compiled in 161ms
+ GET / 200 in 464ms (next.js: 169ms, proxy.ts: 100ms, application-code: 195ms)
+✓ Compiled in 176ms
+ GET / 200 in 667ms (next.js: 332ms, proxy.ts: 91ms, application-code: 244ms)
+✓ Compiled in 128ms
+ GET / 200 in 291ms (next.js: 98ms, proxy.ts: 65ms, application-code: 128ms)
+✓ Compiled in 114ms
+ GET / 200 in 311ms (next.js: 123ms, proxy.ts: 80ms, application-code: 108ms)

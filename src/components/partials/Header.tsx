@@ -102,7 +102,7 @@ export default function Header() {
   return (
     <>
       {/* Top announcement bar */}
-      <div className="site-announcement text-center text-[11px] font-medium py-2 px-4 tracking-wide">
+      <div className="site-announcement text-center text-[11px] font-medium py-2.5 px-4 tracking-wide">
         {t("announcement")}
       </div>
 
@@ -113,24 +113,24 @@ export default function Header() {
             : ""
         }`}
       >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6">
-          <div className="flex items-center justify-between h-15 sm:h-16 md:h-18 gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-4 sm:gap-6">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group flex-shrink min-w-0">
-              <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-9 sm:h-12 w-auto object-contain flex-shrink-0" />
-              <div className="leading-none min-w-0">
-                <div className="site-logo-name font-bold text-xs sm:text-base tracking-tight truncate">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink min-w-0 pr-2">
+              <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-10 sm:h-12 w-auto object-contain flex-shrink-0" />
+              <div className="leading-tight min-w-0">
+                <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate">
                   {shopName}
                 </div>
-                <div className="site-muted text-[9px] sm:text-[10px] font-medium tracking-widest uppercase truncate hidden sm:block">
+                <div className="site-muted text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase truncate hidden sm:block">
                   {shopSubtitle}
                 </div>
               </div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
               {[
                 { href: "/shop", label: t("nav.shop") },
                 { href: "/blogs", label: t("nav.blogs") },
@@ -139,7 +139,7 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="site-link px-3 py-2 text-sm font-medium transition-all whitespace-nowrap"
+                  className="site-link px-3.5 py-2 text-sm font-semibold transition-all whitespace-nowrap hover:bg-black/5 rounded-lg"
                 >
                   {item.label}
                 </Link>
@@ -147,7 +147,7 @@ export default function Header() {
               {user?.role === 1 && (
                 <Link
                   href="/admin"
-                  className="site-link px-3 py-2 text-sm font-semibold transition-all"
+                  className="site-link px-3.5 py-2 text-sm font-bold transition-all hover:bg-black/5 rounded-lg"
                 >
                   {t("nav.admin")}
                 </Link>
@@ -155,7 +155,7 @@ export default function Header() {
             </nav>
 
             {/* Desktop Search Bar */}
-            <div ref={searchContainerRef} className="hidden lg:block relative flex-1 max-w-xs mx-2">
+            <div ref={searchContainerRef} className="hidden lg:block relative flex-1 max-w-xs mx-4">
               <form onSubmit={handleSearchSubmit} className="relative">
                 <input
                   type="text"
@@ -163,7 +163,7 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder={t("search.placeholder")}
-                  className="input input-sm w-full pl-9 pr-8 text-xs"
+                  className="input input-sm w-full pl-10 pr-8 text-xs"
                 />
                 <svg
                   className="icon-action absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
@@ -231,7 +231,7 @@ export default function Header() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-3 sm:gap-4">
 
               {/* Mobile Search Toggle Icon */}
               <button
@@ -314,7 +314,7 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                   placeholder="Search natural products..."
-                  className="input input-sm w-full pl-9 pr-8 text-xs"
+                  className="input input-sm w-full pl-10 pr-8 text-xs"
                   autoFocus
                 />
                 <svg

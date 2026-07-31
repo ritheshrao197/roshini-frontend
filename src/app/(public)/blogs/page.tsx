@@ -12,19 +12,20 @@ export const metadata = {
 export default async function BlogsPage({
   searchParams,
 }: {
-  searchParams: { 
+  searchParams: Promise<{ 
     page?: string; 
     category?: string; 
     tag?: string; 
     search?: string; 
     sort?: string; 
-  };
+  }>;
 }) {
-  const page = Number(searchParams.page) || 1;
-  const category = searchParams.category || "";
-  const tag = searchParams.tag || "";
-  const search = searchParams.search || "";
-  const sort = searchParams.sort || "";
+  const resolvedParams = await searchParams;
+  const page = Number(resolvedParams.page) || 1;
+  const category = resolvedParams.category || "";
+  const tag = resolvedParams.tag || "";
+  const search = resolvedParams.search || "";
+  const sort = resolvedParams.sort || "";
 
   // Fetch vlogs with the active filters
   const { vlogs, totalPages } = await getVlogs(page, 9, category, tag, search, sort);

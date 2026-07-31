@@ -5,9 +5,10 @@ import { useRouter, useParams } from "next/navigation";
 import { VlogCategory, getVlogCategories } from "@/lib/api";
 import VlogForm from "@/components/admin/vlogs/VlogForm";
 
-export default function EditVlogPage({ params }: { params: { id: string } }) {
+export default function EditVlogPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { id } = params;
+  const routeParams = useParams();
+  const id = (routeParams?.id as string) || "";
   const [categories, setCategories] = useState<VlogCategory[]>([]);
   const [vlog, setVlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);

@@ -134,3 +134,507 @@ getVlogs Error: TypeError: fetch failed
   61 |       if (res.ok) {
   62 |         const json = await res.json();
   63 |         if (json.settings) { (src/lib/CustomizationContext.tsx:79:15)
+getHomePageData Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHomePageData (src\lib\api.ts:385:17)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAllProducts Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAllProducts (src\lib\api.ts:136:17)
+    at async getFeaturedProducts (src\lib\api.ts:164:20)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getCategories Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getCategories (src\lib\api.ts:151:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAchievements Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAchievements (src\lib\api.ts:322:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHeroSliders Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHeroSliders (src\lib\api.ts:336:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getWebsiteSections Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getWebsiteSections (src\lib\api.ts:362:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getVlogs Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getVlogs (src\lib\api.ts:254:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHomePageData Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHomePageData (src\lib\api.ts:385:17)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAllProducts Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAllProducts (src\lib\api.ts:136:17)
+    at async getFeaturedProducts (src\lib\api.ts:164:20)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getCategories Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getCategories (src\lib\api.ts:151:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAchievements Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAchievements (src\lib\api.ts:322:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHeroSliders Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHeroSliders (src\lib\api.ts:336:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getWebsiteSections Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getWebsiteSections (src\lib\api.ts:362:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getVlogs Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getVlogs (src\lib\api.ts:254:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHomePageData Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHomePageData (src\lib\api.ts:385:17)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAllProducts Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAllProducts (src\lib\api.ts:136:17)
+    at async getFeaturedProducts (src\lib\api.ts:164:20)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getCategories Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getCategories (src\lib\api.ts:151:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAchievements Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAchievements (src\lib\api.ts:322:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHeroSliders Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHeroSliders (src\lib\api.ts:336:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getWebsiteSections Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getWebsiteSections (src\lib\api.ts:362:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getVlogs Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getVlogs (src\lib\api.ts:254:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHomePageData Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHomePageData (src\lib\api.ts:385:17)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAllProducts Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAllProducts (src\lib\api.ts:136:17)
+    at async getFeaturedProducts (src\lib\api.ts:164:20)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getCategories Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getCategories (src\lib\api.ts:151:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getAchievements Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getAchievements (src\lib\api.ts:322:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getHeroSliders Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getHeroSliders (src\lib\api.ts:336:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getWebsiteSections Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getWebsiteSections (src\lib\api.ts:362:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}
+getVlogs Error: TypeError: fetch failed
+    at async fetchWithTimeout (src\lib\api.ts:82:20)
+    at async getVlogs (src\lib\api.ts:254:17)
+    at async getHomePageData (src\lib\api.ts:393:84)
+    at async HomePage (src\app\page.tsx:32:93)
+  80 |
+  81 |   try {
+> 82 |     let response = await fetch(url, fetchOptions);
+     |                    ^
+  83 |     
+  84 |     if (response.status === 401) {
+  85 |       try { {
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED',
+    [errors]: [ [Error], [Error] ]
+  }
+}

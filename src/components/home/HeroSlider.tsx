@@ -29,19 +29,39 @@ export default function HeroSlider({ sliders }: { sliders: any[] }) {
 
   if (!sliders?.length) {
     return (
-      <section className="hero-fallback relative overflow-hidden py-16 md:py-24 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center animate-stagger">
-          <div className="space-y-6 animate-fade-up">
-            <span className="badge badge-primary">Karnataka Heritage · Homemade Nutrition</span>
-            <h1 className="font-display text-[var(--font-size-4xl)] sm:text-[var(--font-size-5xl)] lg:text-[var(--font-size-6xl)] font-bold leading-tight text-[var(--color-espresso)]">Traditional Nutrition for Modern Families</h1>
-            <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg">Health mixes, seed mixes, herbal teas, spice powders and homemade nutrition products — crafted with love and rooted in tradition.</p>
-            <div className="flex flex-wrap gap-4"><Link href="/shop" className="btn-primary">Shop Now</Link><Link href="/#featured" className="btn-secondary">Explore Collections</Link></div>
+      <section className="hero-fallback relative overflow-hidden py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 lg:items-stretch animate-stagger">
+          {/* Left — text content */}
+          <div className="flex flex-col justify-center gap-6 animate-fade-up py-4">
+            <span className="badge badge-primary self-start px-3.5 py-1 text-xs">Karnataka Heritage · Homemade Nutrition</span>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[var(--color-espresso)] my-2">
+              Traditional Nutrition for Modern Families
+            </h1>
+            <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg mb-2">
+              Health mixes, seed mixes, herbal teas, spice powders and homemade nutrition products — crafted with love and rooted in tradition.
+            </p>
+
+            {/* Trust pills BEFORE the CTA buttons */}
+            <div className="flex flex-wrap gap-3 my-2">
+              {["No Sugar", "Preservative Free", "Homemade"].map((item) => (
+                <span key={item} className="badge badge-terracotta px-3 py-1 text-xs">{item}</span>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-4 sm:gap-6 pt-3">
+              <Link href="/shop" className="btn-primary btn-lg">Shop Now</Link>
+              <Link href="/#featured" className="btn-secondary btn-lg">Explore Collections</Link>
+            </div>
           </div>
-          <div className="hero-panel shadow-xl relative overflow-hidden animate-fade-up">
+
+          {/* Right — decorative panel fills the full column height */}
+          <div className="hero-panel shadow-xl relative overflow-hidden animate-fade-up flex flex-col" style={{ minHeight: "24rem" }}>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-5">
-              <div className="text-8xl">🌾</div><h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
-              <p className="hero-subtitle text-sm leading-relaxed max-w-sm">Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches for maximum nutrition.</p>
-              <div className="flex flex-wrap gap-2 justify-center">{["No Sugar", "Preservative Free", "Homemade"].map((item) => <span key={item} className="badge badge-terracotta">{item}</span>)}</div>
+              <div className="text-8xl">🌾</div>
+              <h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
+              <p className="hero-subtitle text-sm leading-relaxed max-w-sm">
+                Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches for maximum nutrition.
+              </p>
             </div>
           </div>
         </div>
