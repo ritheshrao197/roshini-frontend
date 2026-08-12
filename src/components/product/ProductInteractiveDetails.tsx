@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Product, ProductVariant } from "@/lib/api";
 import AddToCartButton from "./AddToCartButton";
 import { useLanguage } from "@/lib/LanguageContext";
+
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
 
 interface ProductInteractiveDetailsProps {
   product: Product;
@@ -19,6 +25,20 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
     hasVariants ? variants[0] : null
   );
+
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+
+  useEffect(() => {
+    const el = actionsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyBar(!entry.isIntersecting),
+      { rootMargin: "0px 0px -50% 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const price = selectedVariant ? selectedVariant.price : product.pPrice;
   const comparePrice = selectedVariant 
@@ -81,11 +101,11 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       {/* Dynamic Price Display */}
       <div className="flex items-baseline gap-3 pt-1">
         <span className="text-4xl font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
-          ₹{price}
+          {inrFormatter.format(price)}
         </span>
         {comparePrice && comparePrice > price && (
           <span className="text-lg line-through" style={{ color: "#B0886A" }}>
-            ₹{comparePrice}
+            {inrFormatter.format(comparePrice)}
           </span>
         )}
         {discountPercent > 0 && (
@@ -146,7 +166,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2.5 sm:gap-3 pt-1">
+      <div ref={actionsRef} className="flex gap-2.5 sm:gap-3 pt-1">
         <AddToCartButton
           productId={selectedVariant ? `${product._id}-${selectedVariant.weight}` : product._id}
           price={price}
@@ -173,6 +193,38 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
         <span>🌿 100% Natural</span>
         <span className="hidden sm:inline">·</span>
         <span>✅ Verified Quality</span>
+      </div>
+
+      {/* Sticky mobile purchase bar — mirrors the main buy box once it scrolls out of view */}
+      <div
+        className={`lg:hidden fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 px-4 py-3 transition-transform duration-300 ${
+          showStickyBar ? "translate-y-0" : "translate-y-full"
+        }`}
+        style={{
+          background: "#FFFDF9",
+          borderTop: "1px solid #E8D5BC",
+          boxShadow: "0 -8px 24px rgba(44, 26, 14, 0.08)",
+          paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
+        }}
+      >
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-bold truncate" style={{ color: "#6B3E26" }}>{product.pName}</div>
+          <div className="text-base font-bold" style={{ fontFamily: "'Merriweather', serif", color: "#6B3E26" }}>
+            {inrFormatter.format(price)}
+          </div>
+        </div>
+        <div className="flex-shrink-0">
+          <AddToCartButton
+            productId={selectedVariant ? `${product._id}-${selectedVariant.weight}` : product._id}
+            price={price}
+            pName={product.pName}
+            pImage={product.image?.secureUrl || product.images?.[0]?.secureUrl || product.pImages?.[0]}
+            disabled={isOutOfStock}
+            dbProductId={product._id}
+            variantId={selectedVariant ? selectedVariant._id || selectedVariant.weight : undefined}
+            variantName={currentWeight || undefined}
+          />
+        </div>
       </div>
     </div>
   );

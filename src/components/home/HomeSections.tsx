@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
 import NewsletterForm from "@/components/home/NewsletterForm";
+import ScrollReveal from "@/components/common/ScrollReveal";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export function TrustBadgesSection() {
@@ -64,8 +65,10 @@ export function FeaturedProductsSection({ products }: { products: any[] }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+          {products.map((product, i) => (
+            <ScrollReveal key={product._id} className="h-full" threshold={0.05} style={{ transitionDelay: `${Math.min(i, 4) * 60}ms` }}>
+              <ProductCard product={product} />
+            </ScrollReveal>
           ))}
         </div>
       )}
@@ -182,62 +185,84 @@ export function WhyUsSection() {
   );
 }
 
+const BRAND_STORY_BEATS = [
+  {
+    index: "01",
+    title: "Thoughtfully Selected",
+    body: "Natural ingredients, sourced locally — millets, nuts, seeds and dry fruits chosen the way you'd choose them yourself at the market, not off a factory spec sheet.",
+  },
+  {
+    index: "02",
+    title: "Made for Everyday Life",
+    body: "Home-kitchen quality, made for daily use by every age — a spoonful in milk, a bowl at breakfast, no special occasion required.",
+  },
+  {
+    index: "03",
+    title: "From Our Kitchen to Yours",
+    body: "Traditional recipes, generational wisdom — from our Nutrimix Superfood Health Mix and Bananthi Maddu to Pure Honey and Seeds Power Pack, each product is handmade with love, care, authenticity and purity.",
+  },
+];
+
 export function BrandStorySection() {
   return (
-    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #5D310E 0%, #3D1E08 100%)" }}>
-      {/* Decorative subtle background elements */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-15 pointer-events-none" style={{ background: "radial-gradient(circle, #C28B36 0%, transparent 70%)" }} />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full opacity-15 pointer-events-none" style={{ background: "radial-gradient(circle, #5E7D32 0%, transparent 70%)" }} />
+    <section
+      id="brand-story"
+      className="py-24 md:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      style={{ background: "linear-gradient(135deg, #5D310E 0%, #3D1E08 100%)" }}
+    >
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #C28B36 0%, transparent 70%)" }} />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
-        <div className="space-y-6">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full" style={{ background: "rgba(194, 139, 54, 0.2)", color: "#E5B534", border: "1px solid rgba(194, 139, 54, 0.4)" }}>
-            🌿 Our Story
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "#FFFFFF" }}>
-            Handmade Wellness<br />Passed Down Generations
+      <div className="max-w-5xl mx-auto relative z-10">
+        <ScrollReveal>
+          <span className="section-label" style={{ color: "#D9AE7A" }}>Why Roshini&rsquo;s?</span>
+          <h2
+            className="display-heading mt-3 mb-8"
+            style={{ color: "#FFFFFF", fontSize: "clamp(2.25rem, 4vw + 1rem, 4rem)" }}
+          >
+            Wholesome food.
+            <br />
+            Made with intention.
           </h2>
-          <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#FAF6F2" }}>
-            Roshini’s Home Products is a women-led, family-run wellness brand dedicated to creating natural, preservative-free products inspired by India's rich traditions.
+          <p className="text-base sm:text-lg leading-relaxed max-w-2xl" style={{ color: "#F3E8DC" }}>
+            Roshini&rsquo;s Home Products is a women-led, family-run wellness brand dedicated to creating natural, preservative-free food inspired by India&rsquo;s everyday traditions — not a lab-formulated health product.
           </p>
-          <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#F3E8DC" }}>
-            From our Nutrimix Superfood Health Mix and Bananthi Maddu (postnatal tonic) to Pure Honey, Ubtan Face Pack, and Seeds Power Pack — each product is handmade with love, care, authenticity, and purity.
-          </p>
-          <div className="pt-4">
-            <Link 
-              href="/shop" 
-              className="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all shadow-lg hover:-translate-y-1 hover:shadow-2xl cursor-pointer" 
-              style={{ background: "#C28B36", color: "#FFFFFF", boxShadow: "0 10px 25px rgba(61, 30, 8, 0.4)" }}
+        </ScrollReveal>
+
+        <div className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+          {BRAND_STORY_BEATS.map((beat) => (
+            <ScrollReveal
+              key={beat.index}
+              className="pt-6"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}
+              as="div"
             >
-              Explore Our Products
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
-          </div>
+              <span className="block text-sm font-mono mb-3" style={{ color: "#C28B36" }}>
+                {beat.index}
+              </span>
+              <h3
+                className="text-xl md:text-2xl font-bold mb-3"
+                style={{ fontFamily: "var(--font-serif)", color: "#FFFFFF" }}
+              >
+                {beat.title}
+              </h3>
+              <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#DCC8AE" }}>
+                {beat.body}
+              </p>
+            </ScrollReveal>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          {[
-            { icon: "🌾", title: "Traditional Recipes", sub: "Generational wisdom" },
-            { icon: "🏡", title: "Home Kitchen", sub: "Made with love" },
-            { icon: "🌿", title: "Natural Ingredients", sub: "Sourced locally" },
-            { icon: "💚", title: "Family Wellness", sub: "Health for all ages" },
-          ].map((v) => (
-            <div
-              key={v.title}
-              className="p-6 flex flex-col gap-2 rounded-2xl transition-all duration-300 hover:-translate-y-1 group"
-              style={{
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div className="text-3xl mb-1 group-hover:scale-110 transition-transform duration-300">{v.icon}</div>
-              <div className="font-bold text-base sm:text-lg" style={{ color: "#FFFFFF" }}>{v.title}</div>
-              <div className="text-xs sm:text-sm leading-relaxed" style={{ color: "#F3E8DC" }}>{v.sub}</div>
-            </div>
-          ))}
+        <div className="mt-16 md:mt-20">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all shadow-lg hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
+            style={{ background: "#C28B36", color: "#FFFFFF", boxShadow: "0 10px 25px rgba(61, 30, 8, 0.4)" }}
+          >
+            Explore Our Products
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>
@@ -325,33 +350,37 @@ const TESTIMONIALS = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8" style={{ background: "var(--brand-cream)" }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-16">
+    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "var(--brand-cream)" }}>
+      <div className="max-w-6xl mx-auto">
+        <ScrollReveal>
           <span className="section-label">Real Customers, Real Stories</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
+          <h2 className="display-heading mt-3 mb-14 md:mb-20" style={{ fontSize: "clamp(2rem, 3.5vw + 1rem, 3.5rem)", color: "var(--brand-brown)" }}>
             What Families Are Saying
           </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="p-6 sm:p-8 flex flex-col gap-4" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-sm)" }}>
-              <div className="flex gap-1.5">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <span key={i} style={{ color: "var(--brand-brown)" }}>★</span>
+        </ScrollReveal>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
+          {TESTIMONIALS.map((t, i) => (
+            <ScrollReveal
+              key={t.name}
+              className="pt-6 flex flex-col gap-4"
+              style={{ borderTop: "2px solid var(--brand-brown)", transitionDelay: `${i * 80}ms` }}
+            >
+              <div className="flex gap-1" aria-label={`${t.rating} out of 5 stars`}>
+                {Array.from({ length: t.rating }).map((_, idx) => (
+                  <span key={idx} aria-hidden="true" style={{ color: "var(--brand-brown)" }}>★</span>
                 ))}
               </div>
-              <p className="text-sm md:text-base leading-relaxed italic" style={{ color: "var(--text)" }}>"{t.text}"</p>
-              <div className="flex items-center gap-3 mt-auto pt-4" style={{ borderTop: "1px solid var(--border)" }}>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style={{ background: "var(--brand-brown)", color: "var(--on-brand)" }}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <div className="font-bold text-sm" style={{ color: "var(--brand-brown)" }}>{t.name}</div>
-                  <div className="text-xs" style={{ color: "var(--text-muted)" }}>{t.location}</div>
-                </div>
+              <p
+                className="text-lg md:text-xl leading-snug"
+                style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", color: "var(--text)" }}
+              >
+                &ldquo;{t.text}&rdquo;
+              </p>
+              <div className="mt-auto pt-2">
+                <div className="font-bold text-sm" style={{ color: "var(--brand-brown)" }}>{t.name}</div>
+                <div className="text-xs site-muted">{t.location}</div>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

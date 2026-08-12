@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Product, BACKEND_URL } from "@/lib/api";
@@ -19,6 +19,29 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
 export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  const canTilt = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = imageRef.current;
+    if (!el || !canTilt()) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rotateY = (px - 0.5) * 12;
+    const rotateX = (0.5 - py) * 12;
+    el.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+  };
+
+  const handleTiltLeave = () => {
+    if (imageRef.current) {
+      imageRef.current.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    }
+  };
 
   const refreshCartQuantity = () => {
     const cart = getCart();
@@ -80,9 +103,14 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isOutOfStock = product.pQuantity === 0;
 
   return (
-    <div className="product-card card-interactive animate-fade-up group relative flex h-full flex-col overflow-hidden">
-      {/* Image */}
-      <div className="product-card-image relative overflow-hidden">
+    <div className="product-card card-interactive group relative flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1">
+      {/* Image — tilts as a flat 2.5D plane toward the cursor */}
+      <div
+        ref={imageRef}
+        onMouseMove={handleTiltMove}
+        onMouseLeave={handleTiltLeave}
+        className="product-card-image relative overflow-hidden transition-transform duration-200 ease-out will-change-transform"
+      >
         <Link
           href={`/product/${productSlug}`}
           aria-hidden="true"
@@ -94,7 +122,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt=""
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         </Link>
 

@@ -214,7 +214,7 @@ export default function CouponManagementPanel() {
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-bold mb-4">{editingCoupon ? 'Edit Coupon' : 'Create New Coupon'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Code</label>
                   <input type="text" required value={formData.code || ""} onChange={e => setFormData({...formData, code: e.target.value.toUpperCase()})} className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border" />

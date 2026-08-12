@@ -484,7 +484,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#FFFDF9] text-[#2C1A0E] flex flex-col font-sans">
 
-      <main className="max-w-7xl mx-auto w-full px-6 py-12 flex-1 flex flex-col lg:flex-row gap-8">
+      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1 flex flex-col lg:flex-row gap-8">
         {cartItems.length === 0 ? (
           <div className="w-full text-center space-y-6 border border-dashed rounded-3xl p-12 bg-[#FDF6EC] my-auto" style={{ borderColor: "#E8D5BC" }}>
             <span className="text-6xl block">🌾</span>
@@ -514,7 +514,7 @@ export default function CartPage() {
                   return (
                     <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>
                       {/* Product details preview */}
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-4 min-w-0">
                         <img
                           src={imageSrc}
                           alt={item.pName || "Product"}
@@ -523,8 +523,8 @@ export default function CartPage() {
                           className="h-16 w-16 object-cover rounded-xl border bg-white flex-shrink-0"
                           style={{ borderColor: "#E8D5BC" }}
                         />
-                        <div>
-                          <h3 className="font-serif font-bold text-[#6B3E26] text-sm">
+                        <div className="min-w-0">
+                          <h3 className="font-serif font-bold text-[#6B3E26] text-sm break-words">
                             {item.pName || "Wellness Blend"}
                             {item.variantName && ` (${item.variantName})`}
                           </h3>
@@ -604,7 +604,7 @@ export default function CartPage() {
                   </div>
                   {finalShippingCharge > 0 && (
                     <div className="text-[10px] text-[#7A5C45] font-medium bg-white p-2.5 rounded-xl border border-dashed" style={{ borderColor: "#E8D5BC" }}>
-                      💡 Add <span className="font-bold text-[#6B3E26]">{formatINR(499 - totalCost)}</span> more to unlock **FREE SHIPPING**!
+                      💡 Add <span className="font-bold text-[#6B3E26]">{formatINR(499 - totalCost)}</span> more to unlock <strong>FREE SHIPPING</strong>!
                     </div>
                   )}
                   <div className="border-t pt-3 flex justify-between text-base font-bold text-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}>
@@ -702,7 +702,7 @@ export default function CartPage() {
                       <div className="p-4 bg-white border rounded-2xl space-y-3.5" style={{ borderColor: "#E8D5BC" }}>
                         <h4 className="text-xs font-bold text-[#6B3E26] border-b pb-1.5" style={{ borderColor: "#F5E9DA" }}>New Delivery Address</h4>
                         
-                        <div className="grid grid-cols-2 gap-2.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           <div className="flex flex-col gap-1">
                             <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Full Name *</label>
                             <input
@@ -740,7 +740,7 @@ export default function CartPage() {
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           <div className="flex flex-col gap-1">
                             <label className="text-[9px] uppercase font-bold text-[#7A5C45]">Address Line 2 (Opt)</label>
                             <input
@@ -765,7 +765,7 @@ export default function CartPage() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                           <div className="flex flex-col gap-1">
                             <label className="text-[9px] uppercase font-bold text-[#7A5C45]">City *</label>
                             <input
@@ -801,8 +801,8 @@ export default function CartPage() {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between gap-4 pt-1">
-                          <div className="flex items-center gap-1.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="text-[9px] uppercase font-bold text-[#7A5C45]">Type:</span>
                             {["Home", "Office", "Other"].map((t) => (
                               <button

@@ -2,14 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { getHomePageData } from "@/lib/api";
 import HeroSlider from "@/components/home/HeroSlider";
-import { 
-  TrustBadgesSection, 
-  CategoriesSection, 
-  FeaturedProductsSection, 
-  WhyUsSection, 
-  BrandStorySection, 
-  AchievementsSection, 
-  TestimonialsSection, 
+import {
+  TrustBadgesSection,
+  CategoriesSection,
+  FeaturedProductsSection,
+  WhyUsSection,
+  BrandStorySection,
+  AchievementsSection,
+  TestimonialsSection,
   NewsletterSection,
   HealthHubSection
 } from "@/components/home/HomeSections";
@@ -40,7 +40,7 @@ export default async function HomePage() {
       {layout.map((section, index) => {
         switch (section.sectionId) {
           case "hero":
-            return <HeroSlider key={`hero-${index}`} sliders={heroSliders} />;
+            return <HeroSlider key={`hero-${index}`} sliders={heroSliders} products={products} />;
           case "trust_badges":
             return <TrustBadgesSection key={`trust-${index}`} />;
           case "categories":
