@@ -27,8 +27,10 @@ export default function VersionBadge() {
   }, []);
 
   const version = metadata ? metadata.version : `v${pkg.version}`;
-  const env = metadata ? metadata.environment : "development";
+  const env = metadata ? metadata.environment : process.env.NODE_ENV;
   const commitText = metadata ? ` • ${metadata.commit.substring(0, 7)}` : "";
+
+  if (env === "production") return null;
 
   return (
     <div className="fixed bottom-3 right-3 z-[9999] text-[10px] md:text-xs bg-[#2C1A0E]/90 text-[#FFFDF9] px-2.5 py-1 rounded-md border border-[#E8D5BC] shadow-md pointer-events-none select-none font-mono flex flex-col items-end gap-0.5">

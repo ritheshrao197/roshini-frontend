@@ -10,6 +10,12 @@ interface ProductCardProps {
   product: Product;
 }
 
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
 export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -76,20 +82,24 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="product-card card-interactive animate-fade-up group relative flex h-full flex-col overflow-hidden">
       {/* Image */}
-      <Link
-        href={`/product/${productSlug}`}
-        className="product-card-image block relative overflow-hidden"
-      >
-        <Image
-          src={imageUrl}
-          alt={product.pName}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+      <div className="product-card-image relative overflow-hidden">
+        <Link
+          href={`/product/${productSlug}`}
+          aria-hidden="true"
+          tabIndex={-1}
+          className="block absolute inset-0"
+        >
+          <Image
+            src={imageUrl}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </Link>
 
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
           {Number(product.pOffer) > 0 && (
             <span className="product-card-badge product-card-offer text-[10px] font-bold uppercase tracking-wider px-2.5 py-1">
               {product.pOffer}% OFF
@@ -103,15 +113,18 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Wishlist handler */}
-        <div 
+        <button
+          type="button"
           onClick={toggleWishlist}
-          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-pressed={isWishlisted}
+          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity z-10 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
         >
           <div className="product-wishlist w-8 h-8 flex items-center justify-center text-sm shadow-sm transition-transform hover:scale-110 active:scale-95">
             {isWishlisted ? "❤️" : "🤍"}
           </div>
-        </div>
-      </Link>
+        </button>
+      </div>
 
       {/* Details */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 gap-2 sm:gap-2.5">
@@ -145,11 +158,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="product-card-footer flex items-center justify-between gap-2 pt-3 mt-auto">
           <div>
             <span className="product-card-price text-xl font-bold">
-              ₹{product.pPrice}
+              {inrFormatter.format(product.pPrice)}
             </span>
             {Number(product.pOffer) > 0 && (
               <span className="site-muted text-xs line-through ml-2">
-                ₹{Math.round(product.pPrice / (1 - Number(product.pOffer) / 100))}
+                {inrFormatter.format(Math.round(product.pPrice / (1 - Number(product.pOffer) / 100)))}
               </span>
             )}
           </div>
@@ -166,7 +179,8 @@ export default function ProductCard({ product }: ProductCardProps) {
                   e.stopPropagation();
                   updateQuantity(product._id, quantity - 1);
                 }}
-                className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none"
+                aria-label="Decrease quantity"
+                className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)]"
               >
                 −
               </button>
@@ -180,7 +194,8 @@ export default function ProductCard({ product }: ProductCardProps) {
                   e.stopPropagation();
                   updateQuantity(product._id, quantity + 1);
                 }}
-                className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none"
+                aria-label="Increase quantity"
+                className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)]"
               >
                 +
               </button>

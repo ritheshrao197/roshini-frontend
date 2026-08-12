@@ -74,14 +74,14 @@ export default function ForgotPasswordPage() {
           </div>
 
           {error && (
-            <div className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}>
+            <div role="alert" aria-live="polite" className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}>
               <span className="text-base mt-0.5">⚠️</span>
               <span>{error}</span>
             </div>
           )}
 
           {message && (
-            <div className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#F0FDF4", border: "1.5px solid #BBF7D0", color: "#16A34A" }}>
+            <div role="status" aria-live="polite" className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#F0FDF4", border: "1.5px solid #BBF7D0", color: "#16A34A" }}>
               <span className="text-base mt-0.5">✅</span>
               <span>{message}</span>
             </div>
@@ -89,19 +89,22 @@ export default function ForgotPasswordPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Email Address</label>
-              <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-                className={fieldClass} 
-                placeholder="name@example.com" 
+              <label htmlFor="forgot-email" className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Email Address</label>
+              <input
+                id="forgot-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={fieldClass}
+                placeholder="name@example.com"
               />
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full text-center disabled:opacity-60">
-              {loading ? "Sending link..." : "Send Reset Link"}
+              {loading ? "Sending Link…" : "Send Reset Link"}
             </button>
           </form>
 

@@ -7,6 +7,13 @@ import { getCart, updateQuantity, removeFromCart, clearCart, getCartTotal, CartI
 import { API_URL, BACKEND_URL } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
 
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+const formatINR = (value: number) => inrFormatter.format(value);
+
 export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -176,7 +183,7 @@ export default function CartPage() {
           finalShippingCharge: data.finalShippingCharge
         });
         setCouponCode(couponCodeInput);
-        setCouponMessage(`Coupon applied! Savings: ₹${data.discount}`);
+        setCouponMessage(`Coupon applied! Savings: ${formatINR(data.discount)}`);
       } else {
         setCouponErrorMsg(data.error || "Invalid coupon");
         setAppliedCoupon(null);
@@ -508,9 +515,11 @@ export default function CartPage() {
                     <div key={item.id} className="bg-[#FDF6EC] border p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{ borderColor: "#E8D5BC" }}>
                       {/* Product details preview */}
                       <div className="flex items-center gap-4">
-                        <img 
-                          src={imageSrc} 
-                          alt={item.pName || "Product"} 
+                        <img
+                          src={imageSrc}
+                          alt={item.pName || "Product"}
+                          width={64}
+                          height={64}
                           className="h-16 w-16 object-cover rounded-xl border bg-white flex-shrink-0"
                           style={{ borderColor: "#E8D5BC" }}
                         />
@@ -519,34 +528,40 @@ export default function CartPage() {
                             {item.pName || "Wellness Blend"}
                             {item.variantName && ` (${item.variantName})`}
                           </h3>
-                          <span className="text-xs text-[#7A5C45] block mt-0.5">₹{item.price} each</span>
+                          <span className="text-xs text-[#7A5C45] block mt-0.5">{formatINR(item.price)} each</span>
                         </div>
                       </div>
 
                       {/* Quantity adjustments */}
                       <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0" style={{ borderTopColor: "#E8D5BC" }}>
                         <div className="flex items-center gap-2 bg-white border rounded-xl px-2 py-1" style={{ borderColor: "#E8D5BC" }}>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             onClick={() => updateQuantity(item.id, item.quantitiy - 1)}
-                            className="text-xs font-bold text-[#7A5C45] hover:text-[#6B3E26] px-1 cursor-pointer"
+                            aria-label="Decrease quantity"
+                            className="text-xs font-bold text-[#7A5C45] hover:text-[#6B3E26] px-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26] rounded"
                           >
                             -
                           </button>
                           <span className="text-xs font-bold w-4 text-center">{item.quantitiy}</span>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             onClick={() => updateQuantity(item.id, item.quantitiy + 1)}
-                            className="text-xs font-bold text-[#7A5C45] hover:text-[#6B3E26] px-1 cursor-pointer"
+                            aria-label="Increase quantity"
+                            className="text-xs font-bold text-[#7A5C45] hover:text-[#6B3E26] px-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26] rounded"
                           >
                             +
                           </button>
                         </div>
 
-                        <button 
-                          type="button" 
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-xs font-bold text-[#B23A2A] hover:underline cursor-pointer"
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`Remove "${item.pName || "this item"}" from your cart?`)) {
+                              removeFromCart(item.id);
+                            }
+                          }}
+                          className="text-xs font-bold text-[#B23A2A] hover:underline cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B23A2A] rounded"
                         >
                           Remove
                         </button>
@@ -575,26 +590,26 @@ export default function CartPage() {
                 <div className="space-y-2.5 text-sm">
                   <div className="flex justify-between">
                     <span className="text-[#7A5C45]">Cart Subtotal</span>
-                    <span className="font-semibold text-[#6B3E26]">₹{totalCost}</span>
+                    <span className="font-semibold text-[#6B3E26]">{formatINR(totalCost)}</span>
                   </div>
                   {appliedCoupon && (
                     <div className="flex justify-between text-green-600">
                       <span>Coupon Discount</span>
-                      <span className="font-semibold">-₹{appliedCoupon.discount}</span>
+                      <span className="font-semibold">-{formatINR(appliedCoupon.discount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span className="text-[#7A5C45]">Shipping Delivery</span>
-                    <span className="font-medium">{finalShippingCharge === 0 ? "FREE" : `₹${finalShippingCharge}`}</span>
+                    <span className="font-medium">{finalShippingCharge === 0 ? "FREE" : formatINR(finalShippingCharge)}</span>
                   </div>
                   {finalShippingCharge > 0 && (
                     <div className="text-[10px] text-[#7A5C45] font-medium bg-white p-2.5 rounded-xl border border-dashed" style={{ borderColor: "#E8D5BC" }}>
-                      💡 Add <span className="font-bold text-[#6B3E26]">₹{499 - totalCost}</span> more to unlock **FREE SHIPPING**!
+                      💡 Add <span className="font-bold text-[#6B3E26]">{formatINR(499 - totalCost)}</span> more to unlock **FREE SHIPPING**!
                     </div>
                   )}
                   <div className="border-t pt-3 flex justify-between text-base font-bold text-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}>
                     <span>Total Amount</span>
-                    <span className="font-serif text-lg">₹{finalOrderAmount}</span>
+                    <span className="font-serif text-lg">{formatINR(finalOrderAmount)}</span>
                   </div>
                 </div>
               </div>

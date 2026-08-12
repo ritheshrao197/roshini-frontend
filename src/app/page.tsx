@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { getHomePageData } from "@/lib/api";
 import HeroSlider from "@/components/home/HeroSlider";
 import { 
@@ -71,7 +72,7 @@ export default async function HomePage() {
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 flex items-center justify-center font-bold text-xl shadow-sm" style={{ borderRadius: "var(--radius-lg)", background: "var(--brand-cream)", color: "var(--brand-brown-dark, #3C2015)" }}>R</div>
                 <div>
-                  <div className="font-bold text-lg leading-none" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-cream)" }}>Roshini's</div>
+                  <div className="font-bold text-lg leading-none" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-cream)" }}>Roshini&rsquo;s</div>
                   <div className="text-[10px] tracking-widest uppercase mt-1" style={{ color: "var(--brand-cream-dark)" }}>Home Products</div>
                 </div>
               </div>
@@ -113,10 +114,12 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs" style={{ color: "var(--brand-cream-dark)" }}>
-            <div>© 2026 Roshini's Home Products. All rights reserved.</div>
-            <div className="flex gap-6">
-              <a href="#" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Privacy Policy</a>
-              <a href="#" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Terms of Service</a>
+            <div>© 2026 Roshini&rsquo;s Home Products. All rights reserved.</div>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+              <Link href="/privacy-policy" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Privacy Policy</Link>
+              <Link href="/terms-of-service" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Terms of Service</Link>
+              <Link href="/refund-policy" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Refund Policy</Link>
+              <Link href="/shipping-policy" className="transition-colors hover:underline" style={{ color: "var(--brand-cream-dark)" }}>Shipping Policy</Link>
             </div>
           </div>
         </div>

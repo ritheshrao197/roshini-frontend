@@ -111,7 +111,8 @@ export default function Header() {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as any)}
-            className="bg-black/25 text-white rounded px-2 py-0.5 text-[10.5px] font-bold border border-white/25 focus:outline-none cursor-pointer hover:bg-black/40 transition-colors"
+            aria-label="Select language"
+            className="bg-black/25 text-white rounded px-2 py-0.5 text-[10.5px] font-bold border border-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer hover:bg-black/40 transition-colors"
           >
             <option value="English" className="text-black">English</option>
             <option value="Hindi" className="text-black">हिंदी (Hindi)</option>

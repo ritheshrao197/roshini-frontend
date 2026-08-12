@@ -62,7 +62,7 @@ function LoginForm() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-3 p-4 text-sm" style={{ background: "var(--error-light)", border: "1px solid var(--error)", color: "var(--error)", borderRadius: "var(--radius-lg)" }}>
+        <div role="alert" aria-live="polite" className="flex items-start gap-3 p-4 text-sm" style={{ background: "var(--error-light)", border: "1px solid var(--error)", color: "var(--error)", borderRadius: "var(--radius-lg)" }}>
           <span className="text-base mt-0.5">⚠️</span>
           <span>{error}</span>
         </div>
@@ -70,19 +70,22 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Email Address</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required suppressHydrationWarning className={fieldClass} placeholder="name@example.com" />
+          <label htmlFor="login-email" className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Email Address</label>
+          <input id="login-email" name="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required suppressHydrationWarning className={fieldClass} placeholder="name@example.com" />
         </div>
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">
-            <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Password</label>
+            <label htmlFor="login-password" className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "var(--brand-brown)" }}>Password</label>
             <Link href="/forgot-password" className="text-xs hover:underline" style={{ color: "var(--text-muted)" }}>
               Forgot Password?
             </Link>
           </div>
           <div className="relative">
             <input
+              id="login-password"
+              name="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -92,7 +95,8 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)] rounded"
               style={{ color: "var(--text-muted)" }}
             >
               {showPassword ? (
@@ -110,7 +114,7 @@ function LoginForm() {
         </div>
 
         <button type="submit" disabled={loading} className="btn-primary rounded-xl w-full text-center disabled:opacity-60">
-          {loading ? "Signing In..." : "Sign In"}
+          {loading ? "Signing In…" : "Sign In"}
         </button>
       </form>
 

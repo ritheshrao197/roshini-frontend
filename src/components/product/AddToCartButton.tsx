@@ -62,7 +62,8 @@ export default function AddToCartButton({
         <button
           type="button"
           onClick={() => updateQuantity(productId, quantity - 1)}
-          className="px-4 sm:px-5 py-2.5 sm:py-3 text-base font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none"
+          aria-label="Decrease quantity"
+          className="px-4 sm:px-5 py-2.5 sm:py-3 text-base font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26]"
         >
           −
         </button>
@@ -72,7 +73,8 @@ export default function AddToCartButton({
         <button
           type="button"
           onClick={() => updateQuantity(productId, quantity + 1)}
-          className="px-4 sm:px-5 py-2.5 sm:py-3 text-base font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none"
+          aria-label="Increase quantity"
+          className="px-4 sm:px-5 py-2.5 sm:py-3 text-base font-bold text-[#6B3E26] hover:bg-[#ede0cc] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26]"
         >
           +
         </button>

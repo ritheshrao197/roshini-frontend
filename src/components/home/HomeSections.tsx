@@ -114,7 +114,7 @@ export function CategoriesSection({ categories }: { categories: any[] }) {
               className="group flex flex-col items-center gap-4 p-6 sm:p-8 text-center transition-all hover:-translate-y-1"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-sm)" }}
             >
-              <div className="w-16 h-16 flex items-center justify-center text-3xl shadow-sm transition-all group-hover:scale-110 mb-1" style={{ background: "var(--surface-2)", borderRadius: "var(--radius-lg)" }}>
+              <div aria-hidden="true" className="w-16 h-16 flex items-center justify-center text-3xl shadow-sm transition-all group-hover:scale-110 mb-1" style={{ background: "var(--surface-2)", borderRadius: "var(--radius-lg)" }}>
                 {getCatEmoji(cat.cName)}
               </div>
               <div className="space-y-1.5">

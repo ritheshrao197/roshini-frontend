@@ -85,36 +85,40 @@ function ResetPasswordForm() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}>
+        <div role="alert" aria-live="polite" className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#FEF2F2", border: "1.5px solid #FECACA", color: "#B91C1C" }}>
           <span className="text-base mt-0.5">⚠️</span>
           <span>{error}</span>
         </div>
       )}
 
       {message && (
-        <div className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#F0FDF4", border: "1.5px solid #BBF7D0", color: "#16A34A" }}>
+        <div role="status" aria-live="polite" className="flex items-start gap-3 p-4 rounded-2xl text-sm" style={{ background: "#F0FDF4", border: "1.5px solid #BBF7D0", color: "#16A34A" }}>
           <span className="text-base mt-0.5">✅</span>
-          <span>{message} (Redirecting to login...)</span>
+          <span>{message} (Redirecting to login…)</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* New Password Input */}
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>New Password</label>
+          <label htmlFor="reset-password" className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>New Password</label>
           <div className="relative">
-            <input 
-              type={showPassword ? "text" : "password"} 
-              value={newPassword} 
-              onChange={(e) => setNewPassword(e.target.value)} 
-              required 
-              className={fieldClass + " pr-10"} 
-              placeholder="Min 8 characters" 
+            <input
+              id="reset-password"
+              name="new-password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              className={fieldClass + " pr-10"}
+              placeholder="Min 8 characters"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#B0886A] hover:text-[#6B3E26]"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#B0886A] hover:text-[#6B3E26] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26] rounded"
             >
               {showPassword ? (
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -132,20 +136,24 @@ function ResetPasswordForm() {
 
         {/* Confirm Password Input */}
         <div className="space-y-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Confirm Password</label>
+          <label htmlFor="reset-cpassword" className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#6B3E26" }}>Confirm Password</label>
           <div className="relative">
-            <input 
-              type={showConfirmPassword ? "text" : "password"} 
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)} 
-              required 
-              className={fieldClass + " pr-10"} 
-              placeholder="Verify password" 
+            <input
+              id="reset-cpassword"
+              name="confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className={fieldClass + " pr-10"}
+              placeholder="Verify password"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#B0886A] hover:text-[#6B3E26]"
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#B0886A] hover:text-[#6B3E26] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6B3E26] rounded"
             >
               {showConfirmPassword ? (
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -162,7 +170,7 @@ function ResetPasswordForm() {
         </div>
 
         <button type="submit" disabled={loading} className="btn-primary w-full text-center disabled:opacity-60">
-          {loading ? "Resetting password..." : "Set New Password"}
+          {loading ? "Resetting Password…" : "Set New Password"}
         </button>
       </form>
 

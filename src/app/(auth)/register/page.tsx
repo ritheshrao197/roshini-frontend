@@ -94,30 +94,33 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <div className="alert alert-error">
+            <div role="alert" aria-live="polite" className="alert alert-error">
               <span>⚠️</span><span>{error}</span>
             </div>
           )}
           {success && (
-            <div className="alert alert-success">
+            <div role="status" aria-live="polite" className="alert alert-success">
               <span>✅</span><span>{success}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Full Name</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className={fieldClass} placeholder="Your full name" />
+              <label htmlFor="register-name" className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Full Name</label>
+              <input id="register-name" name="name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} required className={fieldClass} placeholder="Your full name" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Email Address</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required suppressHydrationWarning className={fieldClass} placeholder="name@example.com" />
+              <label htmlFor="register-email" className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Email Address</label>
+              <input id="register-email" name="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required suppressHydrationWarning className={fieldClass} placeholder="name@example.com" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Password</label>
+              <label htmlFor="register-password" className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Password</label>
               <div className="relative">
                 <input
+                  id="register-password"
+                  name="new-password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -127,7 +130,8 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)] rounded"
                   style={{ color: "var(--text-muted)" }}
                 >
                   {showPassword ? (
@@ -144,10 +148,13 @@ export default function RegisterPage() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Confirm Password</label>
+              <label htmlFor="register-cpassword" className="text-[11px] font-bold uppercase tracking-widest text-brand-brown">Confirm Password</label>
               <div className="relative">
                 <input
+                  id="register-cpassword"
+                  name="confirm-password"
                   type={showCPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   value={cPassword}
                   onChange={(e) => setCPassword(e.target.value)}
                   required
@@ -157,7 +164,8 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowCPassword(!showCPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  aria-label={showCPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)] rounded"
                   style={{ color: "var(--text-muted)" }}
                 >
                   {showCPassword ? (
@@ -175,7 +183,7 @@ export default function RegisterPage() {
             </div>
 
             <button type="submit" disabled={loading} className={`btn-primary w-full text-center ${loading ? "btn-loading" : ""}`}>
-              {loading ? "Creating Account..." : "Create My Account"}
+              {loading ? "Creating Account…" : "Create My Account"}
             </button>
           </form>
 
@@ -185,7 +193,9 @@ export default function RegisterPage() {
           </div>
 
           <p className="text-center text-[10px] text-text-light">
-            By registering, you agree to our Privacy Policy and Terms of Service.
+            By registering, you agree to our{" "}
+            <Link href="/privacy-policy" className="underline">Privacy Policy</Link> and{" "}
+            <Link href="/terms-of-service" className="underline">Terms of Service</Link>.
           </p>
         </div>
       </div>
