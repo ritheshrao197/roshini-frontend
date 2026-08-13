@@ -1,6 +1,6 @@
 {
   "name": "client-next",
-  "version": "0.2.40",
+  "version": "0.2.41",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.6",
+    "next": "16.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "swiper": "^12.2.0"
@@ -20,7 +20,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
