@@ -1197,12 +1197,13 @@ function AdminDashboardInner() {
                           <th className="px-6 py-3">Category</th>
                           <th className="px-6 py-3 text-center">Status</th>
                           <th className="px-6 py-3 text-right">Views</th>
+                          <th className="px-6 py-3 text-right">Created</th>
                           <th className="px-6 py-3 text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         {vlogs.length === 0 ? (
-                          <tr><td colSpan={5} className="px-6 py-10 text-center text-sm text-[#7A5C45]">No vlogs found.</td></tr>
+                          <tr><td colSpan={6} className="px-6 py-10 text-center text-sm text-[#7A5C45]">No vlogs found.</td></tr>
                         ) : vlogs.map(v => (
                           <tr key={v._id} className="border-b hover:bg-[#F5E9DA]/40 transition-colors" style={{ borderColor: "#E8D5BC" }}>
                             <td className="px-6 py-4 font-semibold text-[#6B3E26]">{v.title}</td>
@@ -1219,6 +1220,9 @@ function AdminDashboardInner() {
                               </span>
                             </td>
                             <td className="px-6 py-4 text-right text-[#7A5C45]">{v.viewCount}</td>
+                            <td className="px-6 py-4 text-right text-[#7A5C45] whitespace-nowrap">
+                              {v.createdAt ? new Date(v.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
+                            </td>
                             <td className="px-6 py-4 text-right space-x-3">
                               <button
                                 onClick={() => handleVlogPublishToggle(v._id, v.isPublished)}
