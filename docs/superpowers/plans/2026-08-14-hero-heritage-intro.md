@@ -4,7 +4,7 @@
 
 **Goal:** Rebuild the fallback hero (`src/components/home/HeroSlider.tsx`'s no-CMS branch) into a cinematic, botanically-framed hero with a Motion entrance sequence and a GSAP scroll-linked parallax, add a new Heritage Introduction section right after it, and bring forward 7 reviewed motion-primitive files from an earlier stashed effort.
 
-**Architecture:** Additive — a new illustration file, a new section component, 7 extracted-and-integrated library/component files — plus a rewrite of the fallback-hero JSX inside the existing `HeroSlider.tsx` (the CMS Swiper branch gets a palette audit only, not a rewrite). No new page routes, no new npm dependency (`motion`/`gsap` already installed since Phase 1).
+**Architecture:** Additive — a new illustration file, a new section component, 7 extracted-and-integrated library/component files — plus a rewrite of the fallback-hero JSX inside the existing `HeroSlider.tsx` (the CMS Swiper branch gets a palette audit only, not a rewrite). No new page routes. Two new npm dependencies (`motion@^13.1.0`, `gsap@^3.15.0` — see Global Constraints).
 
 **Tech Stack:** Next.js 16, React 19, Tailwind v4, `motion/react` (entrance/reveal animation), `gsap`+`gsap/ScrollTrigger` (the hero's scroll-linked parallax — the only GSAP use in this plan).
 
@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- No new npm dependency — `motion` and `gsap` are already in `package.json`.
+- **`motion` (`^13.1.0`) and `gsap` (`^3.15.0`) must be added as new npm dependencies in Task 1** — these exact versions are what the extracted stashed code was originally written against. (Correction: this plan and its spec originally assumed these were already installed, based on a Phase 1 exploration that ran *before* the unrelated motion-plan work was stashed — the stash's own uncommitted changes had added them to `package.json` at that time, which the exploration observed; stashing reverted `package.json` to not have them. Verified empirically during Task 1 execution — see ledger.)
 - `client-next` has no configured test runner — verification is `npm run lint`, `npm run build`, and manual `npm run dev` checks (no unit tests to write).
 - Never touch: `src/lib/cart.ts`, payment/checkout code, product data/API layer, `src/lib/AuthContext.tsx`/`useAuth`, SEO metadata in `layout.tsx`, `server/`.
 - Every new animation must be gated behind `useReducedMotion()` (from `src/lib/useMotionPrefs.ts`, Task 1) — when true, render the final state immediately with no animation, and never create a GSAP `ScrollTrigger` at all.
@@ -30,7 +30,15 @@
 **Interfaces:**
 - Produces: `useReducedMotion()`, `usePointerFine()`, `useCanHover()` (from `useMotionPrefs.ts`); `motionConfig` object and `gsapEase` object (from `motionConfig.ts`); `useGsapContext(scopeRef, setup, deps)`, plus re-exported `gsap`/`ScrollTrigger` (from `gsapUtils.ts`); default-exported `RevealText({children, as, className, style, by, stagger, delay})`; default-exported `FadeUp({children, className, style, delay, distance, duration, as})` plus named `StaggerGroup`/`StaggerItem`; default-exported `ImageReveal({children, className, style, delay, from})`; default-exported `ParallaxLayer({children, className, style, range})`. Tasks 3, 4, and 5 all consume these exact exports.
 
-- [ ] **Step 1: Extract the 7 files from the stash's untracked-files commit**
+- [ ] **Step 1: Install `motion` and `gsap`**
+
+```bash
+npm install motion@^13.1.0 gsap@^3.15.0
+```
+
+Confirm both land in `package.json`'s `dependencies` (not `devDependencies`) and that `npm install` exits cleanly.
+
+- [ ] **Step 2: Extract the 7 files from the stash's untracked-files commit**
 
 These files were authored in an earlier, unrelated session and stashed (never committed) before Phase 1 began. They are recoverable read-only via `git show`, without touching the stash itself:
 
@@ -46,7 +54,7 @@ git show 'stash@{0}^3:src/components/motion/ParallaxLayer.tsx' > src/components/
 
 If any `git show` command fails (e.g. "fatal: invalid object name" or path not found), STOP and report — it means the stash reference has changed since this plan was written, and the file must be located a different way rather than guessed at.
 
-- [ ] **Step 2: Read every extracted file end to end**
+- [ ] **Step 3: Read every extracted file end to end**
 
 Before doing anything else, read all 7 files. They should look like this (summarized — read the actual extracted content, this is not exhaustive):
 
@@ -57,21 +65,21 @@ Before doing anything else, read all 7 files. They should look like this (summar
 
 If what you read materially differs from this summary (missing exports, broken imports, references to files that don't exist in this codebase), STOP and report BLOCKED with specifics — do not silently patch a file that doesn't match its expected shape without checking with the controller first, since these files were written for a different, unknown codebase state originally.
 
-- [ ] **Step 3: Verify — lint and type-check**
+- [ ] **Step 4: Verify — lint and type-check**
 
 Run: `cd client-next && npm run lint`
 Expected: no new errors attributable to these 7 files (the project has pre-existing baseline lint issues in other files — 143 errors/85 warnings as of the last Phase 1 commit; compare against that baseline, don't expect zero).
 
-- [ ] **Step 4: Verify — build**
+- [ ] **Step 5: Verify — build**
 
 Run: `npm run build`
-Expected: succeeds. These files aren't imported by anything yet (Tasks 3-5 wire them up), so this mainly confirms there's no syntax/type error sitting dormant.
+Expected: succeeds. These files aren't imported by anything yet (Tasks 3-5 wire them up), so this mainly confirms there's no syntax/type error sitting dormant, and that `motion`/`gsap` resolve correctly as real dependencies now that Step 1 installed them.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add src/lib/useMotionPrefs.ts src/lib/motionConfig.ts src/lib/gsapUtils.ts src/components/motion/RevealText.tsx src/components/motion/FadeUp.tsx src/components/motion/ImageReveal.tsx src/components/motion/ParallaxLayer.tsx
-git commit -m "feat: extract reviewed motion primitives (RevealText, FadeUp, ImageReveal, ParallaxLayer, gsap/motion utils) from stash"
+git add package.json package-lock.json src/lib/useMotionPrefs.ts src/lib/motionConfig.ts src/lib/gsapUtils.ts src/components/motion/RevealText.tsx src/components/motion/FadeUp.tsx src/components/motion/ImageReveal.tsx src/components/motion/ParallaxLayer.tsx
+git commit -m "feat: add motion/gsap dependencies and extract reviewed motion primitives from stash"
 ```
 
 ---
@@ -434,15 +442,18 @@ git commit -m "feat: rebuild fallback hero with new copy, botanical framing, and
 
 - [ ] **Step 1: Add refs for the scroll-animated elements**
 
-In the `hero-fallback` branch's component scope (same function body as Task 3's edits), add refs for the section root, the headline, and the botanical layer (the product-image ref, `imageWrapRef`, already exists):
+**Read the current `HeroSlider.tsx` first — Task 3 restructured the product-image wrapper beyond what an earlier draft of this plan assumed.** The product image is now split into an OUTER `motion.div` (`className="hero-product-entrance ..."`) that Motion's entrance animation owns, wrapping an INNER plain `<div ref={imageWrapRef} ...>` that the pre-existing mouse-tilt effect owns exclusively (it writes `imageWrapRef.current.style.transform` directly, every mousemove). **Do not attach GSAP's scroll animation to `imageWrapRef`** — that would recreate the exact transform-ownership conflict Task 3's own commit message and code comment describe fixing (two things writing to one element's `transform` fight every frame), just between GSAP and the tilt handler instead of Motion and the tilt handler.
+
+In the `hero-fallback` branch's component scope (same function body as Task 3's edits), add refs for the section root, the headline, the botanical layer, and a NEW ref for the outer product-entrance wrapper:
 
 ```tsx
   const heroSectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const botanicalsRef = useRef<HTMLDivElement>(null);
+  const productEntranceRef = useRef<HTMLDivElement>(null);
 ```
 
-Attach `ref={heroSectionRef}` to the `<section className="hero-fallback ...">` root element. Attach `ref={headlineRef}` to the wrapping `motion.h1`-producing `<RevealText>` call from Task 3 Step 1 — since `RevealText` doesn't accept a `ref` prop directly (check Task 1's extracted `RevealText.tsx` — it doesn't forward one), wrap it in a plain `<div ref={headlineRef}>` instead:
+Attach `ref={heroSectionRef}` to the `<section className="hero-fallback ...">` root element. Attach `ref={headlineRef}` to a new wrapping `<div>` around the `<RevealText>` call (`RevealText` doesn't forward a `ref` — confirm this by checking Task 1's extracted `RevealText.tsx`):
 
 ```tsx
             <div ref={headlineRef}>
@@ -452,7 +463,7 @@ Attach `ref={heroSectionRef}` to the `<section className="hero-fallback ...">` r
             </div>
 ```
 
-Attach `ref={botanicalsRef}` to the botanical framing `motion.div` from Task 3 Step 3.
+Attach `ref={botanicalsRef}` to the botanical framing `motion.div` (the one with `className="hero-botanical-frame pointer-events-none absolute inset-0"`). Attach `ref={productEntranceRef}` to the OUTER `motion.div` with `className="hero-product-entrance relative w-full max-w-md aspect-square"` — this is the node GSAP will animate, NOT `imageWrapRef`.
 
 - [ ] **Step 2: Wire up the scroll-linked animation**
 
@@ -462,7 +473,7 @@ Add, in the component body (after the refs are declared, alongside the existing 
   useGsapContext(
     heroSectionRef,
     () => {
-      if (reduceMotion || !imageWrapRef.current) return;
+      if (reduceMotion || !productEntranceRef.current) return;
 
       gsap.timeline({
         scrollTrigger: {
@@ -472,7 +483,7 @@ Add, in the component body (after the refs are declared, alongside the existing 
           scrub: true,
         },
       })
-        .to(imageWrapRef.current, { y: -60, scale: 0.94, ease: "none" }, 0)
+        .to(productEntranceRef.current, { y: -60, scale: 0.94, ease: "none" }, 0)
         .to(botanicalsRef.current, { y: -20, ease: "none" }, 0)
         .to(headlineRef.current, { opacity: 0, y: -30, ease: "none" }, 0);
     },
@@ -482,7 +493,9 @@ Add, in the component body (after the refs are declared, alongside the existing 
 
 Add `import { useGsapContext, gsap } from "@/lib/gsapUtils";` to the top of the file.
 
-This only runs for the fallback-hero branch (the `useGsapContext` call sits inside the same function as the rest of `HeroSlider`, but its `setup` callback early-returns via `!imageWrapRef.current`, which is only populated when the fallback branch renders — the CMS Swiper branch doesn't use `imageWrapRef` at all, so this is a safe no-op there). Note: `useGsapContext` is called unconditionally on every render of `HeroSlider` regardless of which branch renders — this matches React's rules-of-hooks requirement (hooks can't be called conditionally), and the `setup` function's own guard (`!imageWrapRef.current`) is what makes it a no-op on the CMS branch, not a conditional hook call.
+This only runs for the fallback-hero branch (the `useGsapContext` call sits inside the same function as the rest of `HeroSlider`, but its `setup` callback early-returns via `!productEntranceRef.current`, which is only populated when the fallback branch renders — the CMS Swiper branch doesn't use this ref at all, so this is a safe no-op there). Note: `useGsapContext` is called unconditionally on every render of `HeroSlider` regardless of which branch renders — this matches React's rules-of-hooks requirement (hooks can't be called conditionally), and the `setup` function's own guard is what makes it a no-op on the CMS branch, not a conditional hook call.
+
+**One accepted, narrow edge case to verify rather than over-engineer:** Motion's entrance animation on `productEntranceRef`'s node settles ~1.35s after mount (0.45s delay + 0.9s duration) and does not continue driving that node's transform afterward. GSAP's `ScrollTrigger` only starts producing non-zero scrub values once the user actually scrolls the hero out of the `"top top"` position — in the overwhelming majority of real sessions, that happens well after 1.35s. There is a narrow theoretical window (a user scrolling within the first ~1.3s of page load) where Motion's entrance and GSAP's scroll animation could both be targeting `productEntranceRef`'s transform simultaneously. Verify this visually in Step 6 by scrolling immediately on page load; if you observe a visible glitch (not just a theoretical concern), apply the same fix pattern Task 3 established — split GSAP's scroll target onto its own dedicated wrapper node, sibling to Motion's entrance node, rather than sharing one. Do not add this extra wrapper preemptively if the narrow-window case doesn't actually glitch — that would be solving a problem that isn't real.
 
 - [ ] **Step 3: Verify — lint and type-check**
 
@@ -501,6 +514,7 @@ Run: `npm run dev`, on the homepage:
 - Scroll back up and confirm the effect reverses smoothly (this is `scrub: true`'s job — verify it actually feels scroll-linked, not janky/delayed).
 - Navigate away from the homepage (e.g. click into `/shop`) and back — confirm no console errors about a `ScrollTrigger` referencing a removed DOM node (this is what `useGsapContext`'s `ctx.revert()` cleanup exists to prevent — if you see such an error, the cleanup isn't firing correctly and this needs to be fixed, not ignored).
 - Toggle `prefers-reduced-motion` and confirm no ScrollTrigger is created at all (no scroll-linked movement).
+- Reload the homepage and scroll immediately (within ~1 second of load, before the entrance animation settles) — confirm there's no visible glitch/jump on the product image. Per Step 1's note, this is an accepted narrow edge case unless it's actually visible; if it is, apply the split-wrapper fix described there before proceeding.
 
 - [ ] **Step 6: Commit**
 
