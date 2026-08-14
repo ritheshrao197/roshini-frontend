@@ -11,12 +11,18 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { BACKEND_URL, Product, trackSliderAnalytics } from "@/lib/api";
 import MagneticButton from "@/components/common/MagneticButton";
+import RevealText from "@/components/motion/RevealText";
+import { FadeUp } from "@/components/motion/FadeUp";
+import { MilletSprig, AlmondBranch, FlowerCluster, LeafPair, SeedScatter } from "@/components/decorative/HeroBotanicals";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/useMotionPrefs";
 
 export default function HeroSlider({ sliders, products }: { sliders: any[]; products?: Product[] }) {
   const [variant, setVariant] = useState<"A" | "B">("A");
   const trackedImpressions = useRef(new Set<string>());
   const imageWrapRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   const trackImpression = (id: string) => {
     if (!trackedImpressions.current.has(id)) {
@@ -85,58 +91,107 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
       <section className="hero-fallback relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-[85vh] lg:min-h-[80vh]">
           {/* Left — editorial text content */}
-          <div className="flex flex-col justify-center gap-6 animate-stagger">
-            <span className="section-label">Wholesome Food, Made With Intention</span>
-            <h1 className="display-heading text-[var(--color-espresso)]">
-              Wholesome food.
-              <br />
-              Made with <em>intention</em>.
-            </h1>
-            <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg">
-              A thoughtfully crafted blend of millets, nuts, seeds and dry fruits for everyday nourishment — made the way it always was, by hand, in small batches.
-            </p>
+          <div className="flex flex-col justify-center gap-6">
+            <FadeUp>
+              <span className="section-label">CRAFTED FROM INDIA&apos;S GRAINS &amp; NUTS</span>
+            </FadeUp>
+            <RevealText as="h1" className="display-heading text-[var(--color-espresso)]" delay={0.15}>
+              Wholesome food, rooted in tradition.
+            </RevealText>
+            <FadeUp delay={0.55}>
+              <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg">
+                Thoughtfully blended millet, nuts and seeds for everyday nourishment.
+              </p>
+            </FadeUp>
 
-            <div className="flex flex-wrap gap-4 sm:gap-6 pt-2">
-              <MagneticButton>
-                <Link href={flagshipHref} className="btn-primary btn-lg rounded-xl">
-                  Shop {flagship ? "Nutrimix" : "Now"}
-                </Link>
-              </MagneticButton>
-              <Link href="#brand-story" className="btn-ghost btn-lg rounded-xl">Explore the Blend</Link>
-            </div>
+            <FadeUp delay={0.7}>
+              <div className="flex flex-wrap gap-4 sm:gap-6 pt-2">
+                <MagneticButton>
+                  <Link href={flagshipHref} className="btn-primary btn-lg rounded-xl">
+                    {flagship ? "Shop Nutrimix" : "Shop Now"}
+                  </Link>
+                </MagneticButton>
+                <Link href="#brand-story" className="btn-ghost btn-lg rounded-xl">Explore the Blend</Link>
+              </div>
+            </FadeUp>
           </div>
 
           {/* Right — real flagship product photo, soft-shadowed, layered 2.5D tilt */}
           <div className="relative flex items-center justify-center" style={{ perspective: "1200px" }}>
-            <div
-              ref={imageWrapRef}
-              className="relative w-full max-w-md aspect-square transition-transform duration-300 ease-out will-change-transform"
-              style={{ transformStyle: "preserve-3d" }}
+            {/* Botanical framing layer — behind the product, corner-anchored, restrained */}
+            <motion.div
+              className="hero-botanical-frame pointer-events-none absolute inset-0"
+              aria-hidden="true"
+              style={{ color: "var(--color-secondary-brown)", opacity: reduceMotion ? 0.5 : undefined }}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 0.5, scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.75 }}
+            >
+              <div className="absolute -top-4 -left-6 w-20 h-20 md:w-28 md:h-28">
+                <MilletSprig />
+              </div>
+              <div className="absolute -top-2 -right-4 w-16 h-16 md:w-24 md:h-24 rotate-[15deg]">
+                <AlmondBranch />
+              </div>
+              <div className="absolute -bottom-6 -left-4 w-16 h-16 md:w-20 md:h-20">
+                <LeafPair />
+              </div>
+              <div className="absolute -bottom-4 -right-6 w-14 h-14 md:w-20 md:h-20">
+                <FlowerCluster />
+              </div>
+              <div className="absolute top-1/2 -right-10 w-10 h-10 md:w-14 md:h-14 -translate-y-1/2 rotate-[30deg]">
+                <SeedScatter />
+              </div>
+            </motion.div>
+
+            {/*
+              Split in two: the outer motion.div owns Motion's entrance opacity/scale,
+              the inner plain div (imageWrapRef) owns the mouse-tilt effect's own
+              `el.style.transform` writes. Both used to live on one node and fought
+              over the same `transform` style property — verified visually: moving
+              the mouse during the ~0.45s-1.35s entrance window caused the tilt
+              handler's raw transform string to clobber Motion's in-flight scale
+              (visible jump), and Motion's next animation frame would clobber the
+              tilt rotation right back, alternating every frame until the entrance
+              animation finished. Separating the two transform owners onto sibling
+              nodes removes the conflict entirely.
+            */}
+            <motion.div
+              className="hero-product-entrance relative w-full max-w-md aspect-square"
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
             >
               <div
-                ref={glowRef}
-                className="absolute inset-6 rounded-full blur-2xl opacity-40 transition-transform duration-300 ease-out will-change-transform"
-                style={{ background: "radial-gradient(circle, var(--color-walnut), transparent 70%)" }}
-                aria-hidden="true"
-              />
-              {flagshipImage ? (
-                <Image
-                  src={flagshipImage}
-                  alt={flagship?.pName || "Roshini's Nutrimix"}
-                  fill
-                  sizes="(max-width: 1024px) 80vw, 40vw"
-                  className="relative object-contain drop-shadow-2xl"
-                  priority
+                ref={imageWrapRef}
+                className="relative w-full h-full transition-transform duration-300 ease-out will-change-transform"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <div
+                  ref={glowRef}
+                  className="absolute inset-6 rounded-full blur-2xl opacity-40 transition-transform duration-300 ease-out will-change-transform"
+                  style={{ background: "radial-gradient(circle, var(--color-walnut), transparent 70%)" }}
+                  aria-hidden="true"
                 />
-              ) : (
-                <div className="hero-panel absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-4 rounded-3xl">
-                  <h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
-                  <p className="hero-subtitle text-sm leading-relaxed max-w-sm">
-                    Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches.
-                  </p>
-                </div>
-              )}
-            </div>
+                {flagshipImage ? (
+                  <Image
+                    src={flagshipImage}
+                    alt={flagship?.pName || "Roshini's Nutrimix"}
+                    fill
+                    sizes="(max-width: 1024px) 80vw, 40vw"
+                    className="relative object-contain drop-shadow-2xl"
+                    priority
+                  />
+                ) : (
+                  <div className="hero-panel absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-4 rounded-3xl">
+                    <h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
+                    <p className="hero-subtitle text-sm leading-relaxed max-w-sm">
+                      Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </div>
         </div>
 
