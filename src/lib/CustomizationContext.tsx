@@ -25,11 +25,11 @@ const defaultSettings: CustomizationSettings = {
   logoImage: null,
   shopName: "Roshini's",
   shopSubtitle: "Pure Ingredients, Zero Compromises",
-  themePrimaryColor: "#5D310E",
-  themePrimaryColorDark: "#422209",
-  themePrimaryColorLight: "#AE6837",
-  themeCreamColor: "#F7F1E7",
-  themeCreamColorDark: "#ECE2D0",
+  themePrimaryColor: "#4A2618",
+  themePrimaryColorDark: "#2C170E",
+  themePrimaryColorLight: "#A95636",
+  themeCreamColor: "#F7F0E4",
+  themeCreamColorDark: "#F2E9D9",
 };
 
 const CustomizationContext = createContext<CustomizationContextValue>({
