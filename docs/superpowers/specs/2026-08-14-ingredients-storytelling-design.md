@@ -37,13 +37,25 @@ in full):
   methods), `routes/<resource>.js` (public) + `routes/admin<Resource>.js`
   (admin) — the public/admin file split `CLAUDE.md` documents for
   vlogs/achievements (categories is the one exception, not followed here).
-- Admin routes use `loginCheck` alone (`middleware/auth.js`) — confirmed
-  the RBAC matrix in `config/permissions.js` already has an unused
-  `MANAGE_ACHIEVEMENTS`-shaped entry but is not wired into any route
-  anywhere in the codebase; every simple resource's admin routes use
-  `loginCheck` only. This phase follows that actual convention, not the
-  unused RBAC scaffolding — introducing real RBAC enforcement here would be
-  a separate, unrelated change.
+- **Correction, found during this phase's final review — the original claim
+  here was wrong:** `config/permissions.js`'s full RBAC matrix (`hasPermission`/
+  `checkPermission`) is indeed unwired anywhere, but role-gating itself is
+  NOT absent from this codebase — `middleware/auth.js`'s `isAdmin` is
+  genuinely used by several admin routes (`routes/admin.js`,
+  `routes/customize.js`, `routes/subscribers.js`, `routes/auth.js`,
+  and `routes/userManagement.js` via `middleware/authorize.js`). The
+  narrower, still-true fact is that the *CMS-content resource cohort*
+  specifically — achievements, vlogs, sliders — uses `loginCheck` alone,
+  without `isAdmin`, meaning any authenticated (not necessarily admin) user
+  can currently write to those resources too. The `ingredients` resource
+  was initially built to match that cohort's convention, but the final
+  review correctly flagged this as a real gap, not a neutral style choice,
+  since it lets any logged-in customer write content rendered on the
+  public homepage. **Resolution:** `ingredients`' three write routes
+  (`POST`/`PUT`/`DELETE`) now use `loginCheck, isAdmin` — the same pattern
+  already established elsewhere in this codebase, not new architecture.
+  The pre-existing achievements/vlogs/sliders cohort still has the gap;
+  that's a separate, not-yet-scoped follow-up, not fixed by this phase.
 - `app.js` requires both route files near the top and mounts both under
   bare `/api` (`app.use("/api", achievementRouter)` /
   `app.use("/api", adminAchievementRouter)`) — paths differentiate inside
