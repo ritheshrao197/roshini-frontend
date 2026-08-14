@@ -24,7 +24,7 @@ export default function Header() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ export default function Header() {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
         setShowDropdown(false);
+        setSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -85,7 +86,7 @@ export default function Header() {
     const q = searchQuery.trim();
     if (!q) return;
     setShowDropdown(false);
-    setMobileSearchOpen(false);
+    setSearchOpen(false);
     setMenuOpen(false);
     router.push(`/shop?search=${encodeURIComponent(q)}`);
   };
@@ -178,90 +179,13 @@ export default function Header() {
               )}
             </nav>
 
-            {/* Desktop Search Bar */}
-            <div ref={searchContainerRef} className="hidden lg:block relative flex-1 max-w-xs mx-4">
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => searchQuery.trim() && setShowDropdown(true)}
-                  placeholder={t("search.placeholder")}
-                  className="input input-sm search-input w-full text-xs"
-                  style={{ paddingLeft: "2.75rem", paddingRight: "2.25rem" }}
-                />
-                <svg
-                  className="icon-action absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => { setSearchQuery(""); setShowDropdown(false); }}
-                    className="site-muted absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold"
-                  >
-                    ✕
-                  </button>
-                )}
-              </form>
-
-              {/* Autocomplete Dropdown */}
-              {showDropdown && (
-                <div className="search-dropdown absolute top-full left-0 right-0 mt-2 overflow-hidden z-50">
-                  {searchResults.length > 0 ? (
-                    <div>
-                      <div className="search-dropdown-heading px-3.5 py-2 text-[10px] font-bold uppercase tracking-wider">
-                        Matching Products ({searchResults.length})
-                      </div>
-                      {searchResults.map((item) => {
-                        const imgUrl = item.image?.secureUrl || item.images?.[0]?.secureUrl || item.pImages?.[0] || "/images/placeholder.jpg";
-                        return (
-                          <Link
-                            key={item._id}
-                            href={`/product/${item.slug || item._id}`}
-                            onClick={() => { setShowDropdown(false); setSearchQuery(""); }}
-                            className="search-result flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
-                          >
-                            <img src={imgUrl} alt={item.pName} className="search-result-image w-10 h-10 object-cover" />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold truncate">
-                                {item.pName}
-                              </p>
-                              <p className="product-card-title text-[11px] font-semibold">
-                                ₹{item.pPrice}
-                              </p>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                      <button
-                        onClick={handleSearchSubmit}
-                        className="btn-ghost w-full text-center text-xs font-bold py-2.5"
-                      >
-                        See all results for "{searchQuery}" →
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="site-muted p-4 text-center text-xs">
-                      No products found matching "<span className="font-semibold text-[var(--color-text)]">{searchQuery}</span>"
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
             {/* Right Actions */}
             <div className="flex items-center gap-3 sm:gap-4">
 
-              {/* Mobile Search Toggle Icon */}
+              {/* Search Toggle Icon */}
               <button
-                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="icon-action lg:hidden p-2 transition-colors"
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="icon-action p-2 transition-colors"
                 aria-label="Search"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -329,9 +253,9 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile Search Bar Expansion */}
-          {mobileSearchOpen && (
-            <div className="lg:hidden pb-3 pt-1 relative border-t border-[var(--color-border)]">
+          {/* Search Bar Expansion */}
+          {searchOpen && (
+            <div ref={searchContainerRef} className="pb-3 pt-1 relative border-t border-[var(--color-border)]">
               <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <input
                   type="text"
@@ -363,7 +287,7 @@ export default function Header() {
                 )}
               </form>
 
-              {/* Mobile Autocomplete Dropdown */}
+              {/* Autocomplete Dropdown */}
               {showDropdown && (
                 <div className="search-dropdown absolute top-full left-0 right-0 mt-1 overflow-hidden z-50">
                   {searchResults.length > 0 ? (
@@ -377,7 +301,7 @@ export default function Header() {
                           <Link
                             key={item._id}
                             href={`/product/${item.slug || item._id}`}
-                            onClick={() => { setShowDropdown(false); setSearchQuery(""); setMobileSearchOpen(false); }}
+                            onClick={() => { setShowDropdown(false); setSearchQuery(""); setSearchOpen(false); }}
                             className="search-result flex items-center gap-3 px-3.5 py-2.5 transition-colors last:border-0 group"
                           >
                             <img src={imgUrl} alt={item.pName} className="search-result-image w-10 h-10 object-cover" />
