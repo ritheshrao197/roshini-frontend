@@ -29,6 +29,7 @@ export default function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const searchToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setCartCount(getCartCount());
@@ -40,7 +41,12 @@ export default function Header() {
 
     // Close autocomplete dropdown on outside click
     const handleClickOutside = (e: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (searchToggleRef.current && searchToggleRef.current.contains(target)) {
+        // Let the toggle button's own onClick be the sole source of truth for this click.
+        return;
+      }
+      if (searchContainerRef.current && !searchContainerRef.current.contains(target)) {
         setShowDropdown(false);
         setSearchOpen(false);
       }
@@ -185,6 +191,7 @@ export default function Header() {
 
               {/* Search Toggle Icon */}
               <button
+                ref={searchToggleRef}
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="icon-action p-2 transition-colors"
                 aria-label="Search"

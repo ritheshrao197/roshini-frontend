@@ -1653,6 +1653,17 @@ a:hover {
   color: var(--color-ivory);
   background: color-mix(in srgb, var(--color-ivory) 15%, transparent);
 }
+/* The mobile drawer renders inside .site-header and always has an opaque
+   background, so it must never inherit the transparent-nav light-text
+   overrides above, even while .is-transparent is active on the header. */
+.site-header.is-transparent .header-mobile-panel .site-link {
+  color: var(--color-text);
+}
+.site-header.is-transparent .header-mobile-panel .site-link:hover,
+.site-header.is-transparent .header-mobile-panel .site-link:focus-visible {
+  color: var(--color-espresso);
+  background: var(--color-linen);
+}
 .site-logo-name, .product-card-title { color: var(--color-espresso); }
 .site-logo-name, .product-card-title, .hero-title { font-family: var(--font-serif); }
 .site-muted { color: var(--color-text-muted); }
