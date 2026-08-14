@@ -51,9 +51,18 @@ export function AlmondBranch() {
 /** A small cluster of three simple 5-petal flowers on thin stems. */
 export function FlowerCluster() {
   const flowers = [
-    { cx: 16, cy: 40, r: 4, scale: 1 },
-    { cx: 34, cy: 22, r: 3.2, scale: 0.85 },
-    { cx: 48, cy: 36, r: 3.6, scale: 0.9 },
+    { cx: 16, cy: 40, scale: 1, r: 4, petals: [
+      { px: 4, py: 0 }, { px: 1.236, py: 3.804 }, { px: -3.236, py: 2.351 },
+      { px: -3.236, py: -2.351 }, { px: 1.236, py: -3.804 },
+    ] },
+    { cx: 34, cy: 22, scale: 0.85, r: 3.2, petals: [
+      { px: 3.2, py: 0 }, { px: 0.989, py: 3.043 }, { px: -2.589, py: 1.881 },
+      { px: -2.589, py: -1.881 }, { px: 0.989, py: -3.043 },
+    ] },
+    { cx: 48, cy: 36, scale: 0.9, r: 3.6, petals: [
+      { px: 3.6, py: 0 }, { px: 1.112, py: 3.424 }, { px: -2.912, py: 2.116 },
+      { px: -2.912, py: -2.116 }, { px: 1.112, py: -3.424 },
+    ] },
   ];
   return (
     <svg
@@ -67,24 +76,19 @@ export function FlowerCluster() {
       <path vectorEffect="non-scaling-stroke" d="M16 52 L16 40" />
       <path vectorEffect="non-scaling-stroke" d="M34 52 L34 22" />
       <path vectorEffect="non-scaling-stroke" d="M48 52 L48 36" />
-      {flowers.map(({ cx, cy, r, scale }, i) => (
+      {flowers.map(({ cx, cy, r, scale, petals }, i) => (
         <g key={i} transform={`translate(${cx} ${cy}) scale(${scale})`}>
-          {Array.from({ length: 5 }, (_, p) => {
-            const angle = (p * 72 * Math.PI) / 180;
-            const px = Math.cos(angle) * r;
-            const py = Math.sin(angle) * r;
-            return (
-              <ellipse
-                key={p}
-                vectorEffect="non-scaling-stroke"
-                cx={px}
-                cy={py}
-                rx={r * 0.7}
-                ry={r * 1.1}
-                transform={`rotate(${p * 72} ${px} ${py})`}
-              />
-            );
-          })}
+          {petals.map(({ px, py }, p) => (
+            <ellipse
+              key={p}
+              vectorEffect="non-scaling-stroke"
+              cx={px}
+              cy={py}
+              rx={r * 0.7}
+              ry={r * 1.1}
+              transform={`rotate(${p * 72} ${px} ${py})`}
+            />
+          ))}
           <circle vectorEffect="non-scaling-stroke" r={r * 0.4} fill="currentColor" stroke="none" />
         </g>
       ))}
