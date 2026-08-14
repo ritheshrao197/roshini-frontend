@@ -156,8 +156,9 @@ export default function Header() {
             <nav className="hidden md:flex items-center gap-4 lg:gap-6">
               {[
                 { href: "/shop", label: t("nav.shop") },
-                { href: "/blogs", label: t("nav.blogs") },
                 { href: "/#values", label: t("nav.story") },
+                { href: "/#ingredients", label: t("nav.ingredients") },
+                { href: "/blogs", label: t("nav.journal") },
               ].map((item) => (
                 <Link
                   key={item.href}
@@ -170,7 +171,7 @@ export default function Header() {
               {user?.role === 1 && (
                 <Link
                   href="/admin"
-                  className="site-link px-3.5 py-2 text-sm font-bold transition-all hover:bg-black/5 rounded-lg"
+                  className="site-muted px-3 py-2 text-xs font-medium transition-colors hover:opacity-75 rounded-lg"
                 >
                   {t("nav.admin")}
                 </Link>
@@ -414,8 +415,9 @@ export default function Header() {
           <div className="header-mobile-panel md:hidden px-4 pb-4 pt-2 space-y-1">
             {[
               { href: "/shop", label: "🛍️  Shop All" },
-              { href: "/blogs", label: "📝  Blogs" },
               { href: "/#values", label: "🏡  Our Story" },
+              { href: "/#ingredients", label: "🌾  Ingredients" },
+              { href: "/blogs", label: "📰  Journal" },
               { href: "/cart", label: `🛒  Cart (${cartCount})` },
             ].map((item) => (
               <Link

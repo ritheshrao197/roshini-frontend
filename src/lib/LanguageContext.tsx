@@ -39,6 +39,8 @@ const DICTIONARY: Record<string, Record<string, string>> = {
   English: {
     "nav.shop": "Shop All",
     "nav.blogs": "Blogs",
+    "nav.journal": "Journal",
+    "nav.ingredients": "Ingredients",
     "nav.story": "Our Story",
     "nav.admin": "Admin",
     "nav.signin": "Sign In",
