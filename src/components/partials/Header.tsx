@@ -102,32 +102,9 @@ export default function Header() {
 
   return (
     <>
-      {/* Top announcement bar with language selector */}
-      <div className="site-announcement flex items-center justify-between text-[11px] font-medium py-2 px-4 sm:px-8 tracking-wide">
-        <div className="flex-1 text-center truncate">
-          {t("announcement")}
-        </div>
-        <div className="flex items-center gap-1.5 ml-3 flex-shrink-0">
-          <span className="text-xs">🌐</span>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as any)}
-            aria-label="Select language"
-            className="bg-black/25 text-white rounded px-2 py-0.5 text-[10.5px] font-bold border border-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer hover:bg-black/40 transition-colors"
-          >
-            <option value="English" className="text-black">English</option>
-            <option value="Hindi" className="text-black">हिंदी (Hindi)</option>
-            <option value="Kannada" className="text-black">ಕನ್ನಡ (Kannada)</option>
-            <option value="Tamil" className="text-black">தமிழ் (Tamil)</option>
-            <option value="Telugu" className="text-black">తెలుగు (Telugu)</option>
-            <option value="Malayalam" className="text-black">മലയാളം (Malayalam)</option>
-            <option value="Marathi" className="text-black">मराठी (Marathi)</option>
-            <option value="Bengali" className="text-black">বাংলা (Bengali)</option>
-            <option value="Gujarati" className="text-black">ગુજરાતી (Gujarati)</option>
-            <option value="Spanish" className="text-black">Español (Spanish)</option>
-            <option value="French" className="text-black">Français (French)</option>
-          </select>
-        </div>
+      {/* Top announcement bar */}
+      <div className="site-announcement flex items-center justify-center text-[11px] font-medium py-2 px-4 sm:px-8 tracking-wide text-center">
+        {t("announcement")}
       </div>
 
       <header
@@ -181,6 +158,29 @@ export default function Header() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-3 sm:gap-4">
+
+              {/* Language selector */}
+              <div className="relative">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as any)}
+                  aria-label="Select language"
+                  className="icon-action appearance-none bg-transparent pl-6 pr-1.5 py-2 text-[11px] font-semibold rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+                >
+                  <option value="English">English</option>
+                  <option value="Hindi">हिंदी (Hindi)</option>
+                  <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+                  <option value="Tamil">தமிழ் (Tamil)</option>
+                  <option value="Telugu">తెలుగు (Telugu)</option>
+                  <option value="Malayalam">മലയാളം (Malayalam)</option>
+                  <option value="Marathi">मराठी (Marathi)</option>
+                  <option value="Bengali">বাংলা (Bengali)</option>
+                  <option value="Gujarati">ગુજરાતી (Gujarati)</option>
+                  <option value="Spanish">Español (Spanish)</option>
+                  <option value="French">Français (French)</option>
+                </select>
+                <span className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-xs">🌐</span>
+              </div>
 
               {/* Search Toggle Icon */}
               <button
