@@ -14,6 +14,14 @@ interface RevealTextProps {
   stagger?: number;
   /** Delay before the first word/line starts, in seconds. */
   delay?: number;
+  /**
+   * Pass `false` to opt out of the hidden initial state, so each piece renders at
+   * its natural (visible) position from the very first paint — server-rendered HTML
+   * included. Required for SSR-critical, above-the-fold copy (e.g. the hero headline),
+   * which must not be `opacity: 0` until hydration completes. Omit for the default
+   * masked-reveal behaviour.
+   */
+  initial?: false;
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -31,6 +39,7 @@ export default function RevealText({
   by = "word",
   stagger = 0.045,
   delay = 0,
+  initial,
 }: RevealTextProps) {
   const Tag = motion[as];
   const pieces = by === "word" ? children.split(" ") : [children];
@@ -44,7 +53,7 @@ export default function RevealText({
         >
           <motion.span
             style={{ display: "inline-block", willChange: "transform" }}
-            initial={{ y: "100%", opacity: 0 }}
+            initial={initial === false ? false : { y: "100%", opacity: 0 }}
             whileInView={{ y: "0%", opacity: 1 }}
             viewport={{ once: true, margin: "0px 0px -10% 0px" }}
             transition={{ duration: 0.7, ease: EASE, delay: delay + i * stagger }}

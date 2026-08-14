@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { MotionConfig } from "motion/react";
 import "./globals.css";
 import HeaderWrapper from "@/components/partials/HeaderWrapper";
 import VersionBadge from "@/components/partials/VersionBadge";
@@ -110,9 +111,19 @@ export default function RootLayout({
           <LanguageProvider>
             <ThemeManager />
             <CustomizationProvider>
-              <HeaderWrapper />
-              {children}
-              <VersionBadge />
+              {/*
+                Motion's own default is `reducedMotion: "never"` — it does NOT read
+                prefers-reduced-motion unless told to. "user" makes every Motion-driven
+                animation below this point (transform/opacity tweens) resolve instantly
+                to its final state when the OS/browser requests reduced motion, which is
+                why individual components don't each need their own gate. Site-wide on
+                purpose: it covers future animations as well as today's.
+              */}
+              <MotionConfig reducedMotion="user">
+                <HeaderWrapper />
+                {children}
+                <VersionBadge />
+              </MotionConfig>
             </CustomizationProvider>
           </LanguageProvider>
         </AuthProvider>

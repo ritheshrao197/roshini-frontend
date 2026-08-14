@@ -25,9 +25,7 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
   const glowRef = useRef<HTMLDivElement>(null);
   const heroSectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
-  const botanicalsRef = useRef<HTMLDivElement>(null);
   const botanicalsScrollRef = useRef<HTMLDivElement>(null);
-  const productEntranceRef = useRef<HTMLDivElement>(null);
   const productScrollRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -76,36 +74,47 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
     };
   }, [sliders]);
 
-  // Scroll-linked animation targets productScrollRef/botanicalsScrollRef, NOT
-  // productEntranceRef/botanicalsRef, even though the plan draft originally called for
-  // the latter two. Verified visually: scrolling within ~1s of load (before Motion's
-  // entrance settles — ~1.35s for the product, ~1.55s for the botanicals) while GSAP's
-  // scrub tween also wrote to the same node Motion was animating produced exactly the
-  // fight Task 3's own fix comment above describes for the tilt handler — one frame
-  // showed GSAP's translateY, the next frame Motion's entrance tick clobbered it back,
-  // and for the botanical layer this additionally left its scale permanently stuck at
-  // its initial 0.85 instead of settling at 1, because GSAP caches whatever transform
-  // components it isn't animating at the moment it first renders. Giving GSAP its own
-  // dedicated wrapper (a new node, one level above each Motion-owned node) removes the
+  // Scroll-linked animation targets productScrollRef/botanicalsScrollRef — dedicated
+  // GSAP-owned wrappers, one level above the Motion-owned nodes inside them, NOT the
+  // Motion nodes themselves (which the plan draft originally called for). Verified
+  // visually: scrolling within ~1s of load (before Motion's entrance settles — ~1.35s
+  // for the product, ~1.55s for the botanicals) while GSAP's scrub tween also wrote to
+  // the same node Motion was animating produced exactly the fight Task 3's own fix
+  // comment below describes for the tilt handler — one frame showed GSAP's translateY,
+  // the next frame Motion's entrance tick clobbered it back, and for the botanical layer
+  // this additionally left its scale permanently stuck at its initial 0.85 instead of
+  // settling at 1, because GSAP caches whatever transform components it isn't animating
+  // at the moment it first renders. Giving GSAP its own dedicated wrapper removes the
   // conflict the same way Task 3 separated the tilt handler from Motion's entrance.
   // headlineRef doesn't need this: Motion never touches that div's own transform (only
   // the per-word spans nested inside RevealText), so GSAP is the sole owner there.
+  //
+  // Desktop/tablet only (>=768px): the spec calls for the hero's parallax to be reduced
+  // on mobile, where the single-column layout leaves no room for depth to read and the
+  // scrub costs battery on the very devices least able to spare it. gsap.matchMedia()
+  // creates the timeline only while the query matches and tears it down when it stops —
+  // and because it's constructed inside useGsapContext's gsap.context() setup, the
+  // MatchMedia instance registers itself on that context's `data` (gsap-core.js:4048),
+  // so the existing ctx.revert() cleanup also reverts it and its child contexts. No
+  // extra teardown needed here.
   useGsapContext(
     heroSectionRef,
     () => {
       if (reduceMotion || !productScrollRef.current) return;
 
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: heroSectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      })
-        .to(productScrollRef.current, { y: -60, scale: 0.94, ease: "none" }, 0)
-        .to(botanicalsScrollRef.current, { y: -20, ease: "none" }, 0)
-        .to(headlineRef.current, { opacity: 0, y: -30, ease: "none" }, 0);
+      gsap.matchMedia().add("(min-width: 768px)", () => {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroSectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        })
+          .to(productScrollRef.current, { y: -60, scale: 0.94, ease: "none" }, 0)
+          .to(botanicalsScrollRef.current, { y: -20, ease: "none" }, 0)
+          .to(headlineRef.current, { opacity: 0, y: -30, ease: "none" }, 0);
+      });
     },
     [reduceMotion]
   );
@@ -130,24 +139,43 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
 
     return (
       <section ref={heroSectionRef} className="hero-fallback relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-[85vh] lg:min-h-[80vh]">
-          {/* Left — editorial text content */}
+        {/*
+          `relative z-10` is load-bearing, not cosmetic: `.hero-fallback::before` (the
+          header-legibility scrim) is a positioned pseudo-element with `z-index: 1`, and
+          this grid was `position: static`, so per CSS stacking rules the scrim painted
+          *above* the hero's own content rather than behind it. Giving the content grid
+          its own stacking position puts it back on top of the scrim, which is the whole
+          point of a "darken what's behind" layer.
+        */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-[85vh] lg:min-h-[80vh]">
+          {/*
+            Left — editorial text content.
+
+            Every Motion element in this column passes `initial={false}` on purpose.
+            These are the LCP-critical, above-the-fold elements: with Motion's default
+            hidden initial state they server-render at `opacity: 0` and stay invisible
+            until hydration runs the entrance, which is a Core Web Vitals regression
+            against the pure-CSS animation this replaced. `initial={false}` makes Motion
+            skip the hidden start and render at the final state from the very first
+            paint, server-rendered HTML included. Do NOT reintroduce a hidden initial
+            state here without re-checking the prerendered output for `opacity:0`.
+          */}
           <div className="flex flex-col justify-center gap-6">
-            <FadeUp>
+            <FadeUp initial={false}>
               <span className="section-label">CRAFTED FROM INDIA&apos;S GRAINS &amp; NUTS</span>
             </FadeUp>
             <div ref={headlineRef}>
-              <RevealText as="h1" className="display-heading text-[var(--color-espresso)]" delay={0.15}>
+              <RevealText as="h1" className="display-heading text-[var(--color-espresso)]" delay={0.15} initial={false}>
                 Wholesome food, rooted in tradition.
               </RevealText>
             </div>
-            <FadeUp delay={0.55}>
+            <FadeUp delay={0.55} initial={false}>
               <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg">
                 Thoughtfully blended millet, nuts and seeds for everyday nourishment.
               </p>
             </FadeUp>
 
-            <FadeUp delay={0.7}>
+            <FadeUp delay={0.7} initial={false}>
               <div className="flex flex-wrap gap-4 sm:gap-6 pt-2">
                 <MagneticButton>
                   <Link href={flagshipHref} className="btn-primary btn-lg rounded-xl">
@@ -164,13 +192,22 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
             {/*
               Botanical framing layer — behind the product, corner-anchored, restrained.
               Split the same way as the product image below: botanicalsScrollRef (outer,
-              plain div) is GSAP's scroll-parallax target; botanicalsRef (inner motion.div)
-              is Motion's entrance target. See the comment above the useGsapContext call.
+              plain div) is GSAP's scroll-parallax target; the inner motion.div is
+              Motion's entrance target. See the comment above the useGsapContext call.
+
+              `relative` on the motion.div is required, not decorative: the five
+              `absolute`-positioned illustration wrappers below are positioned against
+              their nearest positioned ancestor, and without it that resolved two levels
+              up (to the `relative` column wrapper) — correct today only because the two
+              boxes happen to coincide exactly.
+
+              This layer keeps Motion's hidden initial state (unlike the left column and
+              the product image, which are `initial={false}` for LCP): it's decorative,
+              `aria-hidden`, and blocks nothing from being readable before hydration.
             */}
             <div ref={botanicalsScrollRef} className="pointer-events-none absolute inset-0">
               <motion.div
-                ref={botanicalsRef}
-                className="hero-botanical-frame w-full h-full"
+                className="hero-botanical-frame relative w-full h-full"
                 aria-hidden="true"
                 style={{ color: "var(--color-secondary-brown)", opacity: reduceMotion ? 0.5 : undefined }}
                 initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
@@ -186,10 +223,19 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
                 <div className="absolute -bottom-6 -left-4 w-16 h-16 md:w-20 md:h-20">
                   <LeafPair />
                 </div>
-                <div className="absolute -bottom-4 -right-6 w-14 h-14 md:w-20 md:h-20">
+                {/*
+                  Mobile reduction (spec: "reduce the illustration layer on mobile").
+                  These two are the right-edge pair: on a single-column layout the
+                  product image is centred and full-width, so SeedScatter (pinned to
+                  the vertical centre of the right edge) sits directly over it, and
+                  FlowerCluster crowds the bottom-right corner beside it. Hiding just
+                  these two leaves a balanced three — MilletSprig, AlmondBranch,
+                  LeafPair — framing the product without competing with it.
+                */}
+                <div className="hidden md:block absolute -bottom-4 -right-6 w-14 h-14 md:w-20 md:h-20">
                   <FlowerCluster />
                 </div>
-                <div className="absolute top-1/2 -right-10 w-10 h-10 md:w-14 md:h-14 -translate-y-1/2 rotate-[30deg]">
+                <div className="hidden md:block absolute top-1/2 -right-10 w-10 h-10 md:w-14 md:h-14 -translate-y-1/2 rotate-[30deg]">
                   <SeedScatter />
                 </div>
               </motion.div>
@@ -208,16 +254,22 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
               nodes removes the conflict entirely.
             */}
             {/*
-              productScrollRef wraps productEntranceRef, giving GSAP's scroll-linked
+              productScrollRef wraps the Motion node, giving GSAP's scroll-linked
               scrub tween a transform owner of its own — see the comment above the
               useGsapContext call for why this extra layer was added after the
               inner motion.div was found to also be GSAP's target during an early draft.
+
+              `initial={false}`: this wraps the `priority` LCP image. With Motion's
+              hidden initial state it server-rendered at `opacity: 0`, so the largest
+              contentful paint could not happen until hydration — the regression this
+              fixes. Rendering straight at the `animate` target means there is no
+              entrance tween left for the product itself, which is the intended
+              trade: a visible LCP beats a 0.9s fade nobody asked for.
             */}
             <div ref={productScrollRef} className="relative w-full max-w-md aspect-square">
               <motion.div
-                ref={productEntranceRef}
                 className="hero-product-entrance relative w-full h-full"
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
+                initial={false}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
               >

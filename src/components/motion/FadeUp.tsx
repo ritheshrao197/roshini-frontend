@@ -16,6 +16,13 @@ interface FadeUpProps {
   /** Animation duration in seconds. */
   duration?: number;
   as?: "div" | "li" | "article";
+  /**
+   * Pass `false` to opt out of the hidden initial state, so the element renders at
+   * its natural (visible) position from the very first paint — server-rendered HTML
+   * included. Required for SSR-critical, above-the-fold content, which must not be
+   * `opacity: 0` until hydration completes. Omit for the default fade-up-on-scroll.
+   */
+  initial?: false;
 }
 
 /**
@@ -30,13 +37,14 @@ export function FadeUp({
   distance = 24,
   duration = 0.6,
   as = "div",
+  initial,
 }: FadeUpProps) {
   const Tag = motion[as];
   return (
     <Tag
       className={className}
       style={style}
-      initial={{ opacity: 0, y: distance }}
+      initial={initial === false ? false : { opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -10% 0px" }}
       transition={{ duration, ease: EASE, delay }}
