@@ -183,9 +183,9 @@
   --font-size-2xl:    1.875rem;
   --font-size-3xl:    2.25rem;
   --font-size-4xl:    3rem;
-  --font-size-5xl:    3.75rem;
-  --font-size-6xl:    4.5rem;
-  --font-size-7xl:    6rem;
+  --font-size-5xl:    4rem;
+  --font-size-6xl:    5.25rem;
+  --font-size-7xl:    7.5rem;
 
   --font-weight-light:    300;
   --font-weight-normal:   400;
@@ -201,9 +201,9 @@
 
   --letter-spacing-tight:   -0.02em;
   --letter-spacing-normal:  0;
-  --letter-spacing-wide:    0.05em;
-  --letter-spacing-wider:   0.1em;
-  --letter-spacing-widest:  0.22em;
+  --letter-spacing-wide:    0.06em;
+  --letter-spacing-wider:   0.13em;
+  --letter-spacing-widest:  0.24em;
 
   /* ── Blur ──────────────────────────────────────────────────── */
   --blur-sm:   4px;
