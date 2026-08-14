@@ -113,7 +113,7 @@ export default function DashboardPage() {
                 {orders.slice(0, 3).map((order) => (
                   <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-4 font-mono text-xs text-gray-600">{order.transactionId}</td>
-                    <td className="px-4 py-4">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="px-4 py-4">{new Date(order.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</td>
                     <td className="px-4 py-4">
                       <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
                         order.status === "Delivered" ? "bg-green-100 text-green-700" :

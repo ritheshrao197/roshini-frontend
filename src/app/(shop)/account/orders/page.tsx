@@ -212,10 +212,10 @@ export default function OrdersPage() {
   <div>
     <div class="brand">🌿 ${inv.storeName}</div>
     <div class="inv-num">Invoice # ${inv.invoiceNumber}</div>
-    <div style="font-size:11px;color:#999;margin-top:4px">Issued: ${new Date(inv.issuedDate).toLocaleDateString()}</div>
+    <div style="font-size:11px;color:#999;margin-top:4px">Issued: ${new Date(inv.issuedDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
   </div>
   <div style="text-align:right;font-size:12px;color:#666">
-    <div><strong>Order Date:</strong> ${new Date(inv.orderDate).toLocaleDateString()}</div>
+    <div><strong>Order Date:</strong> ${new Date(inv.orderDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
     <div><strong>Order ID:</strong> ${inv.orderId}</div>
     <div style="margin-top:6px"><span class="badge">${inv.paymentStatus}</span></div>
   </div>

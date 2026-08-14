@@ -186,7 +186,7 @@ export default function CouponManagementPanel() {
                     {c.usedCount} / {c.usageLimit || "∞"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(c.endDate).toLocaleDateString()}
+                    {new Date(c.endDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${c.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>

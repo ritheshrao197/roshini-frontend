@@ -83,7 +83,7 @@ export default async function VlogDetailPage({ params }: { params: Promise<{ slu
             {vlog.title}
           </h1>
           <div className="flex items-center justify-center gap-4 text-xs" style={{ color: "#7A5C45" }}>
-            <span>{vlog.publishDate ? new Date(vlog.publishDate).toLocaleDateString() : 'Draft'}</span>
+            <span>{vlog.publishDate ? new Date(vlog.publishDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : 'Draft'}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               👁️ {vlog.viewCount} Views

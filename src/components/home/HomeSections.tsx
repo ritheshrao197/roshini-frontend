@@ -467,7 +467,7 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
                 </h4>
                 <p className="text-sm line-clamp-3" style={{ color: "var(--text-muted)" }}>{featuredBlog.excerpt}</p>
                 <div className="flex items-center gap-4 text-xs pt-2" style={{ color: "var(--text-muted)" }}>
-                  <span>{new Date(featuredBlog.publishDate || featuredBlog.createdAt).toLocaleDateString()}</span>
+                  <span>{new Date(featuredBlog.publishDate || featuredBlog.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</span>
                   <span>•</span>
                   <span>{featuredBlog.readingTime || 1} min read</span>
                 </div>
