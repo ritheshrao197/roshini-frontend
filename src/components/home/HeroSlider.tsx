@@ -16,12 +16,19 @@ import { FadeUp } from "@/components/motion/FadeUp";
 import { MilletSprig, AlmondBranch, FlowerCluster, LeafPair, SeedScatter } from "@/components/decorative/HeroBotanicals";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/useMotionPrefs";
+import { useGsapContext, gsap } from "@/lib/gsapUtils";
 
 export default function HeroSlider({ sliders, products }: { sliders: any[]; products?: Product[] }) {
   const [variant, setVariant] = useState<"A" | "B">("A");
   const trackedImpressions = useRef(new Set<string>());
   const imageWrapRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
+  const headlineRef = useRef<HTMLDivElement>(null);
+  const botanicalsRef = useRef<HTMLDivElement>(null);
+  const botanicalsScrollRef = useRef<HTMLDivElement>(null);
+  const productEntranceRef = useRef<HTMLDivElement>(null);
+  const productScrollRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
   const trackImpression = (id: string) => {
@@ -69,6 +76,40 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
     };
   }, [sliders]);
 
+  // Scroll-linked animation targets productScrollRef/botanicalsScrollRef, NOT
+  // productEntranceRef/botanicalsRef, even though the plan draft originally called for
+  // the latter two. Verified visually: scrolling within ~1s of load (before Motion's
+  // entrance settles — ~1.35s for the product, ~1.55s for the botanicals) while GSAP's
+  // scrub tween also wrote to the same node Motion was animating produced exactly the
+  // fight Task 3's own fix comment above describes for the tilt handler — one frame
+  // showed GSAP's translateY, the next frame Motion's entrance tick clobbered it back,
+  // and for the botanical layer this additionally left its scale permanently stuck at
+  // its initial 0.85 instead of settling at 1, because GSAP caches whatever transform
+  // components it isn't animating at the moment it first renders. Giving GSAP its own
+  // dedicated wrapper (a new node, one level above each Motion-owned node) removes the
+  // conflict the same way Task 3 separated the tilt handler from Motion's entrance.
+  // headlineRef doesn't need this: Motion never touches that div's own transform (only
+  // the per-word spans nested inside RevealText), so GSAP is the sole owner there.
+  useGsapContext(
+    heroSectionRef,
+    () => {
+      if (reduceMotion || !productScrollRef.current) return;
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: heroSectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      })
+        .to(productScrollRef.current, { y: -60, scale: 0.94, ease: "none" }, 0)
+        .to(botanicalsScrollRef.current, { y: -20, ease: "none" }, 0)
+        .to(headlineRef.current, { opacity: 0, y: -30, ease: "none" }, 0);
+    },
+    [reduceMotion]
+  );
+
   if (!sliders?.length) {
     const flagship =
       products?.find((p) => /nutrimix/i.test(p.pName)) || products?.[0] || null;
@@ -88,16 +129,18 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
       : "/shop";
 
     return (
-      <section className="hero-fallback relative overflow-hidden">
+      <section ref={heroSectionRef} className="hero-fallback relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center min-h-[85vh] lg:min-h-[80vh]">
           {/* Left — editorial text content */}
           <div className="flex flex-col justify-center gap-6">
             <FadeUp>
               <span className="section-label">CRAFTED FROM INDIA&apos;S GRAINS &amp; NUTS</span>
             </FadeUp>
-            <RevealText as="h1" className="display-heading text-[var(--color-espresso)]" delay={0.15}>
-              Wholesome food, rooted in tradition.
-            </RevealText>
+            <div ref={headlineRef}>
+              <RevealText as="h1" className="display-heading text-[var(--color-espresso)]" delay={0.15}>
+                Wholesome food, rooted in tradition.
+              </RevealText>
+            </div>
             <FadeUp delay={0.55}>
               <p className="site-muted text-base md:text-lg leading-relaxed max-w-lg">
                 Thoughtfully blended millet, nuts and seeds for everyday nourishment.
@@ -118,31 +161,39 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
 
           {/* Right — real flagship product photo, soft-shadowed, layered 2.5D tilt */}
           <div className="relative flex items-center justify-center" style={{ perspective: "1200px" }}>
-            {/* Botanical framing layer — behind the product, corner-anchored, restrained */}
-            <motion.div
-              className="hero-botanical-frame pointer-events-none absolute inset-0"
-              aria-hidden="true"
-              style={{ color: "var(--color-secondary-brown)", opacity: reduceMotion ? 0.5 : undefined }}
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 0.5, scale: 1 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.75 }}
-            >
-              <div className="absolute -top-4 -left-6 w-20 h-20 md:w-28 md:h-28">
-                <MilletSprig />
-              </div>
-              <div className="absolute -top-2 -right-4 w-16 h-16 md:w-24 md:h-24 rotate-[15deg]">
-                <AlmondBranch />
-              </div>
-              <div className="absolute -bottom-6 -left-4 w-16 h-16 md:w-20 md:h-20">
-                <LeafPair />
-              </div>
-              <div className="absolute -bottom-4 -right-6 w-14 h-14 md:w-20 md:h-20">
-                <FlowerCluster />
-              </div>
-              <div className="absolute top-1/2 -right-10 w-10 h-10 md:w-14 md:h-14 -translate-y-1/2 rotate-[30deg]">
-                <SeedScatter />
-              </div>
-            </motion.div>
+            {/*
+              Botanical framing layer — behind the product, corner-anchored, restrained.
+              Split the same way as the product image below: botanicalsScrollRef (outer,
+              plain div) is GSAP's scroll-parallax target; botanicalsRef (inner motion.div)
+              is Motion's entrance target. See the comment above the useGsapContext call.
+            */}
+            <div ref={botanicalsScrollRef} className="pointer-events-none absolute inset-0">
+              <motion.div
+                ref={botanicalsRef}
+                className="hero-botanical-frame w-full h-full"
+                aria-hidden="true"
+                style={{ color: "var(--color-secondary-brown)", opacity: reduceMotion ? 0.5 : undefined }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 0.5, scale: 1 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.75 }}
+              >
+                <div className="absolute -top-4 -left-6 w-20 h-20 md:w-28 md:h-28">
+                  <MilletSprig />
+                </div>
+                <div className="absolute -top-2 -right-4 w-16 h-16 md:w-24 md:h-24 rotate-[15deg]">
+                  <AlmondBranch />
+                </div>
+                <div className="absolute -bottom-6 -left-4 w-16 h-16 md:w-20 md:h-20">
+                  <LeafPair />
+                </div>
+                <div className="absolute -bottom-4 -right-6 w-14 h-14 md:w-20 md:h-20">
+                  <FlowerCluster />
+                </div>
+                <div className="absolute top-1/2 -right-10 w-10 h-10 md:w-14 md:h-14 -translate-y-1/2 rotate-[30deg]">
+                  <SeedScatter />
+                </div>
+              </motion.div>
+            </div>
 
             {/*
               Split in two: the outer motion.div owns Motion's entrance opacity/scale,
@@ -156,42 +207,51 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
               animation finished. Separating the two transform owners onto sibling
               nodes removes the conflict entirely.
             */}
-            <motion.div
-              className="hero-product-entrance relative w-full max-w-md aspect-square"
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
-            >
-              <div
-                ref={imageWrapRef}
-                className="relative w-full h-full transition-transform duration-300 ease-out will-change-transform"
-                style={{ transformStyle: "preserve-3d" }}
+            {/*
+              productScrollRef wraps productEntranceRef, giving GSAP's scroll-linked
+              scrub tween a transform owner of its own — see the comment above the
+              useGsapContext call for why this extra layer was added after the
+              inner motion.div was found to also be GSAP's target during an early draft.
+            */}
+            <div ref={productScrollRef} className="relative w-full max-w-md aspect-square">
+              <motion.div
+                ref={productEntranceRef}
+                className="hero-product-entrance relative w-full h-full"
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
               >
                 <div
-                  ref={glowRef}
-                  className="absolute inset-6 rounded-full blur-2xl opacity-40 transition-transform duration-300 ease-out will-change-transform"
-                  style={{ background: "radial-gradient(circle, var(--color-walnut), transparent 70%)" }}
-                  aria-hidden="true"
-                />
-                {flagshipImage ? (
-                  <Image
-                    src={flagshipImage}
-                    alt={flagship?.pName || "Roshini's Nutrimix"}
-                    fill
-                    sizes="(max-width: 1024px) 80vw, 40vw"
-                    className="relative object-contain drop-shadow-2xl"
-                    priority
+                  ref={imageWrapRef}
+                  className="relative w-full h-full transition-transform duration-300 ease-out will-change-transform"
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <div
+                    ref={glowRef}
+                    className="absolute inset-6 rounded-full blur-2xl opacity-40 transition-transform duration-300 ease-out will-change-transform"
+                    style={{ background: "radial-gradient(circle, var(--color-walnut), transparent 70%)" }}
+                    aria-hidden="true"
                   />
-                ) : (
-                  <div className="hero-panel absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-4 rounded-3xl">
-                    <h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
-                    <p className="hero-subtitle text-sm leading-relaxed max-w-sm">
-                      Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+                  {flagshipImage ? (
+                    <Image
+                      src={flagshipImage}
+                      alt={flagship?.pName || "Roshini's Nutrimix"}
+                      fill
+                      sizes="(max-width: 1024px) 80vw, 40vw"
+                      className="relative object-contain drop-shadow-2xl"
+                      priority
+                    />
+                  ) : (
+                    <div className="hero-panel absolute inset-0 flex flex-col items-center justify-center text-center p-10 space-y-4 rounded-3xl">
+                      <h2 className="hero-title text-2xl font-bold">Handcrafted with Love</h2>
+                      <p className="hero-subtitle text-sm leading-relaxed max-w-sm">
+                        Every product starts with the finest Karnataka ingredients, prepared fresh in micro-batches.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
