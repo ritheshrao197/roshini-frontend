@@ -1641,6 +1641,18 @@ a:hover {
 .site-announcement { background: var(--color-espresso); color: var(--color-ivory); }
 .site-header { background: var(--bg); border-bottom: 1px solid var(--color-border); }
 .site-header.is-scrolled { background: color-mix(in srgb, var(--surface) 95%, transparent); box-shadow: var(--shadow-sm); }
+.site-header.is-transparent { background: transparent; border-bottom-color: transparent; }
+.site-header.is-transparent .site-link,
+.site-header.is-transparent .site-logo-name,
+.site-header.is-transparent .site-muted,
+.site-header.is-transparent .icon-action {
+  color: var(--color-ivory);
+}
+.site-header.is-transparent .site-link:hover,
+.site-header.is-transparent .site-link:focus-visible {
+  color: var(--color-ivory);
+  background: color-mix(in srgb, var(--color-ivory) 15%, transparent);
+}
 .site-logo-name, .product-card-title { color: var(--color-espresso); }
 .site-logo-name, .product-card-title, .hero-title { font-family: var(--font-serif); }
 .site-muted { color: var(--color-text-muted); }

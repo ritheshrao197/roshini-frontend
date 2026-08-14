@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { getCartCount } from "@/lib/cart";
 import { API_URL, getAllProducts, Product } from "@/lib/api";
 import { useCustomization } from "@/lib/CustomizationContext";
@@ -18,6 +18,9 @@ export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isTransparent = isHome && !scrolled;
 
   // Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -109,10 +112,8 @@ export default function Header() {
 
       <header
         className={`site-header sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "is-scrolled backdrop-blur-md"
-            : ""
-        }`}
+          scrolled ? "is-scrolled backdrop-blur-md" : ""
+        } ${isTransparent ? "is-transparent" : ""}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20 gap-4 sm:gap-6">
@@ -121,7 +122,7 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink min-w-0 pr-2">
               <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-10 sm:h-12 w-auto object-contain flex-shrink-0" />
               <div className="leading-tight min-w-0">
-                <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate">
+                <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate transition-colors">
                   {shopName}
                 </div>
                 <div className="site-muted text-[9px] sm:text-[10px] font-semibold tracking-widest uppercase truncate hidden sm:block">
