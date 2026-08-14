@@ -37,8 +37,7 @@ export default async function HomePage() {
   const layout = apiSections && apiSections.length > 0 ? apiSections : DEFAULT_LAYOUT;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--bg)", color: "var(--text)" }}>
-      <div id="ingredients" aria-hidden="true" />
+    <div className="min-h-screen flex flex-col" style={{ color: "var(--text)" }}>
       {layout.map((section, index) => {
         switch (section.sectionId) {
           case "hero":
@@ -48,7 +47,14 @@ export default async function HomePage() {
           case "categories":
             return <CategoriesSection key={`categories-${index}`} categories={categories} />;
           case "featured_products":
-            return <FeaturedProductsSection key={`products-${index}`} products={products} />;
+            // Placeholder target for the "Ingredients" nav link until Phase 3
+            // builds the real ingredient showcase section here.
+            return (
+              <React.Fragment key={`products-${index}`}>
+                <div id="ingredients" aria-hidden="true" />
+                <FeaturedProductsSection products={products} />
+              </React.Fragment>
+            );
           case "why_us":
             return <WhyUsSection key={`whyus-${index}`} />;
           case "brand_story":

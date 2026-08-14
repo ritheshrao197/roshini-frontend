@@ -22,11 +22,14 @@ function BotanicalMotif() {
       strokeLinecap="round"
       className="w-full h-full"
     >
-      <path d="M0 20 C 40 20 40 8 80 8 C 120 8 120 20 160 20 C 200 20 200 8 240 8 C 280 8 280 20 320 20 C 360 20 360 8 400 8" />
+      <path
+        vectorEffect="non-scaling-stroke"
+        d="M0 20 C 40 20 40 8 80 8 C 120 8 120 20 160 20 C 200 20 200 8 240 8 C 280 8 280 20 320 20 C 360 20 360 8 400 8"
+      />
       {stems.map((cx) => (
         <g key={cx} transform={`translate(${cx} 14)`}>
-          <path d="M0 0 C -4 -6 -10 -6 -10 0 C -10 6 -4 6 0 0 Z" />
-          <path d="M0 0 C 4 -6 10 -6 10 0 C 10 6 4 6 0 0 Z" />
+          <path vectorEffect="non-scaling-stroke" d="M0 0 C -4 -6 -10 -6 -10 0 C -10 6 -4 6 0 0 Z" />
+          <path vectorEffect="non-scaling-stroke" d="M0 0 C 4 -6 10 -6 10 0 C 10 6 4 6 0 0 Z" />
         </g>
       ))}
     </svg>
@@ -44,11 +47,11 @@ function GeometricMotif() {
       strokeWidth={STROKE_WIDTH}
       className="w-full h-full"
     >
-      <line x1="0" y1="20" x2="400" y2="20" />
+      <line vectorEffect="non-scaling-stroke" x1="0" y1="20" x2="400" y2="20" />
       {triangles.map((x) => (
         <g key={x}>
-          <path d={`M${x + 4} 20 L${x + 10} 8 L${x + 16} 20`} />
-          <circle cx={x + 10} cy={4} r="1.5" fill="currentColor" stroke="none" />
+          <path vectorEffect="non-scaling-stroke" d={`M${x + 4} 20 L${x + 10} 8 L${x + 16} 20`} />
+          <circle vectorEffect="non-scaling-stroke" cx={x + 10} cy={4} r="1.5" fill="currentColor" stroke="none" />
         </g>
       ))}
     </svg>
@@ -65,12 +68,12 @@ function MinimalMotif() {
       strokeWidth={STROKE_WIDTH}
       className="w-full h-full"
     >
-      <line x1="0" y1="10" x2="176" y2="10" />
+      <line vectorEffect="non-scaling-stroke" x1="0" y1="10" x2="176" y2="10" />
       <g transform="translate(200 10)">
-        <path d="M0 -6 C -5 -6 -5 0 0 0 C 5 0 5 -6 0 -6 Z" />
-        <path d="M0 6 L0 0" />
+        <path vectorEffect="non-scaling-stroke" d="M0 -6 C -5 -6 -5 0 0 0 C 5 0 5 -6 0 -6 Z" />
+        <path vectorEffect="non-scaling-stroke" d="M0 6 L0 0" />
       </g>
-      <line x1="224" y1="10" x2="400" y2="10" />
+      <line vectorEffect="non-scaling-stroke" x1="224" y1="10" x2="400" y2="10" />
     </svg>
   );
 }
@@ -90,10 +93,13 @@ export default function IndianBorder({
   const positionClass =
     position === "top" ? "mb-0" : position === "bottom" ? "mt-0" : "";
 
+  // Colour and opacity live in the `.indian-border` CSS rule (globals.css) so
+  // consumers can retint the motif via `className` — inline styles could not be
+  // overridden by a class.
   return (
     <div
       className={`indian-border indian-border-${variant} ${positionClass} ${className}`.trim()}
-      style={{ color: "var(--color-secondary-brown)", opacity: 0.55, width: "100%", height: "auto", overflow: "hidden" }}
+      style={{ width: "100%", height: "auto", overflow: "hidden" }}
       aria-hidden="true"
     >
       <Motif />

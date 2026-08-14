@@ -7,7 +7,7 @@ import { getCartCount } from "@/lib/cart";
 import { API_URL, getAllProducts, Product } from "@/lib/api";
 import { useCustomization } from "@/lib/CustomizationContext";
 import { useAuth } from "@/lib/useAuth";
-import { useLanguage } from "@/lib/LanguageContext";
+import { useLanguage, type SupportedLanguage } from "@/lib/LanguageContext";
 
 export default function Header() {
   const router = useRouter();
@@ -37,6 +37,9 @@ export default function Header() {
     window.addEventListener("cart_updated", updateCount);
 
     const onScroll = () => setScrolled(window.scrollY > 10);
+    // Initialise from the real scroll position: a reload with browser scroll
+    // restoration can mount this component already scrolled down.
+    onScroll();
     window.addEventListener("scroll", onScroll);
 
     // Close autocomplete dropdown on outside click
@@ -59,6 +62,19 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Escape dismisses the search overlay and returns focus to its toggle button.
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setSearchOpen(false);
+      setShowDropdown(false);
+      searchToggleRef.current?.focus();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [searchOpen]);
 
   // Filter products as user types
   useEffect(() => {
@@ -119,7 +135,7 @@ export default function Header() {
       <header
         className={`site-header sticky top-0 z-50 transition-all duration-300 ${
           scrolled ? "is-scrolled backdrop-blur-md" : ""
-        } ${isTransparent ? "is-transparent" : ""}`}
+        } ${isTransparent ? "is-transparent" : ""} ${isHome ? "is-hero-overlay" : ""}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20 gap-4 sm:gap-6">
@@ -170,23 +186,23 @@ export default function Header() {
               <div className="relative">
                 <select
                   value={language}
-                  onChange={(e) => setLanguage(e.target.value as any)}
+                  onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
                   aria-label="Select language"
                   className="icon-action appearance-none bg-transparent pl-6 pr-1.5 py-2 text-[11px] font-semibold rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
                 >
-                  <option value="English">English</option>
-                  <option value="Hindi">हिंदी (Hindi)</option>
-                  <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
-                  <option value="Tamil">தமிழ் (Tamil)</option>
-                  <option value="Telugu">తెలుగు (Telugu)</option>
-                  <option value="Malayalam">മലയാളം (Malayalam)</option>
-                  <option value="Marathi">मराठी (Marathi)</option>
-                  <option value="Bengali">বাংলা (Bengali)</option>
-                  <option value="Gujarati">ગુજરાતી (Gujarati)</option>
-                  <option value="Spanish">Español (Spanish)</option>
-                  <option value="French">Français (French)</option>
+                  <option className="text-black" value="English">English</option>
+                  <option className="text-black" value="Hindi">हिंदी (Hindi)</option>
+                  <option className="text-black" value="Kannada">ಕನ್ನಡ (Kannada)</option>
+                  <option className="text-black" value="Tamil">தமிழ் (Tamil)</option>
+                  <option className="text-black" value="Telugu">తెలుగు (Telugu)</option>
+                  <option className="text-black" value="Malayalam">മലയാളം (Malayalam)</option>
+                  <option className="text-black" value="Marathi">मराठी (Marathi)</option>
+                  <option className="text-black" value="Bengali">বাংলা (Bengali)</option>
+                  <option className="text-black" value="Gujarati">ગુજરાતી (Gujarati)</option>
+                  <option className="text-black" value="Spanish">Español (Spanish)</option>
+                  <option className="text-black" value="French">Français (French)</option>
                 </select>
-                <span className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-xs">🌐</span>
+                <span aria-hidden="true" className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-xs">🌐</span>
               </div>
 
               {/* Search Toggle Icon */}
@@ -195,6 +211,7 @@ export default function Header() {
                 onClick={() => setSearchOpen(!searchOpen)}
                 className="icon-action p-2 transition-colors"
                 aria-label="Search"
+                aria-expanded={searchOpen}
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -263,7 +280,7 @@ export default function Header() {
 
           {/* Search Bar Expansion */}
           {searchOpen && (
-            <div ref={searchContainerRef} className="pb-3 pt-1 relative border-t border-[var(--color-border)]">
+            <div ref={searchContainerRef} className="header-search-panel pb-3 pt-1 relative border-t border-[var(--color-border)]">
               <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                 <input
                   type="text"
