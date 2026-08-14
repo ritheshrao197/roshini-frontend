@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getHomePageData } from "@/lib/api";
 import IndianBorder from "@/components/decorative/IndianBorder";
 import HeroSlider from "@/components/home/HeroSlider";
+import HeritageIntroSection from "@/components/home/HeritageIntroSection";
 import {
   TrustBadgesSection,
   CategoriesSection,
@@ -19,6 +20,7 @@ export const revalidate = 300;
 
 const DEFAULT_LAYOUT = [
   { sectionId: "hero" },
+  { sectionId: "heritage_intro" },
   { sectionId: "trust_badges" },
   { sectionId: "categories" },
   { sectionId: "featured_products" },
@@ -42,6 +44,8 @@ export default async function HomePage() {
         switch (section.sectionId) {
           case "hero":
             return <HeroSlider key={`hero-${index}`} sliders={heroSliders} products={products} />;
+          case "heritage_intro":
+            return <HeritageIntroSection key={`heritage-${index}`} />;
           case "trust_badges":
             return <TrustBadgesSection key={`trust-${index}`} />;
           case "categories":
