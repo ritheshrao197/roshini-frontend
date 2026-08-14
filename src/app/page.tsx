@@ -40,41 +40,41 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ color: "var(--text)" }}>
-      {layout.map((section, index) => {
-        switch (section.sectionId) {
-          case "hero":
-            return <HeroSlider key={`hero-${index}`} sliders={heroSliders} products={products} />;
-          case "heritage_intro":
-            return <HeritageIntroSection key={`heritage-${index}`} />;
-          case "trust_badges":
-            return <TrustBadgesSection key={`trust-${index}`} />;
-          case "categories":
-            return <CategoriesSection key={`categories-${index}`} categories={categories} />;
-          case "featured_products":
-            // Placeholder target for the "Ingredients" nav link until Phase 3
-            // builds the real ingredient showcase section here.
-            return (
-              <React.Fragment key={`products-${index}`}>
-                <div id="ingredients" aria-hidden="true" />
-                <FeaturedProductsSection products={products} />
-              </React.Fragment>
-            );
-          case "why_us":
-            return <WhyUsSection key={`whyus-${index}`} />;
-          case "brand_story":
-            return <BrandStorySection key={`brand-${index}`} />;
-          case "achievements":
-            return <AchievementsSection key={`achievements-${index}`} achievements={achievements} />;
-          case "testimonials":
-            return <TestimonialsSection key={`testimonials-${index}`} />;
-          case "newsletter":
-            return <NewsletterSection key={`newsletter-${index}`} />;
-          case "health_hub":
-            return <HealthHubSection key={`healthhub-${index}`} vlogs={vlogs} />;
-          default:
-            return null;
-        }
-      })}
+      <HeroSlider sliders={heroSliders} products={products} />
+      <HeritageIntroSection />
+      {layout
+        .filter((section) => section.sectionId !== "hero" && section.sectionId !== "heritage_intro")
+        .map((section, index) => {
+          switch (section.sectionId) {
+            case "trust_badges":
+              return <TrustBadgesSection key={`trust-${index}`} />;
+            case "categories":
+              return <CategoriesSection key={`categories-${index}`} categories={categories} />;
+            case "featured_products":
+              // Placeholder target for the "Ingredients" nav link until Phase 3
+              // builds the real ingredient showcase section here.
+              return (
+                <React.Fragment key={`products-${index}`}>
+                  <div id="ingredients" aria-hidden="true" />
+                  <FeaturedProductsSection products={products} />
+                </React.Fragment>
+              );
+            case "why_us":
+              return <WhyUsSection key={`whyus-${index}`} />;
+            case "brand_story":
+              return <BrandStorySection key={`brand-${index}`} />;
+            case "achievements":
+              return <AchievementsSection key={`achievements-${index}`} achievements={achievements} />;
+            case "testimonials":
+              return <TestimonialsSection key={`testimonials-${index}`} />;
+            case "newsletter":
+              return <NewsletterSection key={`newsletter-${index}`} />;
+            case "health_hub":
+              return <HealthHubSection key={`healthhub-${index}`} vlogs={vlogs} />;
+            default:
+              return null;
+          }
+        })}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
       <IndianBorder variant="minimal" position="top" className="px-4 sm:px-6 lg:px-8" />
