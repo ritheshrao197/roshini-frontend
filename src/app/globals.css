@@ -10,61 +10,62 @@
 
 :root {
   /* ── Primary Brand Colors ───────────────────────────────────── */
-  --primary-brown:    #5D310E;
-  --secondary-brown:  #AE6837;
-  --premium-gold:     #C28B36;
-  --organic-green:    #5E7D32;
+  --primary-brown:    #4A2618;
+  --secondary-brown:  #A95636;
+  --premium-gold:     #C88A3D;
+  --organic-green:    #53634A;
+  --indigo-accent:    #24384A;
 
   /* Legacy re-mapped brand aliases */
-  --espresso:         #5D310E;
-  --espresso-dark:    #3D1E08;
-  --walnut:           #AE6837;
-  --walnut-dark:      #915528;
-  --terracotta:       #C76A3C;
-  --terracotta-dark:  #8D5A3A;
-  --sage:             #5E7D32;
-  --sage-dark:        #3C521F;
-  --charcoal:         #2D2D2D;
+  --espresso:         #4A2618;
+  --espresso-dark:    #2C170E;
+  --walnut:           #A95636;
+  --walnut-dark:      #86452C;
+  --terracotta:       #A95636;
+  --terracotta-dark:  #86452C;
+  --sage:             #53634A;
+  --sage-dark:        #364130;
+  --charcoal:         #1C1917;
 
   /* ── Earthy Brown Scale ─────────────────────────────────────── */
-  --brown-50:   #FAF6F2;
-  --brown-100:  #F3E8DC;
-  --brown-200:  #E6D0BA;
-  --brown-300:  #D4B08C;
-  --brown-400:  #C18D5E;
-  --brown-500:  #AE6837;
-  --brown-600:  #915528;
-  --brown-700:  #75411C;
-  --brown-800:  #5D310E;
-  --brown-900:  #3D1E08;
+  --brown-50:   #FBF4F2;
+  --brown-100:  #F5E6E0;
+  --brown-200:  #EAC9BD;
+  --brown-300:  #DBA691;
+  --brown-400:  #CC8062;
+  --brown-500:  #A95636;
+  --brown-600:  #86452C;
+  --brown-700:  #673521;
+  --brown-800:  #4A2618;
+  --brown-900:  #2C170E;
 
   /* ── Natural Green Scale ────────────────────────────────────── */
-  --green-50:   #F4F8F1;
-  --green-100:  #E4F0D9;
-  --green-200:  #C8DDAF;
-  --green-300:  #A8C77E;
-  --green-400:  #7FA44E;
-  --green-500:  #5E7D32;
-  --green-600:  #4D6728;
-  --green-700:  #3C521F;
-  --green-800:  #2C3D17;
-  --green-900:  #1D2810;
+  --green-50:   #F4F6F3;
+  --green-100:  #E3E8E1;
+  --green-200:  #C4CEBE;
+  --green-300:  #9FB095;
+  --green-400:  #748B68;
+  --green-500:  #53634A;
+  --green-600:  #44523D;
+  --green-700:  #364130;
+  --green-800:  #283024;
+  --green-900:  #1B2018;
 
   /* ── Cream & Background Colors ──────────────────────────────── */
-  --bg-main:    #FFFDF8;
-  --bg-cream:   #FAF6EE;
+  --bg-main:    #F7F0E4;
+  --bg-cream:   #FBF6EC;
   --bg-card:    #FFFFFF;
-  --bg-alt:     #F7F2EA;
-  --bg-beige:   #EFE4D5;
+  --bg-alt:     #F2E9D9;
+  --bg-beige:   #EBDFC8;
 
-  --bg:         #FFFDF8;
-  --bg-warm:    #FAF6EE;
+  --bg:         #F7F0E4;
+  --bg-warm:    #FBF6EC;
   --surface:    #FFFFFF;
-  --surface-2:  #FAF6EE;
-  --surface-3:  #F7F2EA;
-  --surface-4:  #EFE4D5;
-  --ivory:      #FFFDF8;
-  --linen:      #FAF6EE;
+  --surface-2:  #FBF6EC;
+  --surface-3:  #F2E9D9;
+  --surface-4:  #EBDFC8;
+  --ivory:      #F7F0E4;
+  --linen:      #FBF6EC;
   --warm-white: #FFFFFF;
 
   /* ── Neutral Colors ─────────────────────────────────────────── */
@@ -82,26 +83,26 @@
   --border-dark:        #8A8A8A;
 
   /* ── Text Colors ────────────────────────────────────────────── */
-  --text-heading-primary:   #2B1A0E;
-  --text-heading-secondary: #5D310E;
+  --text-heading-primary:   #2C170E;
+  --text-heading-secondary: #4A2618;
   --text-body:              #444444;
   --text-muted-custom:      #6F6F6F;
   --text-light-custom:      #8A8A8A;
   --text-white:             #FFFFFF;
 
   --text:             #444444;
-  --text-primary:     #2B1A0E;
-  --text-secondary:   #5D310E;
+  --text-primary:     #2C170E;
+  --text-secondary:   #4A2618;
   --text-muted:       #6F6F6F;
   --text-light:       #8A8A8A;
 
   /* ── Accent Colors ──────────────────────────────────────────── */
-  --accent-terracotta: #C76A3C;
+  --accent-terracotta: #A95636;
   --accent-turmeric:   #E5B534;
   --accent-ragi:       #6E4A72;
   --accent-cinnamon:   #8D5A3A;
   --accent-leafgreen:  #4E8B4F;
-  --accent:            #C76A3C;
+  --accent:            #A95636;
 
   /* ── Functional Colors ──────────────────────────────────────── */
   --success:          #2E7D32;
