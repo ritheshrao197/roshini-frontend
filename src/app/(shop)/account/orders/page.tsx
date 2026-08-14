@@ -212,10 +212,10 @@ export default function OrdersPage() {
   <div>
     <div class="brand">🌿 ${inv.storeName}</div>
     <div class="inv-num">Invoice # ${inv.invoiceNumber}</div>
-    <div style="font-size:11px;color:#999;margin-top:4px">Issued: ${new Date(inv.issuedDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
+    <div style="font-size:11px;color:#999;margin-top:4px">Issued: ${new Date(inv.issuedDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}</div>
   </div>
   <div style="text-align:right;font-size:12px;color:#666">
-    <div><strong>Order Date:</strong> ${new Date(inv.orderDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
+    <div><strong>Order Date:</strong> ${new Date(inv.orderDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}</div>
     <div><strong>Order ID:</strong> ${inv.orderId}</div>
     <div style="margin-top:6px"><span class="badge">${inv.paymentStatus}</span></div>
   </div>
@@ -307,7 +307,7 @@ ${inv.trackingId ? `<div class="row"><span>Tracking ID</span><strong>${inv.track
                     </div>
                     <div className="text-[10px] text-[#7A5C45] font-mono">Order #{order._id.slice(-10).toUpperCase()}</div>
                     <div className="text-xs text-[#7A5C45]">
-                      {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+                      {new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" })}
                       &nbsp;·&nbsp;{order.allProduct.length} item{order.allProduct.length !== 1 ? "s" : ""}
                     </div>
                   </div>

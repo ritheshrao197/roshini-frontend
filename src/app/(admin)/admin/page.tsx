@@ -986,7 +986,7 @@ function AdminDashboardInner() {
                             </span>
                           </td>
                           <td className="px-5 py-4 text-[10px] text-[#7A5C45]">
-                            {new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                            {new Date(o.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}
                           </td>
                         </tr>
                       );
@@ -1221,7 +1221,7 @@ function AdminDashboardInner() {
                             </td>
                             <td className="px-6 py-4 text-right text-[#7A5C45]">{v.viewCount}</td>
                             <td className="px-6 py-4 text-right text-[#7A5C45] whitespace-nowrap">
-                              {v.createdAt ? new Date(v.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
+                              {v.createdAt ? new Date(v.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }) : "—"}
                             </td>
                             <td className="px-6 py-4 text-right space-x-3">
                               <button

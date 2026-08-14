@@ -55,7 +55,7 @@ function Badge({ text, colorClass }: { text: string; colorClass: string }) {
 
 function formatDate(d?: string) {
   if (!d) return "—";
-  return new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
 }
 
 // ── Add User Modal ─────────────────────────────────────────────────────────

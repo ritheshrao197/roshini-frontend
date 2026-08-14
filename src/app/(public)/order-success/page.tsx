@@ -13,7 +13,7 @@ function OrderSuccessContent() {
     // Generate a delivery date 3-5 days out
     const date = new Date();
     date.setDate(date.getDate() + 4);
-    setDeliveryDate(date.toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" }));
+    setDeliveryDate(date.toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Asia/Kolkata" }));
   }, []);
 
   return (

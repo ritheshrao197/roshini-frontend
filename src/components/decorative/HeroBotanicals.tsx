@@ -50,16 +50,23 @@ export function AlmondBranch() {
 
 /** A small cluster of three simple 5-petal flowers on thin stems. */
 export function FlowerCluster() {
+  // Every numeric attribute here is a precomputed static literal — no arithmetic at
+  // render time. The petal coordinates were originally Math.cos/Math.sin calls and
+  // produced a real, reproduced hydration mismatch (server `cx="-3.23606797749979"`
+  // vs. client `cx="-3.2360679774997902"`). petalRx/petalRy/centerR (formerly
+  // `r * 0.7` / `r * 1.1` / `r * 0.4`, for r = 4 / 3.2 / 3.6) are precomputed for the
+  // same reason plus markup cleanliness: float multiplication would emit 17-digit
+  // values like 3.5200000000000005 into the DOM. Do not reintroduce arithmetic here.
   const flowers = [
-    { cx: 16, cy: 40, scale: 1, r: 4, petals: [
+    { cx: 16, cy: 40, scale: 1, petalRx: 2.8, petalRy: 4.4, centerR: 1.6, petals: [
       { px: 4, py: 0 }, { px: 1.236, py: 3.804 }, { px: -3.236, py: 2.351 },
       { px: -3.236, py: -2.351 }, { px: 1.236, py: -3.804 },
     ] },
-    { cx: 34, cy: 22, scale: 0.85, r: 3.2, petals: [
+    { cx: 34, cy: 22, scale: 0.85, petalRx: 2.24, petalRy: 3.52, centerR: 1.28, petals: [
       { px: 3.2, py: 0 }, { px: 0.989, py: 3.043 }, { px: -2.589, py: 1.881 },
       { px: -2.589, py: -1.881 }, { px: 0.989, py: -3.043 },
     ] },
-    { cx: 48, cy: 36, scale: 0.9, r: 3.6, petals: [
+    { cx: 48, cy: 36, scale: 0.9, petalRx: 2.52, petalRy: 3.96, centerR: 1.44, petals: [
       { px: 3.6, py: 0 }, { px: 1.112, py: 3.424 }, { px: -2.912, py: 2.116 },
       { px: -2.912, py: -2.116 }, { px: 1.112, py: -3.424 },
     ] },
@@ -76,7 +83,7 @@ export function FlowerCluster() {
       <path vectorEffect="non-scaling-stroke" d="M16 52 L16 40" />
       <path vectorEffect="non-scaling-stroke" d="M34 52 L34 22" />
       <path vectorEffect="non-scaling-stroke" d="M48 52 L48 36" />
-      {flowers.map(({ cx, cy, r, scale, petals }, i) => (
+      {flowers.map(({ cx, cy, scale, petalRx, petalRy, centerR, petals }, i) => (
         <g key={i} transform={`translate(${cx} ${cy}) scale(${scale})`}>
           {petals.map(({ px, py }, p) => (
             <ellipse
@@ -84,12 +91,12 @@ export function FlowerCluster() {
               vectorEffect="non-scaling-stroke"
               cx={px}
               cy={py}
-              rx={r * 0.7}
-              ry={r * 1.1}
+              rx={petalRx}
+              ry={petalRy}
               transform={`rotate(${p * 72} ${px} ${py})`}
             />
           ))}
-          <circle vectorEffect="non-scaling-stroke" r={r * 0.4} fill="currentColor" stroke="none" />
+          <circle vectorEffect="non-scaling-stroke" r={centerR} fill="currentColor" stroke="none" />
         </g>
       ))}
     </svg>

@@ -18,9 +18,14 @@ import {
 
 export const revalidate = 300;
 
+/**
+ * Sections rendered as fixed JSX below, above the CMS-driven list — never
+ * admin-toggleable, and filtered out of `layout` so a CMS payload that happens to
+ * list them can't duplicate them. Single source of truth for "not CMS-configurable".
+ */
+const FIXED_SECTIONS = new Set(["hero", "heritage_intro"]);
+
 const DEFAULT_LAYOUT = [
-  { sectionId: "hero" },
-  { sectionId: "heritage_intro" },
   { sectionId: "trust_badges" },
   { sectionId: "categories" },
   { sectionId: "featured_products" },
@@ -43,7 +48,7 @@ export default async function HomePage() {
       <HeroSlider sliders={heroSliders} products={products} />
       <HeritageIntroSection />
       {layout
-        .filter((section) => section.sectionId !== "hero" && section.sectionId !== "heritage_intro")
+        .filter((section) => !FIXED_SECTIONS.has(section.sectionId))
         .map((section, index) => {
           switch (section.sectionId) {
             case "trust_badges":
