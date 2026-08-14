@@ -331,6 +331,29 @@ export async function getAchievements(): Promise<Achievement[]> {
   }
 }
 
+export interface Ingredient {
+  _id: string;
+  name: string;
+  category: "millet" | "nut" | "seed" | "other";
+  description: string;
+  iconKey: string;
+  displayOrder: number;
+}
+
+export async function getIngredients(): Promise<Ingredient[]> {
+  try {
+    const res = await fetchPublicWithTimeout(`${API_URL}/ingredients`, {
+      next: { revalidate: 600, tags: ["ingredients"] },
+    });
+    if (!res.ok) throw new Error("Failed to fetch ingredients");
+    const data = await res.json();
+    return data.ingredients || [];
+  } catch (err) {
+    console.error("getIngredients Error:", err);
+    return [];
+  }
+}
+
 export async function getHeroSliders(): Promise<any[]> {
   try {
     const res = await fetchPublicWithTimeout(`${API_URL}/sliders/active`, {
@@ -375,6 +398,7 @@ export interface HomePageData {
   products: Product[];
   categories: Category[];
   achievements: Achievement[];
+  ingredients: Ingredient[];
   heroSliders: any[];
   sections: any[];
   vlogs: Vlog[];
@@ -390,10 +414,11 @@ export async function getHomePageData(): Promise<HomePageData> {
   } catch (err) {
     console.error("getHomePageData Error:", err);
 
-    const [products, categories, achievements, heroSliders, sections, vlogsData] = await Promise.all([
+    const [products, categories, achievements, ingredients, heroSliders, sections, vlogsData] = await Promise.all([
       getFeaturedProducts(),
       getCategories(),
       getAchievements(),
+      getIngredients(),
       getHeroSliders(),
       getWebsiteSections(),
       getVlogs(1, 15),
@@ -403,6 +428,7 @@ export async function getHomePageData(): Promise<HomePageData> {
       products,
       categories,
       achievements,
+      ingredients,
       heroSliders,
       sections,
       vlogs: vlogsData.vlogs || [],
