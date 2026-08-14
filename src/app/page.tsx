@@ -4,6 +4,8 @@ import { getHomePageData } from "@/lib/api";
 import IndianBorder from "@/components/decorative/IndianBorder";
 import HeroSlider from "@/components/home/HeroSlider";
 import HeritageIntroSection from "@/components/home/HeritageIntroSection";
+import IngredientGallerySection from "@/components/home/IngredientGallerySection";
+import GrainToBlendStorySection from "@/components/home/GrainToBlendStorySection";
 import {
   TrustBadgesSection,
   CategoriesSection,
@@ -23,7 +25,7 @@ export const revalidate = 300;
  * admin-toggleable, and filtered out of `layout` so a CMS payload that happens to
  * list them can't duplicate them. Single source of truth for "not CMS-configurable".
  */
-const FIXED_SECTIONS = new Set(["hero", "heritage_intro"]);
+const FIXED_SECTIONS = new Set(["hero", "heritage_intro", "ingredient_gallery", "grain_to_blend"]);
 
 const DEFAULT_LAYOUT = [
   { sectionId: "trust_badges" },
@@ -38,7 +40,7 @@ const DEFAULT_LAYOUT = [
 ];
 
 export default async function HomePage() {
-  const { products, categories, achievements, heroSliders, sections: apiSections, vlogs } = await getHomePageData();
+  const { products, categories, achievements, ingredients, heroSliders, sections: apiSections, vlogs } = await getHomePageData();
 
   // Use API sections if available, otherwise fallback to default structure
   const layout = apiSections && apiSections.length > 0 ? apiSections : DEFAULT_LAYOUT;
@@ -47,6 +49,8 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col" style={{ color: "var(--text)" }}>
       <HeroSlider sliders={heroSliders} products={products} />
       <HeritageIntroSection />
+      <IngredientGallerySection ingredients={ingredients} />
+      <GrainToBlendStorySection product={products?.find((p) => /nutrimix/i.test(p.pName)) || products?.[0] || null} />
       {layout
         .filter((section) => !FIXED_SECTIONS.has(section.sectionId))
         .map((section, index) => {
@@ -56,14 +60,7 @@ export default async function HomePage() {
             case "categories":
               return <CategoriesSection key={`categories-${index}`} categories={categories} />;
             case "featured_products":
-              // Placeholder target for the "Ingredients" nav link until Phase 3
-              // builds the real ingredient showcase section here.
-              return (
-                <React.Fragment key={`products-${index}`}>
-                  <div id="ingredients" aria-hidden="true" />
-                  <FeaturedProductsSection products={products} />
-                </React.Fragment>
-              );
+              return <FeaturedProductsSection key={`products-${index}`} products={products} />;
             case "why_us":
               return <WhyUsSection key={`whyus-${index}`} />;
             case "brand_story":
