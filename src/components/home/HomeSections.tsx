@@ -214,11 +214,11 @@ export function BrandStorySection() {
       className="py-24 md:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
       style={{ background: "linear-gradient(135deg, var(--color-espresso), var(--color-walnut))" }}
     >
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--color-terracotta) 0%, transparent 70%)" }} />
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--color-premium-gold) 0%, transparent 70%)" }} />
 
       <div className="max-w-5xl mx-auto relative z-10">
         <FadeUp>
-          <span className="section-label" style={{ color: "var(--color-terracotta)" }}>Why Roshini&rsquo;s?</span>
+          <span className="section-label" style={{ color: "var(--color-premium-gold)" }}>Why Roshini&rsquo;s?</span>
           <h2
             className="display-heading mt-3 mb-8"
             style={{ color: "var(--color-ivory)", fontSize: "clamp(2.25rem, 4vw + 1rem, 4rem)" }}
@@ -239,7 +239,7 @@ export function BrandStorySection() {
               className="pt-6"
               style={{ borderTop: "1px solid color-mix(in srgb, var(--color-ivory) 15%, transparent)" }}
             >
-              <span className="block text-sm font-mono mb-3" style={{ color: "var(--color-terracotta)" }}>
+              <span className="block text-sm font-mono mb-3" style={{ color: "var(--color-premium-gold)" }}>
                 {beat.index}
               </span>
               <h3
@@ -259,7 +259,7 @@ export function BrandStorySection() {
           <Link
             href="/shop"
             className="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all shadow-lg hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
-            style={{ background: "var(--color-terracotta)", color: "var(--color-ivory)", boxShadow: "0 10px 25px color-mix(in srgb, var(--color-espresso) 40%, transparent)" }}
+            style={{ background: "var(--color-premium-gold)", color: "var(--color-espresso)", boxShadow: "0 10px 25px color-mix(in srgb, var(--color-espresso) 40%, transparent)" }}
           >
             Explore Our Products
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -364,7 +364,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
               className="pt-6 flex flex-col gap-4"
               style={{ borderTop: "2px solid var(--color-espresso)" }}
             >
-              <div className="flex gap-1" aria-label={`${t.rating} out of 5 stars`}>
+              <div className="flex gap-1" role="img" aria-label={`${t.rating} out of 5 stars`}>
                 {Array.from({ length: t.rating }).map((_, idx) => (
                   <span key={idx} aria-hidden="true" style={{ color: "var(--color-espresso)" }}>★</span>
                 ))}
@@ -398,9 +398,9 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
 
 export function NewsletterSection() {
   return (
-    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "linear-gradient(135deg, var(--color-espresso), var(--color-walnut))" }}>
+    <section className="newsletter-final-cta py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "linear-gradient(135deg, var(--color-espresso), var(--color-walnut))" }}>
       <FadeUp className="max-w-3xl mx-auto text-center space-y-6">
-        <span className="section-label" style={{ color: "var(--color-terracotta)" }}>Join the Roshini&rsquo;s Family</span>
+        <span className="section-label" style={{ color: "var(--color-premium-gold)" }}>Join the Roshini&rsquo;s Family</span>
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--color-ivory)" }}>
           Rooted in Tradition, Delivered to You
         </h2>

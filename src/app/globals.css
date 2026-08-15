@@ -1454,6 +1454,11 @@ a:hover {
   animation: heritage-marquee-scroll 32s linear infinite;
 }
 
+/* WCAG 2.2.2 — let mouse users pause the continuous scroll on hover. */
+.heritage-marquee-track:hover {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .heritage-marquee-track {
     animation: none;
@@ -1712,6 +1717,49 @@ a:hover {
 .site-logo-name, .product-card-title, .hero-title { font-family: var(--font-serif); }
 .site-muted { color: var(--color-text-muted); }
 .site-link { color: var(--color-text); border-radius: var(--radius-md); }
+
+/* Newsletter / Final-CTA dark band — same pattern as .site-header.is-transparent
+   above: override a shared class's colors only within this specific
+   dark-background parent context, without touching the shared class's
+   default (light-context) styling anywhere else it's used (NewsletterForm
+   is shared and may render on light surfaces elsewhere). */
+.newsletter-final-cta .btn-primary {
+  background: var(--color-premium-gold);
+  color: var(--color-espresso);
+}
+.newsletter-final-cta .btn-primary:hover {
+  background: color-mix(in srgb, var(--color-premium-gold) 88%, var(--color-espresso) 12%);
+}
+.newsletter-final-cta .btn-primary:focus-visible {
+  outline: 2px solid var(--color-ivory);
+  outline-offset: 2px;
+}
+.newsletter-final-cta .btn-primary.loading::after {
+  border-color: var(--color-espresso);
+  border-top-color: transparent;
+}
+.newsletter-final-cta .input {
+  background: var(--color-ivory);
+  color: var(--color-espresso);
+  border-color: color-mix(in srgb, var(--color-ivory) 40%, transparent);
+}
+.newsletter-final-cta .input::placeholder {
+  color: color-mix(in srgb, var(--color-espresso) 55%, transparent);
+}
+.newsletter-final-cta .site-muted {
+  color: color-mix(in srgb, var(--color-ivory) 75%, transparent);
+}
+/* NewsletterForm's success-state heading uses a Tailwind arbitrary-value
+   utility (`.text-[var(--color-espresso)]`), which Tailwind places inside
+   `@layer utilities` — under CSS Cascade Layers, unlayered rules always win
+   over layered ones regardless of specificity, so the plain unlayered
+   `p { color: var(--text-secondary); }` rule above (globals.css) would
+   otherwise beat it. Overriding via this unlayered, more-specific selector
+   (targeting the component's existing `.font-display` class rather than an
+   inline style) sidesteps that entirely. */
+.newsletter-final-cta .font-display {
+  color: var(--color-ivory);
+}
 .site-link:hover, .site-link:focus-visible { color: var(--color-espresso); background: var(--color-linen); }
 .icon-action { color: var(--color-espresso); border-radius: var(--radius-md); }
 .cart-count { background: var(--color-espresso); color: var(--color-ivory); }
