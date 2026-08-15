@@ -354,6 +354,30 @@ export async function getIngredients(): Promise<Ingredient[]> {
   }
 }
 
+export interface Testimonial {
+  _id: string;
+  name: string;
+  location: string;
+  quote: string;
+  rating: number;
+  avatarInitial: string;
+  displayOrder: number;
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  try {
+    const res = await fetchPublicWithTimeout(`${API_URL}/testimonials`, {
+      next: { revalidate: 600, tags: ["testimonials"] },
+    });
+    if (!res.ok) throw new Error("Failed to fetch testimonials");
+    const data = await res.json();
+    return data.testimonials || [];
+  } catch (err) {
+    console.error("getTestimonials Error:", err);
+    return [];
+  }
+}
+
 export async function getHeroSliders(): Promise<any[]> {
   try {
     const res = await fetchPublicWithTimeout(`${API_URL}/sliders/active`, {
@@ -399,6 +423,7 @@ export interface HomePageData {
   categories: Category[];
   achievements: Achievement[];
   ingredients: Ingredient[];
+  testimonials: Testimonial[];
   heroSliders: any[];
   sections: any[];
   vlogs: Vlog[];
@@ -414,11 +439,12 @@ export async function getHomePageData(): Promise<HomePageData> {
   } catch (err) {
     console.error("getHomePageData Error:", err);
 
-    const [products, categories, achievements, ingredients, heroSliders, sections, vlogsData] = await Promise.all([
+    const [products, categories, achievements, ingredients, testimonials, heroSliders, sections, vlogsData] = await Promise.all([
       getFeaturedProducts(),
       getCategories(),
       getAchievements(),
       getIngredients(),
+      getTestimonials(),
       getHeroSliders(),
       getWebsiteSections(),
       getVlogs(1, 15),
@@ -429,6 +455,7 @@ export async function getHomePageData(): Promise<HomePageData> {
       categories,
       achievements,
       ingredients,
+      testimonials,
       heroSliders,
       sections,
       vlogs: vlogsData.vlogs || [],
