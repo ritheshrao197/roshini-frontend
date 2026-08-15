@@ -144,12 +144,19 @@ export default function Header() {
                 tagline, so no adjacent text is rendered alongside it. Sized
                 by width (not height) since it's a wide horizontal lockup
                 with fine detail text that turns mushy if constrained to a
-                short header-bar height instead. */}
+                short header-bar height instead. The logo's artwork is dark
+                brown on a transparent background, so over the hero's dark
+                overlay gradient (`.is-hero-overlay`/`.is-transparent`) it
+                loses contrast and reads as if a shadow were cast over it —
+                a soft white halo (shape-hugging via `drop-shadow`, not a
+                rectangular box) keeps it legible against any background,
+                dark hero or opaque scrolled header alike. */}
             <Link href="/" className="flex items-center flex-shrink min-w-0 pr-2">
               <img
                 src={logoUrl || "/images/logo.png"}
                 alt={shopName}
                 className="w-32 sm:w-40 h-auto object-contain flex-shrink-0"
+                style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.85)) drop-shadow(0 0 7px rgba(255,255,255,0.55))" }}
               />
               <div className="leading-tight min-w-0 sr-only">
                 <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate transition-colors">
