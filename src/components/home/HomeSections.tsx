@@ -398,18 +398,25 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
 
 export function NewsletterSection() {
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8" style={{ background: "var(--bg)" }}>
-      <div className="max-w-3xl mx-auto text-center space-y-6">
-        <span className="section-label">Stay Connected</span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
-          Get Nutrition Tips & Exclusive Offers
+    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "linear-gradient(135deg, var(--color-espresso), var(--color-walnut))" }}>
+      <FadeUp className="max-w-3xl mx-auto text-center space-y-6">
+        <span className="section-label" style={{ color: "var(--color-terracotta)" }}>Join the Roshini&rsquo;s Family</span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--color-ivory)" }}>
+          Rooted in Tradition, Delivered to You
         </h2>
-        <p className="text-sm md:text-base leading-relaxed" style={{ color: "var(--text-muted)" }}>
+        <p className="text-sm md:text-base leading-relaxed" style={{ color: "color-mix(in srgb, var(--color-ivory) 90%, transparent)" }}>
           Join 500+ families who receive weekly wellness tips, new product launches and exclusive member discounts.
         </p>
         <NewsletterForm />
-        <p className="text-[11px]" style={{ color: "var(--text-light)" }}>No spam. Unsubscribe anytime. We respect your privacy.</p>
-      </div>
+        <p className="text-[11px]" style={{ color: "color-mix(in srgb, var(--color-ivory) 70%, transparent)" }}>No spam. Unsubscribe anytime. We respect your privacy.</p>
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
+          style={{ color: "var(--color-ivory)" }}
+        >
+          Prefer to browse first? Explore our products →
+        </Link>
+      </FadeUp>
     </section>
   );
 }
