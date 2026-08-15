@@ -211,62 +211,61 @@ export function BrandStorySection() {
     <section
       id="brand-story"
       className="py-24 md:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #5D310E 0%, #3D1E08 100%)" }}
+      style={{ background: "linear-gradient(135deg, var(--color-espresso), var(--color-walnut))" }}
     >
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, #C28B36 0%, transparent 70%)" }} />
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10 pointer-events-none" style={{ background: "radial-gradient(circle, var(--color-terracotta) 0%, transparent 70%)" }} />
 
       <div className="max-w-5xl mx-auto relative z-10">
-        <ScrollReveal>
-          <span className="section-label" style={{ color: "#D9AE7A" }}>Why Roshini&rsquo;s?</span>
+        <FadeUp>
+          <span className="section-label" style={{ color: "var(--color-terracotta)" }}>Why Roshini&rsquo;s?</span>
           <h2
             className="display-heading mt-3 mb-8"
-            style={{ color: "#FFFFFF", fontSize: "clamp(2.25rem, 4vw + 1rem, 4rem)" }}
+            style={{ color: "var(--color-ivory)", fontSize: "clamp(2.25rem, 4vw + 1rem, 4rem)" }}
           >
             Wholesome food.
             <br />
             Made with intention.
           </h2>
-          <p className="text-base sm:text-lg leading-relaxed max-w-2xl" style={{ color: "#F3E8DC" }}>
+          <p className="text-base sm:text-lg leading-relaxed max-w-2xl" style={{ color: "color-mix(in srgb, var(--color-ivory) 90%, transparent)" }}>
             Roshini&rsquo;s Home Products is a women-led, family-run wellness brand dedicated to creating natural, preservative-free food inspired by India&rsquo;s everyday traditions — not a lab-formulated health product.
           </p>
-        </ScrollReveal>
+        </FadeUp>
 
-        <div className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        <StaggerGroup className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           {BRAND_STORY_BEATS.map((beat) => (
-            <ScrollReveal
+            <StaggerItem
               key={beat.index}
               className="pt-6"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}
-              as="div"
+              style={{ borderTop: "1px solid color-mix(in srgb, var(--color-ivory) 15%, transparent)" }}
             >
-              <span className="block text-sm font-mono mb-3" style={{ color: "#C28B36" }}>
+              <span className="block text-sm font-mono mb-3" style={{ color: "var(--color-terracotta)" }}>
                 {beat.index}
               </span>
               <h3
                 className="text-xl md:text-2xl font-bold mb-3"
-                style={{ fontFamily: "var(--font-serif)", color: "#FFFFFF" }}
+                style={{ fontFamily: "var(--font-serif)", color: "var(--color-ivory)" }}
               >
                 {beat.title}
               </h3>
-              <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#DCC8AE" }}>
+              <p className="text-sm sm:text-base leading-relaxed" style={{ color: "color-mix(in srgb, var(--color-ivory) 80%, transparent)" }}>
                 {beat.body}
               </p>
-            </ScrollReveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
 
-        <div className="mt-16 md:mt-20">
+        <FadeUp className="mt-16 md:mt-20">
           <Link
             href="/shop"
             className="inline-flex items-center gap-2.5 px-8 py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all shadow-lg hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
-            style={{ background: "#C28B36", color: "#FFFFFF", boxShadow: "0 10px 25px rgba(61, 30, 8, 0.4)" }}
+            style={{ background: "var(--color-terracotta)", color: "var(--color-ivory)", boxShadow: "0 10px 25px color-mix(in srgb, var(--color-espresso) 40%, transparent)" }}
           >
             Explore Our Products
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </Link>
-        </div>
+        </FadeUp>
       </div>
     </section>
   );
