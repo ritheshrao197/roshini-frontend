@@ -63,8 +63,8 @@ export function CustomizationProvider({ children }: { children: React.ReactNode 
         if (json.settings) {
           const newSettings = {
             logoImage: json.settings.logoImage || null,
-            shopName: json.settings.shopName || defaultSettings.shopName,
-            shopSubtitle: json.settings.shopSubtitle || defaultSettings.shopSubtitle,
+            shopName: json.settings.shopName?.trim() || defaultSettings.shopName,
+            shopSubtitle: json.settings.shopSubtitle?.trim() || defaultSettings.shopSubtitle,
             themePrimaryColor: json.settings.themePrimaryColor || defaultSettings.themePrimaryColor,
             themePrimaryColorDark: json.settings.themePrimaryColorDark || defaultSettings.themePrimaryColorDark,
             themePrimaryColorLight: json.settings.themePrimaryColorLight || defaultSettings.themePrimaryColorLight,

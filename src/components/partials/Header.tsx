@@ -142,7 +142,17 @@ export default function Header() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink min-w-0 pr-2">
-              <img src={logoUrl || "/images/logo.png"} alt={shopName} className="h-10 sm:h-12 w-auto object-contain flex-shrink-0" />
+              {logoUrl ? (
+                <img src={logoUrl} alt={shopName} className="h-10 sm:h-12 w-auto object-contain flex-shrink-0" />
+              ) : (
+                <div
+                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full flex items-center justify-center font-bold text-lg sm:text-xl flex-shrink-0 shadow-sm"
+                  style={{ background: "var(--color-espresso)", color: "var(--color-ivory)", fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)" }}
+                  aria-hidden="true"
+                >
+                  R
+                </div>
+              )}
               <div className="leading-tight min-w-0">
                 <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate transition-colors">
                   {shopName}
