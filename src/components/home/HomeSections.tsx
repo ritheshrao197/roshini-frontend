@@ -8,6 +8,7 @@ import ScrollReveal from "@/components/common/ScrollReveal";
 import { FadeUp, StaggerGroup, StaggerItem } from "@/components/motion/FadeUp";
 import IndianBorder from "@/components/decorative/IndianBorder";
 import { useLanguage } from "@/lib/LanguageContext";
+import type { Testimonial } from "@/lib/api";
 
 export function TrustBadgesSection() {
   return (
@@ -344,47 +345,52 @@ export function AchievementsSection({ achievements }: { achievements: any[] }) {
   );
 }
 
-const TESTIMONIALS = [
-  { name: "Priya Sharma", location: "Bengaluru", text: "The health mix is absolutely fantastic — my kids love it! No added sugar and I can actually taste the quality of real ingredients.", rating: 5, avatar: "P" },
-  { name: "Anitha Rao", location: "Mysuru", text: "Finally a homemade brand that delivers what it promises. The turmeric latte mix is pure gold.", rating: 5, avatar: "A" },
-  { name: "Deepak Nair", location: "Chennai", text: "Roshini's ragi malt has replaced my morning oats entirely. Rich taste, filling, and I feel genuinely energised.", rating: 5, avatar: "D" },
-];
+export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
+  if (!testimonials || testimonials.length === 0) return null;
 
-export function TestimonialsSection() {
   return (
-    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "var(--brand-cream)" }}>
+    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8" style={{ background: "var(--surface-2)" }}>
       <div className="max-w-6xl mx-auto">
-        <ScrollReveal>
+        <FadeUp>
           <span className="section-label">Real Customers, Real Stories</span>
-          <h2 className="display-heading mt-3 mb-14 md:mb-20" style={{ fontSize: "clamp(2rem, 3.5vw + 1rem, 3.5rem)", color: "var(--brand-brown)" }}>
+          <h2 className="display-heading mt-3 mb-14 md:mb-20" style={{ fontSize: "clamp(2rem, 3.5vw + 1rem, 3.5rem)", color: "var(--color-espresso)" }}>
             What Families Are Saying
           </h2>
-        </ScrollReveal>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
-          {TESTIMONIALS.map((t, i) => (
-            <ScrollReveal
-              key={t.name}
+        </FadeUp>
+        <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14">
+          {testimonials.map((t) => (
+            <StaggerItem
+              key={t._id}
               className="pt-6 flex flex-col gap-4"
-              style={{ borderTop: "2px solid var(--brand-brown)", transitionDelay: `${i * 80}ms` }}
+              style={{ borderTop: "2px solid var(--color-espresso)" }}
             >
               <div className="flex gap-1" aria-label={`${t.rating} out of 5 stars`}>
                 {Array.from({ length: t.rating }).map((_, idx) => (
-                  <span key={idx} aria-hidden="true" style={{ color: "var(--brand-brown)" }}>★</span>
+                  <span key={idx} aria-hidden="true" style={{ color: "var(--color-espresso)" }}>★</span>
                 ))}
               </div>
               <p
                 className="text-lg md:text-xl leading-snug"
                 style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", color: "var(--text)" }}
               >
-                &ldquo;{t.text}&rdquo;
+                &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="mt-auto pt-2">
-                <div className="font-bold text-sm" style={{ color: "var(--brand-brown)" }}>{t.name}</div>
-                <div className="text-xs site-muted">{t.location}</div>
+              <div className="mt-auto pt-2 flex items-center gap-3">
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                  style={{ background: "var(--color-espresso)", color: "var(--color-ivory)" }}
+                  aria-hidden="true"
+                >
+                  {t.avatarInitial}
+                </div>
+                <div>
+                  <div className="font-bold text-sm" style={{ color: "var(--color-espresso)" }}>{t.name}</div>
+                  <div className="text-xs site-muted">{t.location}</div>
+                </div>
               </div>
-            </ScrollReveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   );
