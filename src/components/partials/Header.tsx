@@ -140,20 +140,18 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20 gap-4 sm:gap-6">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink min-w-0 pr-2">
-              {logoUrl ? (
-                <img src={logoUrl} alt={shopName} className="h-10 sm:h-12 w-auto object-contain flex-shrink-0" />
-              ) : (
-                <div
-                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full flex items-center justify-center font-bold text-lg sm:text-xl flex-shrink-0 shadow-sm"
-                  style={{ background: "var(--color-espresso)", color: "var(--color-ivory)", fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)" }}
-                  aria-hidden="true"
-                >
-                  R
-                </div>
-              )}
-              <div className="leading-tight min-w-0">
+            {/* Logo — the wordmark image already contains the brand name and
+                tagline, so no adjacent text is rendered alongside it. Sized
+                by width (not height) since it's a wide horizontal lockup
+                with fine detail text that turns mushy if constrained to a
+                short header-bar height instead. */}
+            <Link href="/" className="flex items-center flex-shrink min-w-0 pr-2">
+              <img
+                src={logoUrl || "/images/logo.png"}
+                alt={shopName}
+                className="w-32 sm:w-40 h-auto object-contain flex-shrink-0"
+              />
+              <div className="leading-tight min-w-0 sr-only">
                 <div className="site-logo-name font-bold text-sm sm:text-lg tracking-tight truncate transition-colors">
                   {shopName}
                 </div>
