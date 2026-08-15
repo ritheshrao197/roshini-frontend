@@ -5,6 +5,8 @@ import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
 import NewsletterForm from "@/components/home/NewsletterForm";
 import ScrollReveal from "@/components/common/ScrollReveal";
+import { FadeUp, StaggerGroup, StaggerItem } from "@/components/motion/FadeUp";
+import IndianBorder from "@/components/decorative/IndianBorder";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export function TrustBadgesSection() {
@@ -148,16 +150,17 @@ export function WhyUsSection() {
   return (
     <section id="values" className="py-16 md:py-24 px-4 sm:px-6 lg:px-8" style={{ background: "var(--bg-warm)" }}>
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-16">
+        <FadeUp className="text-center mb-12 md:mb-16">
           <span className="section-label">Why Families Trust Us</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--espresso)" }}>
-            Why Choose Roshini's?
+            Why Choose Roshini&rsquo;s?
           </h2>
-        </div>
+          <IndianBorder variant="minimal" position="bottom" className="max-w-xs mx-auto mt-6 opacity-60" />
+        </FadeUp>
         {/* auto-rows-fr makes all cards the same height in each row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" style={{ gridAutoRows: "1fr" }}>
+        <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" style={{ gridAutoRows: "1fr" }}>
           {WHY_US.map((item) => (
-            <div
+            <StaggerItem
               key={item.title}
               className="flex flex-col p-6 sm:p-8 group hover:-translate-y-1 transition-all"
               style={{
@@ -177,9 +180,9 @@ export function WhyUsSection() {
                 {item.title}
               </h3>
               <p className="text-sm leading-relaxed mt-auto" style={{ color: "var(--text-muted)" }}>{item.desc}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   );
