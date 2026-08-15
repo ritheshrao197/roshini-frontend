@@ -3,8 +3,21 @@
 import React from "react";
 import RevealText from "@/components/motion/RevealText";
 import { StaggerGroup, StaggerItem } from "@/components/motion/FadeUp";
-import { ICON_MAP } from "@/components/decorative/IngredientIcons";
+import { ICON_MAP, GrainIcon, NutIcon, SeedIcon, PodIcon } from "@/components/decorative/IngredientIcons";
 import type { Ingredient } from "@/lib/api";
+
+/**
+ * Last-resort icon when an ingredient's `iconKey` isn't in `ICON_MAP` — e.g. an
+ * admin creates an ingredient via `POST /api/admin/ingredients` with a new key
+ * before a matching icon primitive exists. Falls back on the ingredient's
+ * `category`, which is a closed union, so this map is always total.
+ */
+const FALLBACK_BY_CATEGORY: Record<Ingredient["category"], () => React.JSX.Element> = {
+  millet: () => <GrainIcon />,
+  nut: () => <NutIcon />,
+  seed: () => <SeedIcon />,
+  other: () => <PodIcon />,
+};
 
 export default function IngredientGallerySection({ ingredients }: { ingredients: Ingredient[] }) {
   if (!ingredients?.length) return null;
@@ -21,7 +34,7 @@ export default function IngredientGallerySection({ ingredients }: { ingredients:
 
         <StaggerGroup as="div" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6" staggerDelay={0.09}>
           {ingredients.map((ingredient) => {
-            const Icon = ICON_MAP[ingredient.iconKey];
+            const Icon = ICON_MAP[ingredient.iconKey] ?? FALLBACK_BY_CATEGORY[ingredient.category];
             return (
               <StaggerItem key={ingredient._id} className="rounded-2xl p-5 text-center" style={{ background: "var(--surface)", border: "1px solid var(--color-border)" }}>
                 <div className="w-12 h-12 mx-auto mb-3" style={{ color: "var(--color-secondary-brown)" }} aria-hidden="true">

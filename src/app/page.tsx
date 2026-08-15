@@ -25,7 +25,7 @@ export const revalidate = 300;
  * admin-toggleable, and filtered out of `layout` so a CMS payload that happens to
  * list them can't duplicate them. Single source of truth for "not CMS-configurable".
  */
-const FIXED_SECTIONS = new Set(["hero", "heritage_intro", "ingredient_gallery", "grain_to_blend"]);
+const FIXED_SECTIONS = new Set(["hero", "heritage_intro"]);
 
 const DEFAULT_LAYOUT = [
   { sectionId: "trust_badges" },
@@ -49,8 +49,6 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col" style={{ color: "var(--text)" }}>
       <HeroSlider sliders={heroSliders} products={products} />
       <HeritageIntroSection />
-      <IngredientGallerySection ingredients={ingredients} />
-      <GrainToBlendStorySection product={products?.find((p) => /nutrimix/i.test(p.pName)) || products?.[0] || null} />
       {layout
         .filter((section) => !FIXED_SECTIONS.has(section.sectionId))
         .map((section, index) => {
@@ -59,8 +57,20 @@ export default async function HomePage() {
               return <TrustBadgesSection key={`trust-${index}`} />;
             case "categories":
               return <CategoriesSection key={`categories-${index}`} categories={categories} />;
+            // The two ingredient/storytelling sections are NOT CMS-configurable,
+            // but the spec places them after Featured Products and before Why-Us
+            // — a position `FIXED_SECTIONS` (prepend-only) can't express. Pinning
+            // them to this case renders them there regardless of what the CMS
+            // `sections` payload contains, matching the pattern Phase 2 used for
+            // the old `#ingredients` anchor placeholder.
             case "featured_products":
-              return <FeaturedProductsSection key={`products-${index}`} products={products} />;
+              return (
+                <React.Fragment key={`products-${index}`}>
+                  <FeaturedProductsSection products={products} />
+                  <IngredientGallerySection ingredients={ingredients} />
+                  <GrainToBlendStorySection product={products?.find((p) => /nutrimix/i.test(p.pName)) || products?.[0] || null} />
+                </React.Fragment>
+              );
             case "why_us":
               return <WhyUsSection key={`whyus-${index}`} />;
             case "brand_story":
