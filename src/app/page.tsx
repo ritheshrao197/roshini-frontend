@@ -5,6 +5,8 @@ import HeroSlider from "@/components/home/HeroSlider";
 import HeritageIntroSection from "@/components/home/HeritageIntroSection";
 import IngredientGallerySection from "@/components/home/IngredientGallerySection";
 import GrainToBlendStorySection from "@/components/home/GrainToBlendStorySection";
+import NutritionSection from "@/components/home/NutritionSection";
+import ValuesMarqueeSection from "@/components/home/ValuesMarqueeSection";
 import {
   TrustBadgesSection,
   CategoriesSection,
@@ -31,15 +33,17 @@ const DEFAULT_LAYOUT = [
   { sectionId: "categories" },
   { sectionId: "featured_products" },
   { sectionId: "why_us" },
+  { sectionId: "nutrition" },
   { sectionId: "brand_story" },
   { sectionId: "achievements" },
   { sectionId: "testimonials" },
+  { sectionId: "marquee" },
   { sectionId: "health_hub" },
   { sectionId: "newsletter" }
 ];
 
 export default async function HomePage() {
-  const { products, categories, achievements, ingredients, heroSliders, sections: apiSections, vlogs } = await getHomePageData();
+  const { products, categories, achievements, ingredients, testimonials, heroSliders, sections: apiSections, vlogs } = await getHomePageData();
 
   // Use API sections if available, otherwise fallback to default structure
   const layout = apiSections && apiSections.length > 0 ? apiSections : DEFAULT_LAYOUT;
@@ -72,12 +76,16 @@ export default async function HomePage() {
               );
             case "why_us":
               return <WhyUsSection key={`whyus-${index}`} />;
+            case "nutrition":
+              return <NutritionSection key={`nutrition-${index}`} />;
             case "brand_story":
               return <BrandStorySection key={`brand-${index}`} />;
             case "achievements":
               return <AchievementsSection key={`achievements-${index}`} achievements={achievements} />;
             case "testimonials":
-              return <TestimonialsSection key={`testimonials-${index}`} />;
+              return <TestimonialsSection key={`testimonials-${index}`} testimonials={testimonials} />;
+            case "marquee":
+              return <ValuesMarqueeSection key={`marquee-${index}`} />;
             case "newsletter":
               return <NewsletterSection key={`newsletter-${index}`} />;
             case "health_hub":
