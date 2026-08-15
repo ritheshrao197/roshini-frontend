@@ -1441,6 +1441,25 @@ a:hover {
   animation: shimmer var(--duration-slower) var(--ease-default) infinite;
 }
 
+/* ── Marquee ──────────────────────────────────────────────────── */
+
+@keyframes heritage-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.heritage-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: heritage-marquee-scroll 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heritage-marquee-track {
+    animation: none;
+  }
+}
+
 /* ── Stagger ──────────────────────────────────────────────────── */
 
 .animate-stagger > * {
