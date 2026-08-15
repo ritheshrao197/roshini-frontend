@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useGsapContext, gsap } from "@/lib/gsapUtils";
 import { useReducedMotion } from "@/lib/useMotionPrefs";
 import { GrainIcon, NutIcon, SeedIcon } from "@/components/decorative/IngredientIcons";
@@ -75,10 +76,14 @@ export default function GrainToBlendStorySection({ product }: { product: Product
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-24 md:py-0 md:h-screen flex items-center justify-center"
+      className="relative overflow-hidden pt-36 pb-24 md:py-0 md:h-screen flex items-center justify-center"
       style={{ background: "var(--color-espresso)" }}
     >
-      <div ref={labelRef} className="absolute top-12 left-1/2 -translate-x-1/2 text-center">
+      {/* top-20/md:top-28 clears the sticky header (h-16/h-20, ~65px/~81px);
+          the section's pt-36 (mobile only) pushes the product image down so it
+          doesn't collide with this 2-line-wrapped label in the narrow gap
+          between the header and the image. */}
+      <div ref={labelRef} className="absolute top-20 md:top-28 left-1/2 -translate-x-1/2 text-center">
         <span className="text-xs tracking-[0.3em] uppercase" style={{ color: "var(--color-ivory)" }}>
           Grain &middot; Nut &middot; Seed &middot; Blend
         </span>
@@ -101,7 +106,13 @@ export default function GrainToBlendStorySection({ product }: { product: Product
       <div ref={productRef} className="relative z-10 flex flex-col items-center text-center px-6">
         {flagshipImage && (
           <div className="relative w-48 h-48 md:w-64 md:h-64 mb-8">
-            <img src={flagshipImage} alt={product?.pName || "Roshini's Nutrimix"} className="w-full h-full object-contain drop-shadow-2xl" />
+            <Image
+              src={flagshipImage}
+              alt={product?.pName || "Roshini's Nutrimix"}
+              fill
+              sizes="(max-width: 768px) 192px, 256px"
+              className="object-contain drop-shadow-2xl"
+            />
           </div>
         )}
         <div ref={finalRef}>

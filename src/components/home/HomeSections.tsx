@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ProductCard from "@/components/product/ProductCard";
 import NewsletterForm from "@/components/home/NewsletterForm";
 import ScrollReveal from "@/components/common/ScrollReveal";
@@ -472,7 +473,13 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
             <div className="group overflow-hidden transition-all" style={{ border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
               {getBlogImageUrl(featuredBlog) ? (
                 <div className="relative h-64 md:h-80 w-full overflow-hidden">
-                  <img src={getBlogImageUrl(featuredBlog) || ""} alt={featuredBlog.title} className="object-cover h-full w-full group-hover:scale-105 transition-all duration-300" />
+                  <Image
+                    src={getBlogImageUrl(featuredBlog) || ""}
+                    alt={featuredBlog.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    className="object-cover group-hover:scale-105 transition-all duration-300"
+                  />
                 </div>
               ) : null}
               <div className="p-6 space-y-3">
@@ -499,7 +506,15 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
               {latestBlogs.map((blog) => (
                 <div key={blog._id} className="group flex flex-col p-4 hover:-translate-y-1 transition-all" style={{ border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", background: "var(--surface)" }}>
                   {getBlogImageUrl(blog) ? (
-                    <img src={getBlogImageUrl(blog) || ""} alt={blog.title} className="h-32 w-full object-cover mb-3" style={{ borderRadius: "var(--radius-md)" }} />
+                    <div className="relative h-32 w-full mb-3 overflow-hidden" style={{ borderRadius: "var(--radius-md)" }}>
+                      <Image
+                        src={getBlogImageUrl(blog) || ""}
+                        alt={blog.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 22vw"
+                        className="object-cover"
+                      />
+                    </div>
                   ) : null}
                   <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--spice-red)" }}>{blog.vCategory?.cName}</span>
                   <h4 className="font-bold text-sm line-clamp-2 mt-1" style={{ fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)", color: "var(--brand-brown)" }}>
