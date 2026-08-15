@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import IndianBorder from "@/components/decorative/IndianBorder";
+import { LotusBloom } from "@/components/decorative/HeroBotanicals";
 
 export default function HeritageIntroSection() {
   return (
@@ -16,6 +17,18 @@ export default function HeritageIntroSection() {
           style={{ transformOrigin: "center" }}
         >
           <IndianBorder variant="botanical" position="top" className="mb-8" />
+        </motion.div>
+
+        <motion.div
+          className="w-10 h-10 mx-auto mb-6"
+          style={{ color: "var(--color-premium-gold)" }}
+          initial={{ opacity: 0, scale: 0.7 }}
+          whileInView={{ opacity: 0.85, scale: 1 }}
+          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          aria-hidden="true"
+        >
+          <LotusBloom />
         </motion.div>
 
         <motion.p
@@ -36,7 +49,7 @@ export default function HeritageIntroSection() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           style={{ transformOrigin: "center" }}
         >
-          <IndianBorder variant="botanical" position="bottom" className="mt-8" />
+          <IndianBorder variant="kolam" position="bottom" className="mt-8" />
         </motion.div>
       </div>
     </section>

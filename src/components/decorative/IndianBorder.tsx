@@ -1,6 +1,6 @@
 import React from "react";
 
-export type IndianBorderVariant = "botanical" | "geometric" | "minimal";
+export type IndianBorderVariant = "botanical" | "geometric" | "minimal" | "kolam";
 
 interface IndianBorderProps {
   variant: IndianBorderVariant;
@@ -78,10 +78,41 @@ function MinimalMotif() {
   );
 }
 
+/* Kolam-inspired repeating loop-and-dot chain — evokes the interlocking
+   pulli-kolam knotwork in the ARTREF motifs without reproducing the full
+   lattice, staying tileable and legible at border scale. */
+function KolamMotif() {
+  const units = [40, 120, 200, 280, 360];
+  return (
+    <svg
+      viewBox="0 0 400 40"
+      preserveAspectRatio="none"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={STROKE_WIDTH}
+      className="w-full h-full"
+    >
+      <line vectorEffect="non-scaling-stroke" x1="0" y1="20" x2="400" y2="20" />
+      {units.map((cx) => (
+        <g key={cx} transform={`translate(${cx} 20)`}>
+          <path
+            vectorEffect="non-scaling-stroke"
+            d="M0 0 C -10 -10 -20 -10 -20 0 C -20 10 -10 10 0 0 C 10 -10 20 -10 20 0 C 20 10 10 10 0 0 Z"
+          />
+          <circle vectorEffect="non-scaling-stroke" cx="0" cy="0" r="1.5" fill="currentColor" stroke="none" />
+          <circle vectorEffect="non-scaling-stroke" cx="-14" cy="0" r="1.2" fill="currentColor" stroke="none" />
+          <circle vectorEffect="non-scaling-stroke" cx="14" cy="0" r="1.2" fill="currentColor" stroke="none" />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 const MOTIFS: Record<IndianBorderVariant, () => React.JSX.Element> = {
   botanical: BotanicalMotif,
   geometric: GeometricMotif,
   minimal: MinimalMotif,
+  kolam: KolamMotif,
 };
 
 export default function IndianBorder({

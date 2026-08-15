@@ -127,6 +127,49 @@ export function LeafPair() {
   );
 }
 
+/**
+ * A single large lotus-like bloom, built the same way as `FlowerCluster`'s
+ * tiny flowers (a ring of ellipse petals at precomputed unit-circle offsets,
+ * each rotated 72° from the last around its own center) but scaled up into
+ * a standalone hero motif with a stem. Coordinates are static literals for
+ * the same reason as `FlowerCluster` — see the note on that component.
+ */
+export function LotusBloom() {
+  const petals = [
+    { px: 14, py: 0 },
+    { px: 4.326, py: 13.314 },
+    { px: -11.326, py: 8.229 },
+    { px: -11.326, py: -8.229 },
+    { px: 4.326, py: -13.314 },
+  ];
+  return (
+    <svg
+      viewBox="0 0 80 80"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={STROKE_WIDTH}
+      strokeLinecap="round"
+      className="w-full h-full"
+    >
+      <path vectorEffect="non-scaling-stroke" d="M40 78 L40 58" />
+      <g transform="translate(40 40)">
+        {petals.map(({ px, py }, p) => (
+          <ellipse
+            key={p}
+            vectorEffect="non-scaling-stroke"
+            cx={px}
+            cy={py}
+            rx="9"
+            ry="19"
+            transform={`rotate(${p * 72} ${px} ${py})`}
+          />
+        ))}
+        <circle vectorEffect="non-scaling-stroke" r="6" fill="currentColor" stroke="none" />
+      </g>
+    </svg>
+  );
+}
+
 /** A loose scatter of small seed ovals, varied in size and rotation. */
 export function SeedScatter() {
   const seeds = [

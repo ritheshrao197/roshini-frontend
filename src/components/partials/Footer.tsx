@@ -68,7 +68,7 @@ function ClockIcon() {
 export default function Footer() {
   return (
     <>
-      <IndianBorder variant="minimal" position="top" className="px-4 sm:px-6 lg:px-8" />
+      <IndianBorder variant="kolam" position="top" className="px-4 sm:px-6 lg:px-8" />
       <footer className="pt-16 pb-8 px-4 sm:px-6 lg:px-8 mt-auto" style={{ background: "var(--brand-brown-dark, #3C2015)", color: "var(--brand-cream)" }}>
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-12" style={{ borderBottom: "1px solid rgba(246, 238, 225, 0.2)" }}>
