@@ -151,11 +151,11 @@ export default function Header() {
                 a soft white halo (shape-hugging via `drop-shadow`, not a
                 rectangular box) keeps it legible against any background,
                 dark hero or opaque scrolled header alike. */}
-            <Link href="/" className="flex items-center flex-shrink min-w-0 pr-2">
+            <Link href="/" className="flex items-center flex-shrink-0 pr-2">
               <img
                 src={logoUrl || "/images/logo.png"}
                 alt={shopName}
-                className="w-32 sm:w-40 h-auto object-contain flex-shrink-0"
+                className="w-32 sm:w-56 h-auto object-contain flex-shrink-0"
                 style={{ filter: "drop-shadow(0 0 3px rgba(255,255,255,0.85)) drop-shadow(0 0 7px rgba(255,255,255,0.55))" }}
               />
               <div className="leading-tight min-w-0 sr-only">
@@ -195,15 +195,18 @@ export default function Header() {
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink min-w-0">
 
-              {/* Language selector */}
-              <div className="relative">
+              {/* Language selector — width-constrained on mobile so the
+                  native <select>'s rendered option text can't push the
+                  cart/hamburger icons off-screen; the dropdown itself is
+                  unaffected, only the closed-state display is clipped. */}
+              <div className="relative w-9 sm:w-auto overflow-hidden sm:overflow-visible flex-shrink-0">
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
                   aria-label="Select language"
-                  className="icon-action appearance-none bg-transparent pl-6 pr-1.5 py-2 text-[11px] font-semibold rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+                  className="icon-action appearance-none bg-transparent pl-6 pr-1.5 py-2 text-[11px] font-semibold rounded-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 w-9 sm:w-auto"
                 >
                   <option className="text-black" value="English">English</option>
                   <option className="text-black" value="Hindi">हिंदी (Hindi)</option>
