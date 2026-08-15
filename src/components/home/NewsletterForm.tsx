@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { API_URL } from "@/lib/api";
 
 export default function NewsletterForm() {
   const [email, setEmail]     = useState("");
@@ -16,7 +17,7 @@ export default function NewsletterForm() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8000/api/subscribers/subscribe", {
+      const res = await fetch(`${API_URL}/subscribers/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, source: "Homepage" }),
