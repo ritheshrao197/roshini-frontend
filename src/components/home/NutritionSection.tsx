@@ -5,24 +5,24 @@ import { FadeUp, StaggerGroup, StaggerItem } from "@/components/motion/FadeUp";
 
 const NUTRITION_POINTS = [
   {
-    stat: "3x",
-    title: "Naturally High in Fiber",
-    desc: "Millets and whole grains carry significantly more dietary fiber than refined-flour alternatives — supporting digestion the way traditional diets always have.",
+    stat: "01",
+    title: "Millet & Grain Goodness",
+    desc: "A wholesome blend of millets and grains, thoughtfully combined with nuts and seeds for everyday nourishment.",
   },
   {
-    stat: "0g",
-    title: "Zero Refined Sugar",
-    desc: "Sweetened only with dates, jaggery, and whole fruits — never with refined sugar or artificial sweeteners.",
+    stat: "02",
+    title: "Rich in Goodness",
+    desc: "A carefully selected combination of nuts, seeds, grains and millets, bringing a variety of naturally occurring nutrients to your everyday meals.",
   },
   {
-    stat: "Slow",
-    title: "Slow-Release Energy",
-    desc: "Complex carbohydrates from whole grains release energy gradually, without the sugar spikes and crashes of refined flour.",
+    stat: "03",
+    title: "Made for Everyday Nourishment",
+    desc: "Simple, wholesome ingredients crafted into a convenient blend that fits effortlessly into your family's daily routine.",
   },
   {
-    stat: "100%",
-    title: "Stone-Ground, Not Processed",
-    desc: "Every batch is stone-ground the traditional way, preserving nutrients that high-heat industrial processing strips away.",
+    stat: "04",
+    title: "Inspired by Tradition",
+    desc: "Rooted in India's rich food traditions, our blends bring the goodness of time-tested ingredients to modern family kitchens.",
   },
 ];
 
