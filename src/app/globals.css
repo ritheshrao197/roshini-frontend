@@ -664,10 +664,16 @@ body {
   color: var(--color-terracotta, var(--terracotta));
 }
 
-p {
-  margin-bottom: var(--space-4);
-  max-width: 65ch;
-  color: var(--text-secondary);
+/* Layered so a paragraph's own Tailwind color utility (text-[#...], text-white,
+   etc.) can override this default, instead of this unlayered rule silently
+   winning over utilities regardless of specificity — same trap already fixed
+   for h1-h6 and buttons above. */
+@layer base {
+  p {
+    margin-bottom: var(--space-4);
+    max-width: 65ch;
+    color: var(--text-secondary);
+  }
 }
 
 small { font-size: var(--font-size-sm); }
