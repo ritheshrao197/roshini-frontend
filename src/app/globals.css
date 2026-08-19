@@ -429,6 +429,17 @@ html[data-theme="dark"] {
   --color-accent-cinnamon:   var(--accent-cinnamon);
   --color-accent-leafgreen:  var(--accent-leafgreen);
 
+  /* Admin panel aliases — referenced ~128x across src/components/admin/product/*
+     (accent-green/accent-sage/accent-cream-dark) but never registered here, so
+     every bg-/text-/border-accent-green|sage|cream-dark utility in that admin UI
+     silently resolved to nothing. Worst case was the "Save Product Changes"
+     button: no bg (accent-green) + text-background (real cream token) = an
+     invisible button. Most others just inherited body text color and looked
+     "close enough" to go unnoticed. */
+  --color-accent-green:      var(--sage);
+  --color-accent-sage:       var(--sage);
+  --color-accent-cream-dark: var(--brown-100);
+
   /* Primary Brand Aliases */
   --color-espresso:         var(--espresso);
   --color-walnut:           var(--walnut);

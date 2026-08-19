@@ -256,6 +256,28 @@ function AdminDashboardInner() {
     }
   };
 
+  // Fetch the full product record before editing — the admin list endpoint only
+  // returns a trimmed field set (for table performance), and reusing that partial
+  // object as the edit form's source data was silently blanking every field it
+  // omits (sku, ingredients, SEO, shipping, etc.) on every save.
+  const handleEditProduct = async (product: Product) => {
+    setShowProductForm(true);
+    setEditingProduct(product);
+    try {
+      const res = await fetch(`${API_URL}/product/single-product`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pId: product._id }),
+      });
+      const data = await res.json();
+      if (data.Product) {
+        setEditingProduct(data.Product);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const toggleProductStatus = async (product: Product) => {
     const nextStatus = product.pStatus === "Active" ? "Disabled" : "Active";
     setProducts((prev) => prev.map((p) => (p._id === product._id ? { ...p, pStatus: nextStatus } : p)));
@@ -857,10 +879,7 @@ function AdminDashboardInner() {
                         {products.map(p => (
                           <tr
                             key={p._id}
-                            onClick={() => {
-                              setEditingProduct(p);
-                              setShowProductForm(true);
-                            }}
+                            onClick={() => handleEditProduct(p)}
                             className="border-b hover:bg-[#F5E9DA]/40 cursor-pointer transition-colors"
                             style={{ borderColor: "#E8D5BC" }}
                           >
