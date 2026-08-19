@@ -33,7 +33,7 @@ export interface Product {
   image?: CloudinaryImage;
   images?: CloudinaryImage[];
   pOffer: string | null;
-  pRatingsReviews: any[];
+  pRatingsReviews: ProductReview[];
   pStatus: string;
   comparePrice?: number;
   productWeight?: string;
@@ -47,6 +47,16 @@ export interface Product {
   rating?: number;
   reviewCount?: number;
   pVariants?: ProductVariant[];
+  createdAt: string;
+}
+
+export interface ProductReview {
+  _id: string;
+  review: string;
+  title?: string;
+  rating: string;
+  reviewerName?: string;
+  user?: { _id: string; name?: string } | string;
   createdAt: string;
 }
 
@@ -176,6 +186,32 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   } catch (err) {
     console.error("getProductBySlug Error:", err);
     return null;
+  }
+}
+
+export async function submitProductReview(
+  pId: string,
+  rating: number,
+  review: string,
+  title?: string
+): Promise<{ success?: string; error?: string }> {
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/product/add-review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: typeof window !== "undefined" ? localStorage.getItem("token") || "" : "",
+      },
+      body: JSON.stringify({ pId, rating, review, title }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { error: data.error || "Failed to submit review" };
+    }
+    return data;
+  } catch (err) {
+    console.error("submitProductReview Error:", err);
+    return { error: "Connection error. Please try again." };
   }
 }
 

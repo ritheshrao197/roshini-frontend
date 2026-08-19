@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getProductBySlug, getRelatedProducts, BACKEND_URL } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import ProductInteractiveDetails from "@/components/product/ProductInteractiveDetails";
+import ProductReviews from "@/components/product/ProductReviews";
 import { Metadata } from "next";
 
 interface ProductPageProps {
@@ -51,6 +52,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const isOutOfStock = product.pQuantity === 0;
   const categoryName = typeof product.pCategory === "object" ? product.pCategory.cName : "Homemade";
 
+  const reviewCount = product.pRatingsReviews?.length || 0;
+  const averageRating = reviewCount
+    ? product.pRatingsReviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / reviewCount
+    : 0;
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -66,11 +72,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
       availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       priceValidUntil: "2029-12-31",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: product.pRatingsReviews?.length ? String(product.pRatingsReviews.length) : "12",
-    }
+    // Only include real reviews — fabricated ratings/counts violate Google's
+    // structured data guidelines and mislead shoppers.
+    ...(reviewCount > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: (Math.round(averageRating * 10) / 10).toString(),
+        reviewCount: String(reviewCount),
+      },
+    }),
   };
 
   const breadcrumbJsonLd = {
@@ -178,6 +188,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           </div>
         )}
+
+        {/* Reviews */}
+        <ProductReviews product={product} />
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
