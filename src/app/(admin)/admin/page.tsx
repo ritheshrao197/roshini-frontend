@@ -245,7 +245,7 @@ function AdminDashboardInner() {
   // 2. Fetch Dynamic Catalog Lists
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_URL}/product/all-product`, { headers: { 'token': localStorage.getItem('token') || "" } });
+      const res = await fetch(`${API_URL}/product/admin/all-product`, { headers: { 'token': localStorage.getItem('token') || "" } });
       handleApiError(res.status);
       if (res.ok) {
         const json = await res.json();
@@ -253,6 +253,30 @@ function AdminDashboardInner() {
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const toggleProductStatus = async (product: Product) => {
+    const nextStatus = product.pStatus === "Active" ? "Disabled" : "Active";
+    setProducts((prev) => prev.map((p) => (p._id === product._id ? { ...p, pStatus: nextStatus } : p)));
+
+    try {
+      const res = await fetch(`${API_URL}/product/${product._id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token") || "",
+        },
+        body: JSON.stringify({ pStatus: nextStatus }),
+      });
+      handleApiError(res.status);
+      if (!res.ok) {
+        throw new Error("Failed to update product status");
+      }
+    } catch (e) {
+      console.error(e);
+      // Revert optimistic update on failure
+      setProducts((prev) => prev.map((p) => (p._id === product._id ? { ...p, pStatus: product.pStatus } : p)));
     }
   };
 
@@ -844,11 +868,19 @@ function AdminDashboardInner() {
                             <td className="px-6 py-4 text-right">₹{p.pPrice}</td>
                             <td className="px-6 py-4 text-right">{p.pQuantity} units</td>
                             <td className="px-6 py-4 text-center">
-                              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                                p.pStatus === "Active" ? "bg-green-50 text-green-600 border border-green-100" : "bg-gray-100 text-gray-600 border border-gray-200"
-                              }`}>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleProductStatus(p);
+                                }}
+                                title={p.pStatus === "Active" ? "Click to disable" : "Click to activate"}
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold cursor-pointer transition-colors ${
+                                  p.pStatus === "Active" ? "bg-green-50 text-green-600 border border-green-100 hover:bg-green-100" : "bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200"
+                                }`}
+                              >
                                 {p.pStatus}
-                              </span>
+                              </button>
                             </td>
                           </tr>
                         ))}
