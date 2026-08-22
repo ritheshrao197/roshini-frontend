@@ -3,11 +3,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Product, BACKEND_URL } from "@/lib/api";
+import { Product, ProductVariant, BACKEND_URL } from "@/lib/api";
 import { getCart, addToCart, updateQuantity } from "@/lib/cart";
 
 interface ProductCardProps {
   product: Product;
+  /** Renders this card as one specific variant (own name suffix, price, stock,
+   *  cart identity) instead of the base product — used to list each variant
+   *  as its own card rather than collapsing them into one price range. */
+  variant?: ProductVariant;
 }
 
 const inrFormatter = new Intl.NumberFormat("en-IN", {
@@ -16,10 +20,16 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, variant }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
+
+  // A variant-card's cart identity matches the composite id already used by
+  // ProductInteractiveDetails' AddToCartButton (`${productId}-${weight}`),
+  // so a variant added from here and later changed on the product page (or
+  // vice versa) resolve to the same cart line instead of two separate ones.
+  const cartId = variant ? `${product._id}-${variant.weight}` : product._id;
 
   const canTilt = () =>
     typeof window !== "undefined" &&
@@ -45,7 +55,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const refreshCartQuantity = () => {
     const cart = getCart();
-    const item = cart.find((i) => i.id === product._id);
+    const item = cart.find((i) => i.id === cartId);
     setQuantity(item ? item.quantitiy : 0);
   };
 
@@ -63,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       window.removeEventListener("cart_updated", refreshCartQuantity);
       window.removeEventListener("wishlist_updated", refreshWishlist);
     };
-  }, [product._id]);
+  }, [cartId]);
 
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -100,7 +110,17 @@ export default function ProductCard({ product }: ProductCardProps) {
       ? product.pCategory.cName
       : "Homemade";
 
-  const isOutOfStock = product.pQuantity === 0;
+  const isOutOfStock = variant ? variant.quantity === 0 : product.pQuantity === 0;
+
+  const displayName = variant ? `${product.pName} - ${variant.weight}` : product.pName;
+
+  // Only relevant when this card represents the whole product (no `variant`
+  // passed) and the product itself has multiple variants — shown as a range.
+  // When `variant` is set, the card already represents one exact price.
+  const hasVariants = !variant && !!product.pVariants && product.pVariants.length > 0;
+  const variantPrices = hasVariants ? product.pVariants!.map((v) => v.price) : [];
+  const minVariantPrice = hasVariants ? Math.min(...variantPrices) : product.pPrice;
+  const maxVariantPrice = hasVariants ? Math.max(...variantPrices) : product.pPrice;
 
   return (
     <div className="product-card card-interactive group relative flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1">
@@ -164,7 +184,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Name */}
         <Link href={`/product/${productSlug}`} className="block">
           <h3 className="product-card-title font-bold text-base leading-snug group-hover:opacity-80 transition-opacity">
-            {product.pName}
+            {displayName}
           </h3>
         </Link>
 
@@ -186,9 +206,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="product-card-footer flex items-center justify-between gap-2 pt-3 mt-auto">
           <div>
             <span className="product-card-price text-xl font-bold">
-              {inrFormatter.format(product.pPrice)}
+              {variant
+                ? inrFormatter.format(variant.price)
+                : hasVariants && minVariantPrice !== maxVariantPrice
+                ? `${inrFormatter.format(minVariantPrice)} - ${inrFormatter.format(maxVariantPrice)}`
+                : inrFormatter.format(hasVariants ? minVariantPrice : product.pPrice)}
             </span>
-            {Number(product.pOffer) > 0 && (
+            {!variant && !hasVariants && Number(product.pOffer) > 0 && (
               <span className="site-muted text-xs line-through ml-2">
                 {inrFormatter.format(Math.round(product.pPrice / (1 - Number(product.pOffer) / 100)))}
               </span>
@@ -205,7 +229,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  updateQuantity(product._id, quantity - 1);
+                  updateQuantity(cartId, quantity - 1);
                 }}
                 aria-label="Decrease quantity"
                 className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)]"
@@ -220,7 +244,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  updateQuantity(product._id, quantity + 1);
+                  updateQuantity(cartId, quantity + 1);
                 }}
                 aria-label="Increase quantity"
                 className="px-2.5 py-1.5 text-sm font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-brown)]"
@@ -235,7 +259,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 e.preventDefault();
                 e.stopPropagation();
                 const pImage = product.pImages?.[0] || product.image?.secureUrl || product.images?.[0]?.secureUrl || "/images/product-placeholder.jpg";
-                addToCart(product._id, product.pPrice, product.pName, pImage);
+                if (variant) {
+                  addToCart(cartId, variant.price, displayName, pImage, 1, product._id, variant._id || variant.weight, variant.weight);
+                } else {
+                  addToCart(product._id, product.pPrice, product.pName, pImage);
+                }
               }}
               className="btn-primary btn-sm rounded-lg flex items-center gap-1.5 text-xs cursor-pointer"
             >

@@ -142,9 +142,15 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filteredProducts.map((p) => (
-                  <ProductCard key={p._id} product={p} />
-                ))}
+                {filteredProducts.flatMap((p) =>
+                  p.pVariants && p.pVariants.length > 0
+                    ? p.pVariants.map((v) => (
+                        <ProductCard key={`${p._id}-${v._id || v.weight}`} product={p} variant={v} />
+                      ))
+                    : (
+                        <ProductCard key={p._id} product={p} />
+                      )
+                )}
               </div>
             )}
           </div>

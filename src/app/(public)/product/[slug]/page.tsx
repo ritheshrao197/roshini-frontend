@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getRelatedProducts, BACKEND_URL } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
+import ProductImageGallery from "@/components/product/ProductImageGallery";
 import ProductInteractiveDetails from "@/components/product/ProductInteractiveDetails";
 import ProductReviews from "@/components/product/ProductReviews";
 import { Metadata } from "next";
@@ -40,14 +40,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const relatedProducts = await getRelatedProducts(product);
 
-  const imageUrl =
-    product.image?.secureUrl ||
-    product.images?.[0]?.secureUrl ||
-    (product.pImages && product.pImages.length > 0
-      ? product.pImages[0].startsWith("http")
-        ? product.pImages[0]
-        : `${BACKEND_URL}/uploads/products/${encodeURIComponent(product.pImages[0])}`
-      : "/images/product-placeholder.jpg");
+  // Full gallery: primary `image` first, then every `images[]` entry (deduped),
+  // falling back to legacy `pImages` strings only when neither newer field has
+  // anything — matches the fallback order already used for the single-image
+  // case elsewhere (ProductCard, AddToCartButton), just collecting all of
+  // them instead of stopping at the first.
+  const galleryImages: string[] = [];
+  if (product.image?.secureUrl) galleryImages.push(product.image.secureUrl);
+  if (product.images?.length) {
+    for (const img of product.images) {
+      if (img.secureUrl && !galleryImages.includes(img.secureUrl)) galleryImages.push(img.secureUrl);
+    }
+  }
+  if (galleryImages.length === 0 && product.pImages?.length) {
+    for (const p of product.pImages) {
+      galleryImages.push(p.startsWith("http") ? p : `${BACKEND_URL}/uploads/products/${encodeURIComponent(p)}`);
+    }
+  }
+
+  const imageUrl = galleryImages[0] || "/images/product-placeholder.jpg";
 
   const isOutOfStock = product.pQuantity === 0;
   const categoryName = typeof product.pCategory === "object" ? product.pCategory.cName : "Homemade";
@@ -130,32 +141,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           {/* Image Gallery */}
           <div className="space-y-3">
-            <div
-              className="relative overflow-hidden rounded-3xl shadow-md"
-              style={{ aspectRatio: "1 / 1", background: "#F5E9DA" }}
-            >
-              <Image
-                src={imageUrl}
-                alt={product.pName}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Badges */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                {Number(product.pOffer) > 0 && (
-                  <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: "#B23A2A", color: "#fff" }}>
-                    {product.pOffer}% OFF
-                  </span>
-                )}
-                {isOutOfStock && (
-                  <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: "rgba(0,0,0,0.6)", color: "#fff" }}>
-                    Sold Out
-                  </span>
-                )}
-              </div>
-            </div>
+            <ProductImageGallery
+              images={galleryImages}
+              alt={product.pName}
+              offerPercent={Number(product.pOffer)}
+              isOutOfStock={isOutOfStock}
+            />
 
             {/* Quality badges strip */}
             <div className="grid grid-cols-3 gap-2">

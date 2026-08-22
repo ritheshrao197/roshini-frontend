@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
+import type { ProductVariant } from "@/lib/api";
 import NewsletterForm from "@/components/home/NewsletterForm";
 import ScrollReveal from "@/components/common/ScrollReveal";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -65,11 +66,19 @@ export function FeaturedProductsSection({ products }: { products: any[] }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {products.map((product, i) => (
-            <ScrollReveal key={product._id} className="h-full" threshold={0.05} style={{ transitionDelay: `${Math.min(i, 4) * 60}ms` }}>
-              <ProductCard product={product} />
-            </ScrollReveal>
-          ))}
+          {products.flatMap((product, i) =>
+            product.pVariants && product.pVariants.length > 0
+              ? product.pVariants.map((v: ProductVariant) => (
+                  <ScrollReveal key={`${product._id}-${v._id || v.weight}`} className="h-full" threshold={0.05} style={{ transitionDelay: `${Math.min(i, 4) * 60}ms` }}>
+                    <ProductCard product={product} variant={v} />
+                  </ScrollReveal>
+                ))
+              : (
+                  <ScrollReveal key={product._id} className="h-full" threshold={0.05} style={{ transitionDelay: `${Math.min(i, 4) * 60}ms` }}>
+                    <ProductCard product={product} />
+                  </ScrollReveal>
+                )
+          )}
         </div>
       )}
     </section>
@@ -467,7 +476,7 @@ export function HealthHubSection({ vlogs }: { vlogs: any[] }) {
                 </h4>
                 <p className="text-sm line-clamp-3" style={{ color: "var(--text-muted)" }}>{featuredBlog.excerpt}</p>
                 <div className="flex items-center gap-4 text-xs pt-2" style={{ color: "var(--text-muted)" }}>
-                  <span>{new Date(featuredBlog.publishDate || featuredBlog.createdAt).toLocaleDateString()}</span>
+                  <span>{new Date(featuredBlog.publishDate || featuredBlog.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}</span>
                   <span>•</span>
                   <span>{featuredBlog.readingTime || 1} min read</span>
                 </div>
