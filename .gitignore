@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# superpowers scratch workspace (plans/specs are committed deliberately;
+# this is per-run scratch data, not part of the app)
+.superpowers/

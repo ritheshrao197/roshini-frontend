@@ -6,14 +6,17 @@ export interface Slider {
   title: string;
   subtitle: string;
   description: string;
-  desktopImage?: string;
-  mobileImage?: string;
+  backgroundColor: string;
+  desktopImage?: { publicId: string; secureUrl: string; alt: string } | string;
+  mobileImage?: { publicId: string; secureUrl: string; alt: string } | string;
+  productImage?: { publicId: string; secureUrl: string; alt: string } | string;
   primaryButtonText: string;
   primaryButtonLink: string;
   secondaryButtonText: string;
   secondaryButtonLink: string;
   type: string;
   referenceId: string;
+  linkedProductId?: string;
   badgeText: string;
   badgeColor: string;
   showOverlayStats: boolean;
@@ -25,6 +28,13 @@ export interface Slider {
   experimentId?: string;
   variant?: string;
   displayOrder: number;
+}
+
+/** `desktopImage`/`mobileImage` come back from the API as `{ publicId, secureUrl, alt }`
+ *  objects (see server/models/heroSlider.js) — never render them directly as JSX text. */
+function imageUrl(image?: { secureUrl: string } | string): string {
+  if (!image) return "";
+  return typeof image === "string" ? image : image.secureUrl || "";
 }
 
 interface Props {
@@ -47,6 +57,8 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
     secondaryButtonLink: "",
     type: "image",
     referenceId: "",
+    linkedProductId: "",
+    backgroundColor: "#4A2618",
     badgeText: "",
     badgeColor: "#AE6837",
     showOverlayStats: false,
@@ -58,8 +70,7 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
     displayOrder: 0,
   });
 
-  const [desktopImage, setDesktopImage] = useState<File | null>(null);
-  const [mobileImage, setMobileImage] = useState<File | null>(null);
+  const [productImage, setProductImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -75,6 +86,8 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
         secondaryButtonLink: initialData.secondaryButtonLink || "",
         type: initialData.type || "image",
         referenceId: initialData.referenceId || "",
+        linkedProductId: initialData.linkedProductId || "",
+        backgroundColor: initialData.backgroundColor || "#4A2618",
         badgeText: initialData.badgeText || "",
         badgeColor: initialData.badgeColor || "#AE6837",
         showOverlayStats: initialData.showOverlayStats || false,
@@ -98,10 +111,9 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, isDesktop: boolean) => {
+  const handleProductImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      if (isDesktop) setDesktopImage(e.target.files[0]);
-      else setMobileImage(e.target.files[0]);
+      setProductImage(e.target.files[0]);
     }
   };
 
@@ -123,8 +135,7 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
         }
       });
 
-      if (desktopImage) submitData.append("desktopImage", desktopImage);
-      if (mobileImage) submitData.append("mobileImage", mobileImage);
+      if (productImage) submitData.append("productImage", productImage);
 
       const res = await fetch(url, {
         method,
@@ -208,6 +219,16 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
           </div>
         )}
 
+        {/* Product card link — available on every slide, independent of Slide Type */}
+        <div className="space-y-2 p-4 rounded-xl bg-green-50 border border-green-100">
+          <label className="block text-xs font-bold text-green-800 uppercase">Link to Product (optional)</label>
+          <select name="linkedProductId" value={formData.linkedProductId || ""} onChange={handleChange} className="w-full border rounded-xl p-3">
+            <option value="">-- None --</option>
+            {productsList.map(p => <option key={p._id} value={p._id}>{p.pName}</option>)}
+          </select>
+          <p className="text-[10px] text-gray-500">Shows a product card (photo, name, price, link) on this slide, regardless of Slide Type.</p>
+        </div>
+
         {/* Scheduling (Only if status is scheduled) */}
         {formData.status === "scheduled" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-xl bg-orange-50 border border-orange-100">
@@ -243,19 +264,31 @@ export default function SliderForm({ initialData, onSuccess, onCancel, productsL
           </div>
         </div>
 
-        {/* Images */}
+        {/* Background + Product Card */}
         <div className="space-y-4">
-          <h3 className="font-bold text-[#6B3E26]">Media Assets</h3>
+          <h3 className="font-bold text-[#6B3E26]">Background &amp; Product Card</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-gray-700 uppercase">Desktop Image *</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, true)} className="w-full border rounded-xl p-3" />
-              {isEditMode && initialData?.desktopImage && !desktopImage && <p className="text-xs text-gray-500">Current: {initialData.desktopImage}</p>}
+              <label className="block text-xs font-bold text-gray-700 uppercase">Background Color</label>
+              <div className="flex items-center gap-3">
+                <input type="color" name="backgroundColor" value={formData.backgroundColor} onChange={handleChange} className="w-14 h-11 border rounded-lg cursor-pointer" />
+                <input type="text" name="backgroundColor" value={formData.backgroundColor} onChange={handleChange} className="w-full border rounded-xl p-3" placeholder="#4A2618" />
+              </div>
+              <p className="text-[10px] text-gray-500">A solid color fill behind the slide content — no background photo needed.</p>
             </div>
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-gray-700 uppercase">Mobile Image (Optional Fallback)</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, false)} className="w-full border rounded-xl p-3" />
-              {isEditMode && initialData?.mobileImage && !mobileImage && <p className="text-xs text-gray-500">Current: {initialData.mobileImage}</p>}
+              <label className="block text-xs font-bold text-gray-700 uppercase">Product Card Image</label>
+              <input type="file" accept="image/*" onChange={handleProductImageChange} className="w-full border rounded-xl p-3" />
+              {productImage && (
+                <img src={URL.createObjectURL(productImage)} alt="Selected preview" className="h-20 w-20 object-contain border rounded-lg bg-gray-50" />
+              )}
+              {isEditMode && initialData?.productImage && !productImage && imageUrl(initialData.productImage) && (
+                <div className="flex items-center gap-2">
+                  <img src={imageUrl(initialData.productImage)} alt="Current product card" className="h-20 w-20 object-contain border rounded-lg bg-gray-50" />
+                  <span className="text-xs text-gray-500">Current image</span>
+                </div>
+              )}
+              <p className="text-[10px] text-gray-500">Shown on the product card — independent of the linked product's own catalog photo.</p>
             </div>
           </div>
         </div>

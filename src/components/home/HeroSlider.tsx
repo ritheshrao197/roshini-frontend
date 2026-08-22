@@ -154,32 +154,96 @@ export default function HeroSlider({ sliders, products }: { sliders: any[]; prod
 
   return (
     <div className="hero-slide relative w-full h-[65vh] md:h-[80vh]">
-      <Swiper modules={[Autoplay, Pagination, Navigation, EffectFade]} effect="fade" spaceBetween={0} slidesPerView={1} loop={sliders.length > 1} autoplay={{ delay: 6000, disableOnInteraction: false }} pagination={{ clickable: true }} navigation onSlideChange={(swiper) => { const id = sliders[swiper.realIndex]?._id; if (id) trackImpression(id); }} className="w-full h-full hero-swiper">
+      <Swiper
+        modules={[Autoplay, Pagination, Navigation, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        speed={1000}
+        spaceBetween={0}
+        slidesPerView={1}
+        loop={sliders.length > 1}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
+        pagination={{ type: "fraction" }}
+        navigation
+        onSlideChange={(swiper) => { const id = sliders[swiper.realIndex]?._id; if (id) trackImpression(id); }}
+        className="w-full h-full hero-swiper"
+      >
         {sliders.map((slide) => {
           let title = slide.title;
           let subtitle = slide.subtitle;
           let description = slide.description;
           let primaryBtnText = slide.primaryButtonText;
           let primaryBtnLink = slide.primaryButtonLink;
-          let bgImage = slide.desktopImage?.secureUrl || "/images/hero-bg.jpg";
           if (slide.type === "product" && slide.productData) {
             title = title || slide.productData.pName;
             subtitle = subtitle || `₹${slide.productData.pPrice}`;
             primaryBtnText = primaryBtnText || "Shop Now";
             primaryBtnLink = primaryBtnLink || `/product/${slide.productData.slug || slide.productData._id}`;
-            if (!slide.desktopImage && slide.productData.pImages?.[0]) bgImage = slide.productData.pImages[0].startsWith("http") ? slide.productData.pImages[0] : `${BACKEND_URL}/uploads/products/${slide.productData.pImages[0]}`;
           } else if (slide.type === "achievement" && slide.achievementData) {
             title = title || slide.achievementData.title;
             subtitle = subtitle || slide.achievementData.subtitle;
           }
-          const alignment = slide.textAlignment === "center" ? "items-center text-center mx-auto" : slide.textAlignment === "right" ? "items-end text-right ml-auto" : "items-start text-left";
-          return <SwiperSlide key={slide._id}><div className="relative h-full w-full flex items-center overflow-hidden"><img src={bgImage} alt="" aria-hidden="true" className="hero-slide-image absolute inset-0 h-full w-full" /><div className="hero-overlay absolute inset-0" /><div className={`relative z-10 max-w-7xl mx-auto px-6 sm:px-12 w-full flex flex-col ${alignment}`}>
-            {slide.badgeText && <span className="badge badge-terracotta mb-4">{slide.badgeText}</span>}
-            {title && <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight drop-shadow-md">{title}</h1>}
-            {subtitle && <h2 className="hero-subtitle text-xl md:text-3xl font-medium mb-6 drop-shadow-sm max-w-3xl">{subtitle}</h2>}
-            {description && <p className="text-sm md:text-lg text-[var(--color-ivory)] mb-8 max-w-2xl leading-relaxed">{description}</p>}
-            {slide.showOverlayStats && <div className="flex flex-wrap gap-3 mb-8"><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">⭐ 4.84/5 Rating</span><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">🌿 30+ Ingredients</span></div>}
-            <div className="flex flex-wrap gap-4">{primaryBtnText && primaryBtnLink && <Link href={primaryBtnLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className={variant === "B" ? "btn-primary btn-lg rounded-xl" : "btn-terracotta btn-lg rounded-xl"}>{primaryBtnText}</Link>}{slide.secondaryButtonText && slide.secondaryButtonLink && <Link href={slide.secondaryButtonLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className="btn-secondary btn-lg rounded-xl">{slide.secondaryButtonText}</Link>}</div>
+
+          // Product card: independent of the slide's `type` — populated from
+          // `linkedProductId` (any slide), falling back to the auto-detected
+          // product for `type: "product"` slides. The card's own photo
+          // prefers the admin's separately-uploaded `productImage`, falling
+          // back to the linked product's catalog photo — the two are never
+          // the same field, so uploading one never silently overwrites use
+          // of the other.
+          const cardProduct = slide.linkedProduct || (slide.type === "product" ? slide.productData : null);
+          const rawCardImage =
+            slide.productImage?.secureUrl ||
+            cardProduct?.image?.secureUrl ||
+            cardProduct?.images?.[0]?.secureUrl ||
+            cardProduct?.pImages?.[0] ||
+            null;
+          const productCardImage = rawCardImage
+            ? rawCardImage.startsWith("http")
+              ? rawCardImage
+              : `${BACKEND_URL}/uploads/products/${rawCardImage}`
+            : null;
+          const hasProductCard = !!(productCardImage || cardProduct);
+
+          // A product showcase always reads as text-left / card-right,
+          // matching the non-CMS fallback hero's own layout, rather than
+          // trying to reconcile the admin's free-form textAlignment with a
+          // two-column split.
+          const alignment = hasProductCard
+            ? "items-start text-left"
+            : slide.textAlignment === "center" ? "items-center text-center mx-auto" : slide.textAlignment === "right" ? "items-end text-right ml-auto" : "items-start text-left";
+          return <SwiperSlide key={slide._id}><div className="relative h-full w-full flex items-center overflow-hidden"><div className="absolute inset-0" style={{ backgroundColor: slide.backgroundColor || "#4A2618" }} /><div className={`relative z-10 max-w-7xl mx-auto px-6 sm:px-12 w-full flex flex-col ${alignment} ${hasProductCard ? "lg:flex-row lg:items-center lg:justify-between gap-10" : ""}`}>
+            <div className={hasProductCard ? "flex flex-col max-w-xl" : "contents"}>
+              {slide.badgeText && <span className="hero-reveal hero-reveal-badge badge badge-terracotta mb-4">{slide.badgeText}</span>}
+              {title && <h1 className="hero-reveal hero-reveal-title hero-title text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight drop-shadow-md">{title}</h1>}
+              {subtitle && <h2 className="hero-reveal hero-reveal-subtitle hero-subtitle italic font-light text-xl md:text-3xl mb-6 drop-shadow-sm max-w-3xl">{subtitle}</h2>}
+              {description && <p className="hero-reveal hero-reveal-desc text-sm md:text-lg text-[var(--color-ivory)] mb-8 max-w-2xl leading-relaxed">{description}</p>}
+              {slide.showOverlayStats && <div className="hero-reveal hero-reveal-stats flex flex-wrap gap-3 mb-8"><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">⭐ 4.84/5 Rating</span><span className="hero-stat backdrop-blur-sm px-3 py-1.5 text-sm font-semibold">🌿 30+ Ingredients</span></div>}
+              <div className="hero-reveal hero-reveal-cta flex flex-wrap gap-4">{primaryBtnText && primaryBtnLink && <Link href={primaryBtnLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className={variant === "B" ? "btn-primary btn-lg rounded-xl" : "btn-terracotta btn-lg rounded-xl"}>{primaryBtnText}</Link>}{slide.secondaryButtonText && slide.secondaryButtonLink && <Link href={slide.secondaryButtonLink} onClick={() => trackSliderAnalytics(slide._id, "click")} className="btn-secondary btn-lg rounded-xl">{slide.secondaryButtonText}</Link>}</div>
+            </div>
+            {hasProductCard && (
+              <div className="hero-reveal hero-reveal-product hidden lg:block flex-shrink-0 w-72 xl:w-80 rounded-3xl overflow-hidden shadow-2xl" style={{ background: "var(--color-ivory)" }}>
+                {productCardImage && (
+                  <div className="relative w-full aspect-square">
+                    <img src={productCardImage} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-contain p-6" />
+                  </div>
+                )}
+                {cardProduct && (
+                  <div className="px-5 pb-5 pt-1 text-center">
+                    <p className="font-serif font-bold text-lg" style={{ color: "var(--color-espresso)" }}>{cardProduct.pName}</p>
+                    {cardProduct.pPrice != null && <p className="text-sm font-semibold mt-1" style={{ color: "var(--color-terracotta)" }}>₹{cardProduct.pPrice}</p>}
+                    <Link
+                      href={`/product/${cardProduct.slug || cardProduct._id}`}
+                      onClick={() => trackSliderAnalytics(slide._id, "click")}
+                      className="inline-block mt-3 text-xs font-bold uppercase tracking-wider underline"
+                      style={{ color: "var(--color-espresso)" }}
+                    >
+                      View Product →
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
           </div></div></SwiperSlide>;
         })}
       </Swiper>

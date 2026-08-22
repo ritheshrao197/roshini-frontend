@@ -1702,12 +1702,47 @@ a:hover {
 }
 .hero-title { color: var(--color-ivory); }
 .hero-subtitle { color: var(--color-linen); }
-.hero-overlay { background: linear-gradient(90deg, color-mix(in srgb, var(--color-espresso) 85%, transparent), color-mix(in srgb, var(--color-walnut) 50%, transparent), transparent); }
 .hero-slide { background: var(--color-espresso); }
-.hero-slide-image { object-fit: cover; }
 .hero-stat { background: color-mix(in srgb, var(--color-ivory) 20%, transparent); border: 1px solid color-mix(in srgb, var(--color-ivory) 35%, transparent); color: var(--color-ivory); border-radius: var(--radius-lg); }
 .hero-swiper .swiper-pagination-bullet { background: var(--color-linen); opacity: .6; width: 10px; height: 10px; }
 .hero-swiper .swiper-pagination-bullet-active { opacity: 1; background: var(--color-terracotta); width: 30px; border-radius: var(--radius-sm); transition: all var(--duration-medium) var(--ease-default); }
+
+/* Staggered entrance for each text element on the active slide, keyed by
+   role (not nth-child) since badge/description/stats are conditionally
+   rendered per-slide and would shift sibling position otherwise. */
+.hero-swiper .swiper-slide-active .hero-reveal {
+  animation: heroTextReveal .7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-swiper .swiper-slide-active .hero-reveal-badge { animation-delay: .05s; }
+.hero-swiper .swiper-slide-active .hero-reveal-title { animation-delay: .2s; }
+.hero-swiper .swiper-slide-active .hero-reveal-subtitle { animation-delay: .35s; }
+.hero-swiper .swiper-slide-active .hero-reveal-desc { animation-delay: .5s; }
+.hero-swiper .swiper-slide-active .hero-reveal-stats { animation-delay: .6s; }
+.hero-swiper .swiper-slide-active .hero-reveal-cta { animation-delay: .7s; }
+.hero-swiper .swiper-slide-active .hero-reveal-product { animation-delay: .3s; }
+@keyframes heroTextReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-swiper .swiper-slide-active .hero-slide-image,
+  .hero-swiper .swiper-slide-active .hero-reveal {
+    animation: none;
+  }
+}
+
+/* Numbered "01 / 04" style counter, replacing the old dot pagination. */
+.hero-swiper .swiper-pagination-fraction {
+  bottom: 32px;
+  width: auto;
+  left: auto;
+  right: 32px;
+  color: var(--color-ivory);
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 6px color-mix(in srgb, var(--color-espresso) 60%, transparent);
+}
 
 .scroll-cue {
   width: 1px;
@@ -1733,8 +1768,23 @@ a:hover {
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue::after { animation: none; top: 60%; }
 }
-.hero-swiper .swiper-button-next, .hero-swiper .swiper-button-prev { color: var(--color-linen); transform: scale(.7); opacity: .5; transition: opacity var(--duration-medium); }
-.hero-swiper:hover .swiper-button-next, .hero-swiper:hover .swiper-button-prev { opacity: 1; }
+/* Prominent, always-visible circular chevron buttons — previously small,
+   low-opacity, and hover-only. */
+.hero-swiper .swiper-button-next, .hero-swiper .swiper-button-prev {
+  width: 52px;
+  height: 52px;
+  color: var(--color-ivory);
+  background: color-mix(in srgb, var(--color-espresso) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-ivory) 30%, transparent);
+  border-radius: var(--radius-full);
+  opacity: 1;
+  transition: background var(--duration-medium), transform var(--duration-medium);
+}
+.hero-swiper .swiper-button-next::after, .hero-swiper .swiper-button-prev::after { font-size: 18px; font-weight: 700; }
+.hero-swiper .swiper-button-next:hover, .hero-swiper .swiper-button-prev:hover {
+  background: color-mix(in srgb, var(--color-espresso) 55%, transparent);
+  transform: scale(1.05);
+}
 
 /* ─────────────────────────────────────────────────────────────
    PRINT STYLES
