@@ -74,11 +74,11 @@ function getTimelineConfig(order: Order): TimelineConfig {
     };
   }
 
-  const steps = ["Pending", "Paid", "Processing", "Shipped", "Delivered"];
+  const steps = ["Pending", "Paid", "Packed", "Shipped", "Delivered"];
   let currentStep = 0;
   if (order.status === "Delivered" || order.status === "DELIVERED") currentStep = 4;
   else if (order.status === "Shipped" || order.status === "SHIPPED") currentStep = 3;
-  else if (order.status === "Processing") currentStep = 2;
+  else if (order.status === "Processing" || order.status === "PACKED") currentStep = 2;
   else if (order.paymentStatus === "Paid" || order.paymentStatus === "SUCCESS" || order.status === "CONFIRMED") currentStep = 1;
 
   return {
@@ -112,6 +112,7 @@ function StatusBadge({ status }: { status: string }) {
     PENDING: "bg-gray-50 text-gray-600 border-gray-200",
     CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
     Processing: "bg-blue-50 text-blue-700 border-blue-200",
+    PACKED: "bg-amber-50 text-amber-700 border-amber-200",
     Shipped: "bg-indigo-50 text-indigo-700 border-indigo-200",
     SHIPPED: "bg-indigo-50 text-indigo-700 border-indigo-200",
     Delivered: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -181,7 +182,9 @@ export default function OrdersPage() {
   const handleDownloadInvoice = async (orderId: string) => {
     setDownloadingInvoice(orderId);
     try {
-      const res = await fetch(`${API_URL}/order/invoice/${orderId}`);
+      const res = await fetch(`${API_URL}/order/invoice/${orderId}`, {
+        headers: { token: localStorage.getItem("token") || "" },
+      });
       const json = await res.json();
       if (json.invoice) {
         const inv = json.invoice;

@@ -70,6 +70,20 @@ interface AnalyticsData {
   }>;
 }
 
+// Order statuses as stored by the backend; older orders may still carry title-case labels.
+const ORDER_STATUSES = ["PENDING", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED"];
+function normalizeOrderStatus(value?: string): string {
+  const upper = String(value || "").trim().toUpperCase();
+  if (upper === "NOT PROCESSED") return "PENDING";
+  if (upper === "PROCESSING") return "CONFIRMED";
+  return ORDER_STATUSES.includes(upper) ? upper : "PENDING";
+}
+function normalizePaymentStatus(value?: string): string {
+  const upper = String(value || "").trim().toUpperCase();
+  if (upper === "PAID") return "SUCCESS";
+  return ["PENDING", "SUCCESS", "FAILED", "REFUNDED"].includes(upper) ? upper : "PENDING";
+}
+
 export default function AdminDashboardPage() {
   return (
     <AuthProvider>
@@ -667,8 +681,8 @@ function AdminDashboardInner() {
   const openOrderDrawer = (order: Order) => {
     setSelectedOrder(order);
     setDrawerTrackingId(order.shipmentTrackingId || "");
-    setDrawerPaymentStatus(order.paymentStatus || "Pending");
-    setDrawerStatus(order.status || "Not processed");
+    setDrawerPaymentStatus(normalizePaymentStatus(order.paymentStatus));
+    setDrawerStatus(normalizeOrderStatus(order.status));
     setDrawerMsg("");
   };
 
@@ -1009,6 +1023,12 @@ function AdminDashboardInner() {
                       const stBadge: Record<string, string> = {
                         "Not processed": "bg-gray-100 text-gray-600 border-gray-200",
                         Processing: "bg-blue-50 text-blue-700 border-blue-100",
+                        PENDING: "bg-gray-100 text-gray-600 border-gray-200",
+                        CONFIRMED: "bg-blue-50 text-blue-700 border-blue-100",
+                        PACKED: "bg-amber-50 text-amber-700 border-amber-100",
+                        SHIPPED: "bg-indigo-50 text-indigo-700 border-indigo-100",
+                        DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-100",
+                        CANCELLED: "bg-red-50 text-red-600 border-red-100",
                         Shipped: "bg-indigo-50 text-indigo-700 border-indigo-100",
                         Delivered: "bg-emerald-50 text-emerald-700 border-emerald-100",
                         Cancelled: "bg-red-50 text-red-600 border-red-100",
@@ -1132,11 +1152,12 @@ function AdminDashboardInner() {
                             className="w-full bg-white border rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#6B3E26]"
                             style={{ borderColor: "#E8D5BC" }}
                           >
-                            <option value="Not processed">Not Processed</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Cancelled">Cancelled</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="CONFIRMED">Confirmed</option>
+                            <option value="PACKED">Packed</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
                           </select>
                         </div>
 
@@ -1149,10 +1170,10 @@ function AdminDashboardInner() {
                             className="w-full bg-white border rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#6B3E26]"
                             style={{ borderColor: "#E8D5BC" }}
                           >
-                            <option value="Pending">Pending</option>
-                            <option value="Paid">Paid</option>
-                            <option value="Failed">Failed</option>
-                            <option value="Refunded">Refunded</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="SUCCESS">Paid</option>
+                            <option value="FAILED">Failed</option>
+                            <option value="REFUNDED">Refunded</option>
                           </select>
                         </div>
 
