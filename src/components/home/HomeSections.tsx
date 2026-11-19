@@ -17,7 +17,7 @@ export function TrustBadgesSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {[
-            { icon: "🚚", title: "Free Shipping", sub: "Orders above ₹499" },
+            { icon: "🚚", title: "₹50 Off Delivery", sub: "Orders above ₹500" },
             { icon: "🔒", title: "Secure Payment", sub: "PhonePe & PayU" },
             { icon: "♻️", title: "Eco Packaging", sub: "Sustainable materials" },
             { icon: "📞", title: "WhatsApp Support", sub: "Mon–Sat 9am–7pm" },

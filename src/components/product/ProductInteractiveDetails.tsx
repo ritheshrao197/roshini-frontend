@@ -154,7 +154,7 @@ export default function ProductInteractiveDetails({ product }: ProductInteractiv
       {/* Shipping and trust points */}
       <div className="flex flex-col gap-2">
         {[
-          ["🚚", "Free shipping on orders above ₹499"],
+          ["🚚", "₹50 off delivery on orders above ₹500"],
           ["📦", "Fresh micro-batch packaging"],
           ["↩️", "Easy returns within 7 days"],
         ].map(([icon, text]) => (

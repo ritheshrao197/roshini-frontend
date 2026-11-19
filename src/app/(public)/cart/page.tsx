@@ -74,7 +74,23 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
   const [couponErrorMsg, setCouponErrorMsg] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<{ discount: number, finalShippingCharge: number } | null>(null);
+  // `shippingBase` is the delivery charge the coupon was validated against
+  const [appliedCouponRaw, setAppliedCoupon] = useState<{ discount: number, finalShippingCharge: number, shippingBase: number } | null>(null);
+
+  // Delivery charge quote (India Post tariff, computed by the backend), tagged with the
+  // pincode + cart it was fetched for so stale results are ignored.
+  const [shippingResult, setShippingResult] = useState<{
+    key: string;
+    quote: {
+      grossCharge: number;
+      deliveryDiscount: number;
+      shippingCharge: number;
+      zone: string;
+      discountThreshold: number;
+      discountAmount: number;
+    } | null;
+    error: string;
+  } | null>(null);
 
   const refreshCart = () => {
     setCartItems(getCart());
@@ -149,8 +165,57 @@ export default function CartPage() {
     setCouponErrorMsg("");
   }, [cartItems]);
 
+  // Destination pincode from the selected saved address or the new-address form
+  const deliveryPincode = (showNewAddressForm
+    ? newAddress.pincode
+    : savedAddresses.find(a => a._id === selectedAddressId)?.pincode || ""
+  ).trim();
+  const hasValidPincode = /^\d{6}$/.test(deliveryPincode);
+
+  const needsQuote = cartItems.length > 0 && hasValidPincode;
+  const quoteItems = cartItems.map(item => ({
+    id: item.productId || item.id,
+    variantId: item.variantId || null,
+    quantitiy: item.quantitiy,
+  }));
+  const quoteKey = JSON.stringify([deliveryPincode, quoteItems]);
+
+  // Fetch the delivery charge whenever the cart or destination changes
+  useEffect(() => {
+    if (!needsQuote) return;
+    const controller = new AbortController();
+    const [pincode, items] = JSON.parse(quoteKey);
+    fetch(`${API_URL}/shipping/quote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({ pincode, items }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        setShippingResult(data.success
+          ? { key: quoteKey, quote: data, error: "" }
+          : { key: quoteKey, quote: null, error: data.error || "Could not calculate delivery charge" });
+      })
+      .catch(err => {
+        if (err.name !== "AbortError") {
+          setShippingResult({ key: quoteKey, quote: null, error: "Could not calculate delivery charge" });
+        }
+      });
+    return () => controller.abort();
+  }, [needsQuote, quoteKey]);
+
+  const currentShipping = needsQuote && shippingResult?.key === quoteKey ? shippingResult : null;
+  const shippingQuote = currentShipping?.quote ?? null;
+  const shippingError = currentShipping?.error ?? "";
+  const shippingLoading = needsQuote && !currentShipping;
+
   const totalCost = getCartTotal();
-  const baseShippingCharge = totalCost >= 499 ? 0 : 99;
+  const baseShippingCharge = shippingQuote ? shippingQuote.shippingCharge : 0;
+  // A coupon stays applied only while the delivery charge it was validated against is unchanged
+  const appliedCoupon = appliedCouponRaw && shippingQuote && appliedCouponRaw.shippingBase === baseShippingCharge
+    ? appliedCouponRaw
+    : null;
   const finalShippingCharge = appliedCoupon ? appliedCoupon.finalShippingCharge : baseShippingCharge;
   const discountAmount = appliedCoupon ? appliedCoupon.discount : 0;
   const finalOrderAmount = Math.max(0, totalCost - discountAmount + finalShippingCharge);
@@ -173,17 +238,19 @@ export default function CartPage() {
           "Content-Type": "application/json",
           "token": localStorage.getItem("token") || ""
         },
-        body: JSON.stringify({ code: couponCodeInput, cartItems: orderProducts })
+        body: JSON.stringify({ code: couponCodeInput, cartItems: orderProducts, shippingCharge: baseShippingCharge })
       });
       const data = await res.json();
       
       if (data.success) {
         setAppliedCoupon({
           discount: data.discount,
-          finalShippingCharge: data.finalShippingCharge
+          finalShippingCharge: data.finalShippingCharge,
+          shippingBase: baseShippingCharge
         });
         setCouponCode(couponCodeInput);
-        setCouponMessage(`Coupon applied! Savings: ${formatINR(data.discount)}`);
+        const couponSavings = data.discount + Math.max(0, baseShippingCharge - data.finalShippingCharge);
+        setCouponMessage(`Coupon applied! Savings: ${formatINR(couponSavings)}`);
       } else {
         setCouponErrorMsg(data.error || "Invalid coupon");
         setAppliedCoupon(null);
@@ -244,6 +311,10 @@ export default function CartPage() {
     }
     if (cartItems.length === 0) {
       setCheckoutError("Your cart is empty.");
+      return;
+    }
+    if (!shippingQuote || shippingLoading) {
+      setCheckoutError("Please enter a valid 6-digit delivery pincode so we can calculate the delivery charge.");
       return;
     }
     if (finalOrderAmount > 0 && !selectedPayment) {
@@ -592,19 +663,41 @@ export default function CartPage() {
                     <span className="text-[#7A5C45]">Cart Subtotal</span>
                     <span className="font-semibold text-[#6B3E26]">{formatINR(totalCost)}</span>
                   </div>
-                  {appliedCoupon && (
+                  {appliedCoupon && appliedCoupon.discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Coupon Discount</span>
                       <span className="font-semibold">-{formatINR(appliedCoupon.discount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-[#7A5C45]">Shipping Delivery</span>
-                    <span className="font-medium">{finalShippingCharge === 0 ? "FREE" : formatINR(finalShippingCharge)}</span>
+                    <span className="text-[#7A5C45]">
+                      Delivery Charge{shippingQuote ? ` (${shippingQuote.zone})` : ""}
+                    </span>
+                    <span className="font-medium">
+                      {shippingLoading
+                        ? "Calculating…"
+                        : !shippingQuote
+                          ? <span className="text-[11px] text-[#7A5C45]">{shippingError || "Enter pincode"}</span>
+                          : shippingQuote.deliveryDiscount > 0
+                            ? formatINR(shippingQuote.grossCharge)
+                            : formatINR(shippingQuote.shippingCharge)}
+                    </span>
                   </div>
-                  {finalShippingCharge > 0 && (
+                  {shippingQuote && shippingQuote.deliveryDiscount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Delivery Discount (orders above ₹{shippingQuote.discountThreshold})</span>
+                      <span className="font-semibold">-{formatINR(shippingQuote.deliveryDiscount)}</span>
+                    </div>
+                  )}
+                  {appliedCoupon && shippingQuote && appliedCoupon.finalShippingCharge < shippingQuote.shippingCharge && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Coupon Delivery Waiver</span>
+                      <span className="font-semibold">-{formatINR(shippingQuote.shippingCharge - appliedCoupon.finalShippingCharge)}</span>
+                    </div>
+                  )}
+                  {shippingQuote && shippingQuote.deliveryDiscount === 0 && totalCost <= shippingQuote.discountThreshold && (
                     <div className="text-[10px] text-[#7A5C45] font-medium bg-white p-2.5 rounded-xl border border-dashed" style={{ borderColor: "#E8D5BC" }}>
-                      💡 Add <span className="font-bold text-[#6B3E26]">{formatINR(499 - totalCost)}</span> more to unlock <strong>FREE SHIPPING</strong>!
+                      💡 Add <span className="font-bold text-[#6B3E26]">{formatINR(shippingQuote.discountThreshold + 1 - totalCost)}</span> more to get <strong>₹{shippingQuote.discountAmount} OFF delivery</strong>!
                     </div>
                   )}
                   <div className="border-t pt-3 flex justify-between text-base font-bold text-[#6B3E26]" style={{ borderColor: "#E8D5BC" }}>
@@ -630,7 +723,7 @@ export default function CartPage() {
                     Apply
                   </button>
                 </form>
-                {couponMessage && <p className="text-green-600 text-xs font-semibold">{couponMessage}</p>}
+                {couponMessage && appliedCoupon && <p className="text-green-600 text-xs font-semibold">{couponMessage}</p>}
                 {couponErrorMsg && <p className="text-red-500 text-xs font-semibold">{couponErrorMsg}</p>}
               </div>
 

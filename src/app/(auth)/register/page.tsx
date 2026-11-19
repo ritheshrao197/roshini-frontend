@@ -70,7 +70,7 @@ export default function RegisterPage() {
             Create your account to track orders, save favourites, and get exclusive member offers from Roshini's Home Products.
           </p>
           <div className="flex flex-col gap-3 pt-2">
-            {[["✅", "Free shipping on \u20b9999+"], ["💰", "Exclusive member discounts"], ["📦", "Easy order tracking"], ["🌿", "Early access to new batches"]].map(([icon, text]) => (
+            {[["✅", "\u20b950 off delivery on \u20b9500+"], ["💰", "Exclusive member discounts"], ["📦", "Easy order tracking"], ["🌿", "Early access to new batches"]].map(([icon, text]) => (
               <div key={text} className="flex items-center gap-3 text-sm text-brand-cream-dark">
                 <span>{icon}</span><span>{text}</span>
               </div>
